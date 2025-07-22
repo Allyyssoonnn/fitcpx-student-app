@@ -1,7 +1,7 @@
-import 'package:fitcpxapp/src/blocs/joint/joint_event.dart';
-import 'package:fitcpxapp/src/blocs/joint/joint_state.dart';
-import 'package:fitcpxapp/src/models/joint_model.dart';
-import 'package:fitcpxapp/src/services/joints_service.dart';
+import 'package:fitcpxaluno/src/blocs/joint/joint_event.dart';
+import 'package:fitcpxaluno/src/blocs/joint/joint_state.dart';
+import 'package:fitcpxaluno/src/models/joint_model.dart';
+import 'package:fitcpxaluno/src/services/joints_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class JointBloc extends Bloc<JointEvent, JointState> {

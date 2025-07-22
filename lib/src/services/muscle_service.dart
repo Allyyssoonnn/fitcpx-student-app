@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
-import 'package:fitcpxapp/src/core/dio_client.dart';
-import 'package:fitcpxapp/src/core/dio_exceptions.dart';
+import 'package:fitcpxaluno/src/core/dio_client.dart';
+import 'package:fitcpxaluno/src/core/dio_exceptions.dart';
 
 class MusclesService {
   final Dio _dio = DioClient.instance;

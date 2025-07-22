@@ -1,4 +1,4 @@
-import 'package:fitcpxapp/src/models/exercise_model.dart';
+import 'package:fitcpxaluno/src/models/exercise_model.dart';
 
 abstract class ExerciseState {}
 

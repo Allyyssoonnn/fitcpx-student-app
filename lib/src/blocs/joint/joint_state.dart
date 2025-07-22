@@ -1,4 +1,4 @@
-import 'package:fitcpxapp/src/models/joint_model.dart';
+import 'package:fitcpxaluno/src/models/joint_model.dart';
 
 abstract class JointState {}
 

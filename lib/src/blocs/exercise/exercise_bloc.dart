@@ -1,7 +1,7 @@
-import 'package:fitcpxapp/src/blocs/exercise/exercise_event.dart';
-import 'package:fitcpxapp/src/blocs/exercise/exercise_state.dart';
-import 'package:fitcpxapp/src/models/exercise_model.dart';
-import 'package:fitcpxapp/src/services/exercises_service.dart';
+import 'package:fitcpxaluno/src/blocs/exercise/exercise_event.dart';
+import 'package:fitcpxaluno/src/blocs/exercise/exercise_state.dart';
+import 'package:fitcpxaluno/src/models/exercise_model.dart';
+import 'package:fitcpxaluno/src/services/exercises_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ExerciseBloc extends Bloc<ExerciseEvent, ExerciseState> {

@@ -1,4 +1,4 @@
-import 'package:fitcpxapp/src/models/muscle_model.dart';
+import 'package:fitcpxaluno/src/models/muscle_model.dart';
 
 abstract class MuscleState {}
 

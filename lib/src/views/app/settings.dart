@@ -1,5 +1,5 @@
-import 'package:fitcpxapp/src/blocs/auth/auth_bloc.dart';
-import 'package:fitcpxapp/src/blocs/auth/auth_event.dart';
+import 'package:fitcpxaluno/src/blocs/auth/auth_bloc.dart';
+import 'package:fitcpxaluno/src/blocs/auth/auth_event.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

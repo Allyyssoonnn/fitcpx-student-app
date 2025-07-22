@@ -1,6 +1,6 @@
-import 'package:fitcpxapp/src/views/app/home.dart';
-import 'package:fitcpxapp/src/views/app/settings.dart';
-import 'package:fitcpxapp/src/widgets/custom_scaffold_app.dart';
+import 'package:fitcpxaluno/src/views/app/home.dart';
+import 'package:fitcpxaluno/src/views/app/settings.dart';
+import 'package:fitcpxaluno/src/widgets/custom_scaffold_app.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 

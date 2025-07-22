@@ -1,5 +1,5 @@
-import 'package:fitcpxapp/src/views/auth/exercises.dart';
-import 'package:fitcpxapp/src/widgets/welcome_button.dart';
+import 'package:fitcpxaluno/src/views/auth/exercises.dart';
+import 'package:fitcpxaluno/src/widgets/welcome_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 

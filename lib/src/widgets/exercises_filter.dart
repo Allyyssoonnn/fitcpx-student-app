@@ -1,7 +1,7 @@
-import 'package:fitcpxapp/src/blocs/joint/joint_bloc.dart';
-import 'package:fitcpxapp/src/blocs/joint/joint_state.dart';
-import 'package:fitcpxapp/src/blocs/muscle/muscle_bloc.dart';
-import 'package:fitcpxapp/src/blocs/muscle/muscle_state.dart';
+import 'package:fitcpxaluno/src/blocs/joint/joint_bloc.dart';
+import 'package:fitcpxaluno/src/blocs/joint/joint_state.dart';
+import 'package:fitcpxaluno/src/blocs/muscle/muscle_bloc.dart';
+import 'package:fitcpxaluno/src/blocs/muscle/muscle_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

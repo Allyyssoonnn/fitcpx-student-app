@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
-import 'package:fitcpxapp/src/core/dio_client.dart';
-import 'package:fitcpxapp/src/core/dio_exceptions.dart';
-import 'package:fitcpxapp/src/models/user_model.dart';
+import 'package:fitcpxaluno/src/core/dio_client.dart';
+import 'package:fitcpxaluno/src/core/dio_exceptions.dart';
+import 'package:fitcpxaluno/src/models/user_model.dart';
 
 class UserService {
   final Dio _dio = DioClient.instance;

@@ -1,6 +1,6 @@
-import 'package:fitcpxapp/src/models/exercise_model.dart';
-import 'package:fitcpxapp/src/widgets/customScaffold.dart';
-import 'package:fitcpxapp/src/widgets/video_player.dart';
+import 'package:fitcpxaluno/src/models/exercise_model.dart';
+import 'package:fitcpxaluno/src/widgets/customScaffold.dart';
+import 'package:fitcpxaluno/src/widgets/video_player.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 

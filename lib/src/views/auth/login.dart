@@ -1,8 +1,8 @@
 import 'dart:async';
 
-import 'package:fitcpxapp/src/blocs/auth/auth_bloc.dart';
-import 'package:fitcpxapp/src/blocs/auth/auth_event.dart';
-import 'package:fitcpxapp/src/widgets/customScaffold.dart';
+import 'package:fitcpxaluno/src/blocs/auth/auth_bloc.dart';
+import 'package:fitcpxaluno/src/blocs/auth/auth_event.dart';
+import 'package:fitcpxaluno/src/widgets/customScaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -194,11 +194,13 @@ class _LoginScreenState extends State<LoginScreen>
                               onPressed: () {
                                 context.read<AuthBloc>().add(
                                   AuthLoggedIn(
-                                    email: _email,
-                                    password: _password,
+                                    // email: _email,
+                                    email: 'alyson.personalstudio@gmail.com',
+                                    // password: _password,
+                                    password: '12345',
                                   ),
                                 );
-                                Navigator.pop(context);
+                                // Navigator.pop(context);
                               },
                               child: const Text(
                                 'Entrar',

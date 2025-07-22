@@ -1,11 +1,11 @@
 import 'dart:async';
 
-import 'package:fitcpxapp/src/blocs/exercise/exercise_bloc.dart';
-import 'package:fitcpxapp/src/blocs/exercise/exercise_event.dart';
-import 'package:fitcpxapp/src/blocs/exercise/exercise_state.dart';
-import 'package:fitcpxapp/src/views/auth/exercise_info.dart';
-import 'package:fitcpxapp/src/widgets/customScaffold.dart';
-import 'package:fitcpxapp/src/widgets/exercises_filter.dart';
+import 'package:fitcpxaluno/src/blocs/exercise/exercise_bloc.dart';
+import 'package:fitcpxaluno/src/blocs/exercise/exercise_event.dart';
+import 'package:fitcpxaluno/src/blocs/exercise/exercise_state.dart';
+import 'package:fitcpxaluno/src/views/auth/exercise_info.dart';
+import 'package:fitcpxaluno/src/widgets/customScaffold.dart';
+import 'package:fitcpxaluno/src/widgets/exercises_filter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:fitcpxapp/src/core/dio_interceptor.dart';
+import 'package:fitcpxaluno/src/core/dio_interceptor.dart';
 
 class DioClient {
   static final Dio _dio =

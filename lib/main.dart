@@ -1,17 +1,17 @@
-import 'package:fitcpxapp/src/blocs/auth/auth_bloc.dart';
-import 'package:fitcpxapp/src/blocs/auth/auth_state.dart';
-import 'package:fitcpxapp/src/blocs/exercise/exercise_bloc.dart';
-import 'package:fitcpxapp/src/blocs/exercise/exercise_event.dart';
-import 'package:fitcpxapp/src/blocs/joint/joint_bloc.dart';
-import 'package:fitcpxapp/src/blocs/joint/joint_event.dart';
-import 'package:fitcpxapp/src/blocs/muscle/muscle_bloc.dart';
-import 'package:fitcpxapp/src/blocs/muscle/muscle_event.dart';
-import 'package:fitcpxapp/src/routes/app_routes.dart';
-import 'package:fitcpxapp/src/services/exercises_service.dart';
-import 'package:fitcpxapp/src/services/joints_service.dart';
-import 'package:fitcpxapp/src/services/muscle_service.dart';
-import 'package:fitcpxapp/src/services/user_service.dart';
-import 'package:fitcpxapp/src/views/auth/welcome.dart';
+import 'package:fitcpxaluno/src/blocs/auth/auth_bloc.dart';
+import 'package:fitcpxaluno/src/blocs/auth/auth_state.dart';
+import 'package:fitcpxaluno/src/blocs/exercise/exercise_bloc.dart';
+import 'package:fitcpxaluno/src/blocs/exercise/exercise_event.dart';
+import 'package:fitcpxaluno/src/blocs/joint/joint_bloc.dart';
+import 'package:fitcpxaluno/src/blocs/joint/joint_event.dart';
+import 'package:fitcpxaluno/src/blocs/muscle/muscle_bloc.dart';
+import 'package:fitcpxaluno/src/blocs/muscle/muscle_event.dart';
+import 'package:fitcpxaluno/src/routes/app_routes.dart';
+import 'package:fitcpxaluno/src/services/exercises_service.dart';
+import 'package:fitcpxaluno/src/services/joints_service.dart';
+import 'package:fitcpxaluno/src/services/muscle_service.dart';
+import 'package:fitcpxaluno/src/services/user_service.dart';
+import 'package:fitcpxaluno/src/views/auth/login.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -51,7 +51,7 @@ class MyApp extends StatelessWidget {
             if (state is AuthAuthenticated) {
               return const AppRoutes();
             } else {
-              return const WelcomeScreen();
+              return const LoginScreen();
             }
           },
         ),

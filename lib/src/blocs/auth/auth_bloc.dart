@@ -1,6 +1,6 @@
-import 'package:fitcpxapp/src/blocs/auth/auth_event.dart';
-import 'package:fitcpxapp/src/blocs/auth/auth_state.dart';
-import 'package:fitcpxapp/src/services/user_service.dart';
+import 'package:fitcpxaluno/src/blocs/auth/auth_event.dart';
+import 'package:fitcpxaluno/src/blocs/auth/auth_state.dart';
+import 'package:fitcpxaluno/src/services/user_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

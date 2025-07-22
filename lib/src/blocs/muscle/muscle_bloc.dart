@@ -1,7 +1,7 @@
-import 'package:fitcpxapp/src/blocs/muscle/muscle_event.dart';
-import 'package:fitcpxapp/src/blocs/muscle/muscle_state.dart';
-import 'package:fitcpxapp/src/models/muscle_model.dart';
-import 'package:fitcpxapp/src/services/muscle_service.dart';
+import 'package:fitcpxaluno/src/blocs/muscle/muscle_event.dart';
+import 'package:fitcpxaluno/src/blocs/muscle/muscle_state.dart';
+import 'package:fitcpxaluno/src/models/muscle_model.dart';
+import 'package:fitcpxaluno/src/services/muscle_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class MuscleBloc extends Bloc<MuscleEvent, MuscleState> {
