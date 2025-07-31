@@ -10,7 +10,12 @@ class CustomScaffoldApp extends StatelessWidget {
   final Widget? child;
   final String currentLocation;
 
-  static const routes = ['/home', '/settings'];
+  static const routes = [
+    '/home',
+    '/fitness_assessments',
+    '/workouts',
+    '/settings',
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -41,6 +46,16 @@ class CustomScaffoldApp extends StatelessWidget {
             icon: Icon(Icons.home_outlined),
             selectedIcon: Icon(Icons.home),
             label: 'Início',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.add_chart_outlined),
+            selectedIcon: Icon(Icons.add_chart_outlined),
+            label: 'Avaliações',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.fitness_center),
+            selectedIcon: Icon(Icons.fitness_center),
+            label: 'Treinos',
           ),
           NavigationDestination(
             icon: Icon(Icons.person_outline),

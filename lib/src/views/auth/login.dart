@@ -59,6 +59,19 @@ class _LoginScreenState extends State<LoginScreen>
     super.dispose();
   }
 
+  Future<void> _onLogin() async {
+    context.read<AuthBloc>().add(
+      AuthLoggedIn(
+        // email: _email,
+        email: 'alyson.personalstudio@gmail.com',
+        // password: _password,
+        password: '12345',
+      ),
+    );
+    // Navigator.pop(context);
+    // context.read<WorkoutBloc>().add(LoadWorkouts());
+  }
+
   @override
   Widget build(BuildContext context) {
     return PopScope(
@@ -191,17 +204,7 @@ class _LoginScreenState extends State<LoginScreen>
                                 ),
                                 backgroundColor: Colors.black87,
                               ),
-                              onPressed: () {
-                                context.read<AuthBloc>().add(
-                                  AuthLoggedIn(
-                                    // email: _email,
-                                    email: 'alyson.personalstudio@gmail.com',
-                                    // password: _password,
-                                    password: '12345',
-                                  ),
-                                );
-                                // Navigator.pop(context);
-                              },
+                              onPressed: _onLogin,
                               child: const Text(
                                 'Entrar',
                                 style: TextStyle(

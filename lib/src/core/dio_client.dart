@@ -6,6 +6,7 @@ class DioClient {
       Dio(
           BaseOptions(
             baseUrl: 'https://api.fitcpx.com',
+            // baseUrl: 'http://localhost:8070',
             connectTimeout: const Duration(seconds: 10),
             receiveTimeout: const Duration(seconds: 10),
             contentType: 'application/json',

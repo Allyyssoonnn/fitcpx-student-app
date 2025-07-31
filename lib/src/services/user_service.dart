@@ -9,8 +9,8 @@ class UserService {
   Future<UserModel> login(String email, String senha) async {
     try {
       final response = await _dio.post(
-        '/usuario/login',
-        data: {'email': email, 'senha': senha},
+        '/appaluno/login',
+        data: {'login': email, 'senha': senha},
       );
 
       final data = response.data;
@@ -22,7 +22,8 @@ class UserService {
       //
 
       return UserModel(
-        name: data['usuario']?['nome_usuario'],
+        id: data['aluno']?['cod_aluno'],
+        name: data['aluno']?['nome_aluno'],
         token: data['token'],
         refreshToken: data['refreshToken'],
       );

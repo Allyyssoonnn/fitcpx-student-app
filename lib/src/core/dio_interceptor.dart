@@ -3,10 +3,10 @@ import 'package:dio/dio.dart';
 class DioInterceptor extends Interceptor {
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
-    const token = 'seu_token_aqui';
-    if (token.isNotEmpty) {
-      options.headers['Authorization'] = 'Bearer $token';
-    }
+    // const token = 'seu_token_aqui';
+    // if (token.isNotEmpty) {
+    //   options.headers['Authorization'] = 'Bearer $token';
+    // }
 
     handler.next(options);
   }

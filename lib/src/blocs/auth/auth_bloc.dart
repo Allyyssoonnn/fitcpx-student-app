@@ -12,7 +12,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       try {
         final data = await userService.login(event.email, event.password);
 
+        if (data.token == null) {
+          emit(AuthUnAuthenticated());
+          return;
+        }
+
         final prefs = await SharedPreferences.getInstance();
+        await prefs.setInt('id_client', data.id);
         await prefs.setString('name', data.name);
         await prefs.setString('token', data.token);
         await prefs.setString('refreshToken', data.refreshToken);
@@ -24,7 +30,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     });
     on<AuthLoggedOut>((event, emit) async {
       final prefs = await SharedPreferences.getInstance();
+      await prefs.remove('id_client');
+      await prefs.remove('name');
       await prefs.remove('token');
+      await prefs.remove('refreshToken');
       emit(AuthUnAuthenticated());
     });
   }

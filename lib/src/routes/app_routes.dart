@@ -1,5 +1,7 @@
+import 'package:fitcpxaluno/src/views/app/fitness_assessments.dart';
 import 'package:fitcpxaluno/src/views/app/home.dart';
 import 'package:fitcpxaluno/src/views/app/settings.dart';
+import 'package:fitcpxaluno/src/views/app/workouts.dart';
 import 'package:fitcpxaluno/src/widgets/custom_scaffold_app.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -10,7 +12,7 @@ class AppRoutes extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final router = GoRouter(
-      initialLocation: '/home',
+      initialLocation: '/fitness_assessments',
       routes: [
         ShellRoute(
           builder: (context, state, child) => CustomScaffoldApp(
@@ -21,6 +23,14 @@ class AppRoutes extends StatelessWidget {
             GoRoute(
               path: '/home',
               builder: (context, state) => const HomeScreen(),
+            ),
+            GoRoute(
+              path: '/fitness_assessments',
+              builder: (context, state) => FitnessAssessmentsScreen(),
+            ),
+            GoRoute(
+              path: '/workouts',
+              builder: (context, state) => WorkoutsScreen(),
             ),
             GoRoute(
               path: '/settings',
