@@ -14,6 +14,7 @@ class SettingsScreen extends StatefulWidget {
 
 class _SettingsScreen extends State<SettingsScreen> {
   String? userName;
+  String? userImg;
 
   @override
   void initState() {
@@ -25,6 +26,7 @@ class _SettingsScreen extends State<SettingsScreen> {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
       userName = prefs.getString('name');
+      userImg = prefs.getString('clientImg');
     });
   }
 
@@ -51,7 +53,7 @@ class _SettingsScreen extends State<SettingsScreen> {
                       children: [
                         ClipOval(
                           child: Image.network(
-                            'https://media.fitcpx.com/Alyson.PNG',
+                            userImg ?? '',
                             height: 50,
                             fit: BoxFit.cover,
                             loadingBuilder: (context, child, loadingProgress) {

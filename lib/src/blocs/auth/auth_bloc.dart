@@ -20,6 +20,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         final prefs = await SharedPreferences.getInstance();
         await prefs.setInt('id_client', data.id);
         await prefs.setString('name', data.name);
+        await prefs.setString('clientImg', data.clientImg ?? '');
+        await prefs.setInt('id_company', data.companyId);
+        await prefs.setString('company', data.company);
+        await prefs.setString('companyImg', data.companyImg ?? '');
         await prefs.setString('token', data.token);
         await prefs.setString('refreshToken', data.refreshToken);
 
@@ -32,6 +36,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       final prefs = await SharedPreferences.getInstance();
       await prefs.remove('id_client');
       await prefs.remove('name');
+      await prefs.remove('id_company');
+      await prefs.remove('company');
       await prefs.remove('token');
       await prefs.remove('refreshToken');
       emit(AuthUnAuthenticated());

@@ -1,21 +1,40 @@
 import 'package:fitcpxaluno/src/models/fitness_assessment_model.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart' show rootBundle;
+import 'package:http/http.dart' as http;
 import 'package:pdf/pdf.dart';
 import 'package:printing/printing.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+Future<String> carregarHtmlDoServidor() async {
+  final response = await http.get(
+    Uri.parse('https://api.fitcpx.com/fitnessassessmentpdf'),
+  );
+
+  if (response.statusCode == 200) {
+    return response.body;
+  } else {
+    throw Exception('Falha ao carregar template HTML');
+  }
+}
 
 Future<void> exportFullContentAsPdf(
   FitnessAssessmentModel assessment,
   BuildContext context,
 ) async {
+  final prefs = await SharedPreferences.getInstance();
   try {
+    final String? company = prefs.getString('company');
+    final String? companyImg = prefs.getString('companyImg');
+
     // 1. Carregar o template HTML do asset
-    String htmlTemplate = await rootBundle.loadString(
-      'assets/utils/templatePDF.html',
-    );
+    // String htmlTemplate = await rootBundle.loadString(
+    //   'assets/utils/templatePDF.html',
+    // );
+    String htmlTemplate = await carregarHtmlDoServidor();
 
     // 2. Substituir placeholders pelo conteúdo real do assessment
     String htmlContent = htmlTemplate
+        .replaceAll('{{companyImg}}', companyImg ?? '')
         .replaceAll('<!-- {{trainer}} -->', assessment.trainer ?? '')
         .replaceAll('<!-- {{client}} -->', assessment.client ?? '')
         .replaceAll('<!-- {{height}} -->', assessment.height?.toString() ?? '')

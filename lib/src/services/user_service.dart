@@ -24,6 +24,10 @@ class UserService {
       return UserModel(
         id: data['aluno']?['cod_aluno'],
         name: data['aluno']?['nome_aluno'],
+        clientImg: data['aluno']?['imagem_aluno'],
+        companyId: data['empresa']?['cod_empresa'],
+        company: data['empresa']?['nome_empresa'],
+        companyImg: data['empresa']?['imagem_empresa'],
         token: data['token'],
         refreshToken: data['refreshToken'],
       );
