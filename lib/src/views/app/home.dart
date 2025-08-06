@@ -1,4 +1,3 @@
-import 'package:fitcpxaluno/src/views/auth/exercises.dart';
 import 'package:fitcpxaluno/src/widgets/welcome_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -36,15 +35,9 @@ class HomeScreen extends StatelessWidget {
                   children: [
                     WelcomeButton(
                       icon: Icons.list_alt,
-                      buttonText: 'Exercícios',
-                      buttonDescription:
-                          'Lista gratuita com 693 exercícios com informações e vídeos autorais.',
-                      onTap: () =>
-                          Navigator.of(context, rootNavigator: true).push(
-                            MaterialPageRoute(
-                              builder: (context) => ExercisesScreen(),
-                            ),
-                          ),
+                      buttonText: 'Treino de hoje',
+                      buttonDescription: 'Realizar treino de hoje',
+                      onTap: () {},
                     ),
                   ],
                 ),

@@ -56,6 +56,7 @@ class _LoginScreenState extends State<LoginScreen>
   @override
   void dispose() {
     _debounce?.cancel();
+    _controller.dispose();
     super.dispose();
   }
 
@@ -63,9 +64,11 @@ class _LoginScreenState extends State<LoginScreen>
     context.read<AuthBloc>().add(
       AuthLoggedIn(
         // email: _email,
-        email: 'alyson.personalstudio@gmail.com',
+        email: 'th.aisleao@hotmail.com',
+        // email: 'alyson.personalstudio@gmail.com',
         // password: _password,
-        password: '12345',
+        password: '123',
+        context: context,
       ),
     );
     // Navigator.pop(context);

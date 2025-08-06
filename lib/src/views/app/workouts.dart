@@ -1,5 +1,6 @@
 import 'package:fitcpxaluno/src/blocs/workout/workout_bloc.dart';
 import 'package:fitcpxaluno/src/blocs/workout/workout_state.dart';
+import 'package:fitcpxaluno/src/screens/sessions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -44,6 +45,15 @@ class WorkoutsScreen extends StatelessWidget {
                         elevation: 4,
                         shadowColor: Colors.black.withOpacity(0.1),
                         child: InkWell(
+                          onTap: () =>
+                              Navigator.of(context, rootNavigator: true).push(
+                                MaterialPageRoute(
+                                  builder: (context) => SessionScreen(
+                                    idWorkout: workout.id,
+                                    nameWorkout: workout.name,
+                                  ),
+                                ),
+                              ),
                           borderRadius: BorderRadius.circular(20),
                           child: Padding(
                             padding: const EdgeInsets.symmetric(

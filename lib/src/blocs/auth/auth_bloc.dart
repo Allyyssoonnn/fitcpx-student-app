@@ -10,7 +10,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   AuthBloc(this.userService) : super(AuthUnAuthenticated()) {
     on<AuthLoggedIn>((event, emit) async {
       try {
-        final data = await userService.login(event.email, event.password);
+        final data = await userService.login(
+          event.email,
+          event.password,
+          event.context,
+        );
 
         if (data.token == null) {
           emit(AuthUnAuthenticated());

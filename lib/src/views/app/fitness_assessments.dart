@@ -1,6 +1,6 @@
 import 'package:fitcpxaluno/src/blocs/fitnessAssessment/fitness_assessment_bloc.dart';
 import 'package:fitcpxaluno/src/blocs/fitnessAssessment/fitness_assessment_state.dart';
-import 'package:fitcpxaluno/src/widgets/view_fitness_assessment.dart';
+import 'package:fitcpxaluno/src/screens/view_fitness_assessment.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

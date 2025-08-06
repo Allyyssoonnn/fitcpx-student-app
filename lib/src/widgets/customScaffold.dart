@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 
 class CustomScaffold extends StatelessWidget {
-  const CustomScaffold({super.key, this.child});
+  const CustomScaffold({super.key, this.child, this.floatingActionButton});
+
+  final Widget? floatingActionButton;
   final Widget? child;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: floatingActionButton,
       appBar: AppBar(backgroundColor: Colors.transparent, elevation: 0),
       extendBodyBehindAppBar: true,
       body: Stack(
@@ -23,7 +26,7 @@ class CustomScaffold extends StatelessWidget {
           //   width: double.infinity,
           //   height: double.infinity,
           // ),
-          SafeArea(child: child!, bottom: false),
+          SafeArea(bottom: false, child: child!),
         ],
       ),
     );

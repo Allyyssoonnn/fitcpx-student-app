@@ -1,3 +1,4 @@
+import 'package:fitcpxaluno/src/widgets/badge_session.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -22,6 +23,7 @@ class CustomScaffoldApp extends StatelessWidget {
     final index = routes.indexWhere((t) => currentLocation.startsWith(t));
 
     return Scaffold(
+      floatingActionButton: BadgeSession(),
       backgroundColor: Color.fromRGBO(40, 167, 69, 1),
       appBar: AppBar(
         backgroundColor: Color.fromRGBO(40, 167, 69, 1),

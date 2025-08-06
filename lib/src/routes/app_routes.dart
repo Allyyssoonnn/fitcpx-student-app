@@ -12,7 +12,7 @@ class AppRoutes extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final router = GoRouter(
-      initialLocation: '/fitness_assessments',
+      initialLocation: '/home',
       routes: [
         ShellRoute(
           builder: (context, state, child) => CustomScaffoldApp(

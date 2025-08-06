@@ -5,8 +5,8 @@ class DioClient {
   static final Dio _dio =
       Dio(
           BaseOptions(
-            baseUrl: 'https://api.fitcpx.com',
-            // baseUrl: 'http://localhost:8070',
+            // baseUrl: 'https://api.fitcpx.com',
+            baseUrl: 'http://192.168.1.5:8070',
             connectTimeout: const Duration(seconds: 10),
             receiveTimeout: const Duration(seconds: 10),
             contentType: 'application/json',
@@ -14,7 +14,7 @@ class DioClient {
         )
         ..interceptors.addAll([
           DioInterceptor(),
-          LogInterceptor(responseBody: false, requestBody: true),
+          // LogInterceptor(responseBody: false, requestBody: true),
         ]);
   static Dio get instance => _dio;
 }

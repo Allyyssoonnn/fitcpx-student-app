@@ -1,5 +1,6 @@
 import 'package:fitcpxaluno/src/blocs/auth/auth_bloc.dart';
 import 'package:fitcpxaluno/src/blocs/auth/auth_event.dart';
+import 'package:fitcpxaluno/src/screens/my_contracts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -51,37 +52,53 @@ class _SettingsScreen extends State<SettingsScreen> {
                     child: Row(
                       spacing: 10,
                       children: [
-                        ClipOval(
-                          child: Image.network(
-                            userImg ?? '',
-                            height: 50,
-                            fit: BoxFit.cover,
-                            loadingBuilder: (context, child, loadingProgress) {
-                              if (loadingProgress == null) return child;
-                              return Container(
-                                height: 50,
-                                width: 50,
-                                alignment: Alignment.center,
-                                child: const CircularProgressIndicator(
-                                  strokeWidth: 2,
-                                ),
-                              );
-                            },
-                            errorBuilder: (context, error, stackTrace) {
-                              return Container(
-                                height: 50,
-                                width: 50,
-                                color: Colors.grey[300],
-                                alignment: Alignment.center,
-                                child: const Icon(
-                                  Icons.person,
-                                  size: 24,
-                                  color: Colors.grey,
-                                ),
-                              );
-                            },
+                        if (userImg != '')
+                          ClipOval(
+                            child: Image.network(
+                              userImg ?? 'https://placehold.co/400',
+                              height: 50,
+                              fit: BoxFit.cover,
+                              loadingBuilder:
+                                  (context, child, loadingProgress) {
+                                    if (loadingProgress == null) return child;
+                                    return Container(
+                                      height: 50,
+                                      width: 50,
+                                      alignment: Alignment.center,
+                                      child: const CircularProgressIndicator(
+                                        strokeWidth: 2,
+                                      ),
+                                    );
+                                  },
+                              errorBuilder: (context, error, stackTrace) {
+                                return Container(
+                                  height: 50,
+                                  width: 50,
+                                  color: Colors.grey[300],
+                                  alignment: Alignment.center,
+                                  child: const Icon(
+                                    Icons.person,
+                                    size: 24,
+                                    color: Colors.grey,
+                                  ),
+                                );
+                              },
+                            ),
+                          )
+                        else
+                          ClipOval(
+                            child: Container(
+                              height: 50,
+                              width: 50,
+                              color: Colors.grey[300],
+                              alignment: Alignment.center,
+                              child: const Icon(
+                                Icons.person,
+                                size: 24,
+                                color: Colors.grey,
+                              ),
+                            ),
                           ),
-                        ),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -104,18 +121,26 @@ class _SettingsScreen extends State<SettingsScreen> {
                     onTap: () {},
                     child: Container(
                       padding: EdgeInsets.all(20),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            spacing: 16,
-                            children: [
-                              Icon(Icons.monetization_on),
-                              Text('Pagamentos'),
-                            ],
-                          ),
-                          Icon(Icons.arrow_forward_ios),
-                        ],
+                      child: InkWell(
+                        onTap: () =>
+                            Navigator.of(context, rootNavigator: true).push(
+                              MaterialPageRoute(
+                                builder: (context) => MyContracts(),
+                              ),
+                            ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              spacing: 16,
+                              children: [
+                                Icon(Icons.monetization_on),
+                                Text('Pagamentos'),
+                              ],
+                            ),
+                            Icon(Icons.arrow_forward_ios),
+                          ],
+                        ),
                       ),
                     ),
                   ),

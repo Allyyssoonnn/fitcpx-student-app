@@ -2,11 +2,16 @@ import 'package:dio/dio.dart';
 import 'package:fitcpxaluno/src/core/dio_client.dart';
 import 'package:fitcpxaluno/src/core/dio_exceptions.dart';
 import 'package:fitcpxaluno/src/models/user_model.dart';
+import 'package:flutter/material.dart';
 
 class UserService {
   final Dio _dio = DioClient.instance;
 
-  Future<UserModel> login(String email, String senha) async {
+  Future<UserModel> login(
+    String email,
+    String senha,
+    BuildContext context,
+  ) async {
     try {
       final response = await _dio.post(
         '/appaluno/login',
@@ -16,7 +21,11 @@ class UserService {
       final data = response.data;
 
       //add exception because the response is 200 to error
-      if (response.data['status'] == false) {
+      if (response.data['status'] == true && response.data['token'] == null) {
+        final message = response.data['msg'] ?? '';
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(backgroundColor: Colors.redAccent, content: Text(message)),
+        );
         throw Exception(response.data['msg']);
       }
       //

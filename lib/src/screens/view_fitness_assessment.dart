@@ -22,7 +22,6 @@ class _ViewFitnessAssessmentState extends State<ViewFitnessAssessment>
   late final Animation<Offset> _slideAnimation;
   late final Animation<double> _fadeAnimation;
   late final _fitnessAssessmentService = FitnessAssessmentService();
-  final GlobalKey _screenKey = GlobalKey();
 
   bool _isExisting = false;
 
