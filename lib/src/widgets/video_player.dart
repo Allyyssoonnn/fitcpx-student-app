@@ -16,6 +16,20 @@ class _YoutubeWebViewPlayerState extends State<YoutubeWebViewPlayer> {
   bool _isLoading = true;
 
   @override
+  void didUpdateWidget(covariant YoutubeWebViewPlayer oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (oldWidget.videoUrl != widget.videoUrl) {
+      final videoId =
+          Uri.tryParse(widget.videoUrl)?.queryParameters['v'] ??
+          widget.videoUrl.split("/").last;
+
+      final embedUrl = 'https://www.youtube.com/embed/$videoId';
+      _controller.loadRequest(Uri.parse(embedUrl));
+    }
+  }
+
+  @override
   void initState() {
     super.initState();
 

@@ -1,11 +1,18 @@
 import 'package:fitcpxaluno/src/blocs/session/session_bloc.dart';
 import 'package:fitcpxaluno/src/blocs/session/session_state.dart';
+import 'package:fitcpxaluno/src/blocs/session_timer/sessionTimer.dart';
 import 'package:fitcpxaluno/src/screens/session_exercises.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class BadgeSession extends StatelessWidget {
   BadgeSession({super.key});
+
+  String _formatDuration(int seconds) {
+    final minutes = (seconds ~/ 60).toString().padLeft(2, '0');
+    final remainingSeconds = (seconds % 60).toString().padLeft(2, '0');
+    return '$minutes:$remainingSeconds';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,15 +46,23 @@ class BadgeSession extends StatelessWidget {
                     // shape: BoxShape.circle,
                   ),
                   constraints: BoxConstraints(minWidth: 20, minHeight: 20),
-                  child: Center(
-                    child: Text(
-                      '01:45',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                  child: BlocBuilder<TimerBloc, TimerState>(
+                    builder: (context, state) {
+                      if (state is RunningTimerState) {
+                        return Center(
+                          child: Text(
+                            _formatDuration(state.secondsElapsed ?? 0),
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        );
+                      }
+
+                      return const Center();
+                    },
                   ),
                 ),
               ),

@@ -9,6 +9,7 @@ class CustomScaffold extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       floatingActionButton: floatingActionButton,
       appBar: AppBar(backgroundColor: Colors.transparent, elevation: 0),
       extendBodyBehindAppBar: true,

@@ -1,5 +1,6 @@
 import 'package:fitcpxaluno/src/blocs/session/session_bloc.dart';
 import 'package:fitcpxaluno/src/blocs/session/session_event.dart';
+import 'package:fitcpxaluno/src/blocs/session_timer/sessionTimer.dart';
 import 'package:fitcpxaluno/src/models/session_model.dart';
 import 'package:fitcpxaluno/src/screens/session_exercises.dart';
 import 'package:fitcpxaluno/src/services/workout_service.dart';
@@ -36,6 +37,7 @@ class SessionScreen extends StatelessWidget {
             TextButton(
               onPressed: () {
                 context.read<SessionBloc>().add(StartWorkout(session));
+                context.read<TimerBloc>().add(StartTimer());
                 Navigator.of(context).pop();
                 Navigator.of(context).pop();
                 Navigator.of(context, rootNavigator: true).push(

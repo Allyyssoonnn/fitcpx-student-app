@@ -63,174 +63,191 @@ class _LoginScreenState extends State<LoginScreen>
   Future<void> _onLogin() async {
     context.read<AuthBloc>().add(
       AuthLoggedIn(
-        // email: _email,
-        email: 'th.aisleao@hotmail.com',
-        // email: 'alyson.personalstudio@gmail.com',
-        // password: _password,
-        password: '123',
+        email: _email,
+        // email: 'th.aisleao@hotmail.com',
+        password: _password,
+        // password: '123',
         context: context,
       ),
     );
-    // Navigator.pop(context);
-    // context.read<WorkoutBloc>().add(LoadWorkouts());
   }
 
   @override
   Widget build(BuildContext context) {
+    final bottomInset = MediaQuery.of(context).viewInsets.bottom;
+
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (didPop, result) async {
         if (!didPop) _exitScreen();
       },
       child: CustomScaffold(
-        child: Column(
-          children: [
-            const Spacer(flex: 2),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 40),
-              child: Center(
-                child: RichText(
-                  textAlign: TextAlign.center,
-                  text: const TextSpan(
-                    children: [
-                      TextSpan(
-                        text: 'Olá, Aluno\n',
-                        style: TextStyle(
-                          fontSize: 38,
-                          color: Colors.white,
-                          fontWeight: FontWeight.w700,
+        child: GestureDetector(
+          behavior: HitTestBehavior.translucent,
+          onTap: () => FocusScope.of(context).unfocus(),
+          child: Column(
+            children: [
+              const Spacer(flex: 2), // mantém o espaçamento do topo igual
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 40),
+                child: Center(
+                  child: RichText(
+                    textAlign: TextAlign.center,
+                    text: const TextSpan(
+                      children: [
+                        TextSpan(
+                          text: 'Olá, Aluno\n',
+                          style: TextStyle(
+                            fontSize: 38,
+                            color: Colors.white,
+                            fontWeight: FontWeight.w700,
+                          ),
                         ),
-                      ),
-                      TextSpan(
-                        text: '\nBem-vindo de volta',
-                        style: TextStyle(
-                          fontSize: 18,
-                          color: Colors.white70,
-                          fontWeight: FontWeight.w400,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            const Spacer(flex: 1),
-            Expanded(
-              flex: 6,
-              child: SlideTransition(
-                position: _slideAnimation,
-                child: FadeTransition(
-                  opacity: _fadeAnimation,
-                  child: Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.fromLTRB(24, 32, 24, 40),
-                    decoration: const BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.vertical(
-                        top: Radius.circular(40),
-                      ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Color.fromRGBO(0, 0, 0, 0.05),
-                          blurRadius: 10,
-                          offset: Offset(0, -4),
+                        TextSpan(
+                          text: '\nBem-vindo de volta',
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: Colors.white70,
+                            fontWeight: FontWeight.w400,
+                          ),
                         ),
                       ],
                     ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                  ),
+                ),
+              ),
+              const Spacer(flex: 1), // mantém o espaçamento
+              // container branco ocupando o resto da tela
+              Expanded(
+                flex: 6,
+                child: SlideTransition(
+                  position: _slideAnimation,
+                  child: FadeTransition(
+                    opacity: _fadeAnimation,
+                    child: Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.fromLTRB(24, 32, 24, 40),
+                      decoration: const BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.vertical(
+                          top: Radius.circular(40),
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Color.fromRGBO(0, 0, 0, 0.05),
+                            blurRadius: 10,
+                            offset: Offset(0, -4),
+                          ),
+                        ],
+                      ),
+                      child: SingleChildScrollView(
+                        physics: const ClampingScrollPhysics(),
+                        padding: EdgeInsets.only(bottom: bottomInset),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                const Text(
+                                  'Login',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                const SizedBox(height: 24),
+                                TextField(
+                                  decoration: InputDecoration(
+                                    prefixIcon: const Icon(
+                                      Icons.email_outlined,
+                                    ),
+                                    hintText: 'Email ou CPF',
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(14),
+                                    ),
+                                  ),
+                                  onChanged: (value) {
+                                    if (_debounce?.isActive ?? false)
+                                      _debounce!.cancel();
+                                    _debounce = Timer(
+                                      const Duration(milliseconds: 300),
+                                      () {
+                                        setState(() {
+                                          _email = value;
+                                        });
+                                      },
+                                    );
+                                  },
+                                ),
+                                const SizedBox(height: 16),
+                                TextField(
+                                  obscureText: true,
+                                  decoration: InputDecoration(
+                                    prefixIcon: const Icon(Icons.lock_outline),
+                                    hintText: 'Senha',
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(14),
+                                    ),
+                                  ),
+                                  onChanged: (value) {
+                                    if (_debounce?.isActive ?? false)
+                                      _debounce!.cancel();
+                                    _debounce = Timer(
+                                      const Duration(milliseconds: 300),
+                                      () {
+                                        setState(() {
+                                          _password = value;
+                                        });
+                                      },
+                                    );
+                                  },
+                                ),
+                                const SizedBox(height: 24),
+                                ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 16,
+                                    ),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    backgroundColor: Colors.black87,
+                                  ),
+                                  onPressed: _onLogin,
+                                  child: const Text(
+                                    'Entrar',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+
+                            const SizedBox(height: 12),
+
                             const Text(
-                              'Login',
-                              textAlign: TextAlign.center,
+                              'Developed by Lab Complex Dev LTDA - 59.820.051/0001-02',
                               style: TextStyle(
-                                fontSize: 24,
-                                fontWeight: FontWeight.w600,
+                                fontSize: 10,
+                                color: Colors.black38,
                               ),
-                            ),
-                            const SizedBox(height: 24),
-                            TextField(
-                              decoration: InputDecoration(
-                                prefixIcon: const Icon(Icons.email_outlined),
-                                hintText: 'Email ou CPF',
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(14),
-                                ),
-                              ),
-                              onChanged: (value) {
-                                if (_debounce?.isActive ?? false)
-                                  _debounce!.cancel();
-                                _debounce = Timer(
-                                  const Duration(milliseconds: 300),
-                                  () {
-                                    setState(() {
-                                      _email = value;
-                                    });
-                                  },
-                                );
-                              },
-                            ),
-                            const SizedBox(height: 16),
-                            TextField(
-                              obscureText: true,
-                              decoration: InputDecoration(
-                                prefixIcon: const Icon(Icons.lock_outline),
-                                hintText: 'Senha',
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(14),
-                                ),
-                              ),
-                              onChanged: (value) {
-                                if (_debounce?.isActive ?? false)
-                                  _debounce!.cancel();
-                                _debounce = Timer(
-                                  const Duration(milliseconds: 300),
-                                  () {
-                                    setState(() {
-                                      _password = value;
-                                    });
-                                  },
-                                );
-                              },
-                            ),
-                            const SizedBox(height: 24),
-                            ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 16,
-                                ),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                backgroundColor: Colors.black87,
-                              ),
-                              onPressed: _onLogin,
-                              child: const Text(
-                                'Entrar',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
+                              textAlign: TextAlign.center,
                             ),
                           ],
                         ),
-                        const Text(
-                          'Developed by Lab Complex Dev LTDA - 59.820.051/0001-02',
-                          style: TextStyle(fontSize: 10, color: Colors.black38),
-                          textAlign: TextAlign.center,
-                        ),
-                      ],
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

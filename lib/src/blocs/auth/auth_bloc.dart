@@ -1,5 +1,7 @@
+import 'package:dio/dio.dart';
 import 'package:fitcpxaluno/src/blocs/auth/auth_event.dart';
 import 'package:fitcpxaluno/src/blocs/auth/auth_state.dart';
+import 'package:fitcpxaluno/src/core/dio_exceptions.dart';
 import 'package:fitcpxaluno/src/services/user_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -32,18 +34,23 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         await prefs.setString('refreshToken', data.refreshToken);
 
         emit(AuthAuthenticated());
-      } catch (e) {
-        emit(AuthError('Error load exercises $e'));
+      } on DioException catch (e) {
+        final statusCode = e.response?.statusCode ?? 'no status code';
+        final responseData = e.response?.data ?? 'no response data';
+
+        final message = DioExceptions.fromDioError(e).toString();
+
+        throw Exception(
+          'Dio error: $message | '
+          'Status: $statusCode | '
+          'Response: $responseData | '
+          'URL: ${e.requestOptions.uri}',
+        );
       }
     });
     on<AuthLoggedOut>((event, emit) async {
       final prefs = await SharedPreferences.getInstance();
-      await prefs.remove('id_client');
-      await prefs.remove('name');
-      await prefs.remove('id_company');
-      await prefs.remove('company');
-      await prefs.remove('token');
-      await prefs.remove('refreshToken');
+      await prefs.clear();
       emit(AuthUnAuthenticated());
     });
   }

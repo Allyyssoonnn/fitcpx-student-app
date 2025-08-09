@@ -1,13 +1,17 @@
 import 'package:fitcpxaluno/src/models/sets_model.dart';
 
 class ExerciseModel {
+  final int cod_sessao_exercicio;
   final int cod_exercicio;
   final String nome_exercicio;
   final String? url_exercicio;
   final int nSets;
   final int weight;
   final int repetition;
+  final int sequence;
   final List<SetsModel>? setsInfo;
+  final int interval;
+  final List<ExerciseModel> superSet;
 
   //Information
   final int? cod_grupo_exercicio_1;
@@ -26,26 +30,35 @@ class ExerciseModel {
     int? weight,
     int? repetition,
     List<SetsModel>? setsInfo,
+    List<ExerciseModel>? superSet,
   }) {
     return ExerciseModel(
+      cod_sessao_exercicio: id ?? this.cod_sessao_exercicio,
       cod_exercicio: id ?? this.cod_exercicio,
       nome_exercicio: name ?? this.nome_exercicio,
       url_exercicio: this.url_exercicio,
       nSets: this.nSets,
+      superSet: superSet ?? this.superSet,
       setsInfo: setsInfo ?? this.setsInfo,
       weight: weight ?? this.weight,
       repetition: repetition ?? this.repetition,
+      sequence: this.sequence,
+      interval: this.interval,
     );
   }
 
   ExerciseModel({
+    required this.cod_sessao_exercicio,
     required this.cod_exercicio,
     required this.nome_exercicio,
     required this.url_exercicio,
     required this.nSets,
     required this.weight,
     required this.repetition,
+    required this.sequence,
     this.setsInfo,
+    required this.interval,
+    required this.superSet,
 
     //Information
     this.cod_grupo_exercicio_1,
@@ -60,12 +73,15 @@ class ExerciseModel {
 
   factory ExerciseModel.fromJson(Map<String, dynamic> json) {
     return ExerciseModel(
+      cod_sessao_exercicio: json['cod_sessao_exercicio'] ?? 0,
       cod_exercicio: json['cod_exercicio'] ?? 0,
       nome_exercicio: json['nome_exercicio'] ?? '',
       url_exercicio: json['url_exercicio'] ?? '',
       nSets: json['serie_sessao_exercicio'] ?? 0,
       weight: json['carga_sessao_exercicio'] ?? 0,
       repetition: json['repeticao_sessao_exercicio'] ?? 0,
+      sequence: json['sequencia_sessao_exercicio'] ?? 0,
+      interval: json['intervalo_sessao_exercicio'] ?? 0,
       setsInfo:
           (json['setsInfo'] as List?)
               ?.map((e) => SetsModel.fromJson(e))
@@ -79,6 +95,11 @@ class ExerciseModel {
               checked: false,
             ),
           ),
+      superSet:
+          (json['sets'] as List?)
+              ?.map((e) => ExerciseModel.fromJson(e))
+              .toList() ??
+          [],
       cod_grupo_exercicio_1: json['cod_grupo_exercicio_1'] ?? 0,
       nome_grupo_exercicio_1:
           json['grupo_exercicio_1']?['nome_grupo_exercicio'] ?? '',
@@ -93,13 +114,17 @@ class ExerciseModel {
 
   Map<String, dynamic> toJson() {
     return {
+      'cod_sessao_exercicio': cod_sessao_exercicio,
       'cod_exercicio': cod_exercicio,
       'nome_exercicio': nome_exercicio,
       'url_exercicio': url_exercicio,
-      'nSets': nSets,
-      'weight': weight,
-      'repetition': repetition,
+      'serie_sessao_exercicio': nSets,
+      'carga_sessao_exercicio': weight,
+      'repeticao_sessao_exercicio': repetition,
+      'sequencia_sessao_exercicio': sequence,
+      'intervalo_sessao_exercicio': interval,
       'setsInfo': setsInfo?.map((set) => set.toJson()).toList(),
+      'sets': superSet.map((e) => e.toJson()).toList(),
       'cod_grupo_exercicio_1': cod_grupo_exercicio_1,
       'nome_grupo_exercicio_1': nome_grupo_exercicio_1,
       'cod_equipamento_1': cod_equipamento_1,

@@ -1,6 +1,7 @@
 import 'package:fitcpxaluno/src/widgets/welcome_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:go_router/go_router.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -34,10 +35,16 @@ class HomeScreen extends StatelessWidget {
                 child: Column(
                   children: [
                     WelcomeButton(
-                      icon: Icons.list_alt,
-                      buttonText: 'Treino de hoje',
+                      icon: Icons.fitness_center,
+                      buttonText: 'Meus treinos',
                       buttonDescription: 'Realizar treino de hoje',
-                      onTap: () {},
+                      onTap: () => context.go('/workouts'),
+                    ),
+                    WelcomeButton(
+                      icon: Icons.add_chart,
+                      buttonText: 'Minhas avaliações',
+                      buttonDescription: 'Conferir sua evolução',
+                      onTap: () => context.go('/fitness_assessments'),
                     ),
                   ],
                 ),

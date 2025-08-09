@@ -2,8 +2,8 @@ import 'package:fitcpxaluno/src/blocs/session/session_bloc.dart';
 import 'package:fitcpxaluno/src/blocs/session/session_event.dart';
 import 'package:fitcpxaluno/src/blocs/session/session_state.dart';
 import 'package:fitcpxaluno/src/models/exercise_model.dart';
+import 'package:fitcpxaluno/src/screens/exerciseInfo/exercise_info.dart';
 import 'package:fitcpxaluno/src/screens/review_session.dart';
-import 'package:fitcpxaluno/src/views/auth/exercise_info.dart';
 import 'package:fitcpxaluno/src/widgets/customScaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -76,6 +76,7 @@ class SessionExerciseScreen extends StatelessWidget {
                                   builder: (context) => ExerciseInfoScreen(
                                     key: UniqueKey(),
                                     exerciseIndex: index,
+                                    allExercises: session!.exercises ?? [],
                                   ),
                                 ),
                               ),
@@ -114,7 +115,7 @@ class SessionExerciseScreen extends StatelessWidget {
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            exercise.nome_exercicio,
+                                            '${exercise.sequence} - ${exercise.nome_exercicio}',
                                             style: TextStyle(
                                               fontWeight: FontWeight.w600,
                                               // fontSize: 18,
@@ -125,6 +126,9 @@ class SessionExerciseScreen extends StatelessWidget {
                                             ),
                                           ),
                                           const SizedBox(height: 4),
+                                          Text(
+                                            '${exercise.nSets}x${exercise.repetition} - ${exercise.weight}kg',
+                                          ),
                                         ],
                                       ),
                                     ),

@@ -6,6 +6,7 @@ class FitnessAssessmentModel {
   final String date;
   final String weight;
   final String height;
+  final List<String> images;
 
   // Mass Percent
   final double bodyPercFat;
@@ -68,6 +69,7 @@ class FitnessAssessmentModel {
     required this.date,
     required this.weight,
     required this.height,
+    required this.images,
 
     required this.bodyPercFat,
     required this.leanPercMass,
@@ -144,6 +146,9 @@ class FitnessAssessmentModel {
       date: formattedDate,
       weight: json['peso']?.toString() ?? '',
       height: json['altura']?.toString() ?? '',
+      images: (json['images'] as List<dynamic>? ?? [])
+          .map((item) => item['url_imagem'] as String)
+          .toList(),
 
       bodyPercFat: _toDouble(json['gordura']),
       musclePerMass: _toDouble(

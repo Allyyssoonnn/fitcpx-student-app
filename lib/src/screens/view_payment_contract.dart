@@ -93,7 +93,8 @@ class _viewPaymentContractState extends State<ViewPaymentContract> {
                                   border: Border.all(
                                     color:
                                         payment.status == 'confirmed' ||
-                                            payment.status == 'paid'
+                                            payment.status == 'paid' ||
+                                            payment.status == 'succeeded'
                                         ? Colors.green
                                         : Colors.orange,
                                     width: 1.5,
@@ -102,7 +103,8 @@ class _viewPaymentContractState extends State<ViewPaymentContract> {
                                 padding: const EdgeInsets.all(12),
                                 child: Icon(
                                   payment.status == 'confirmed' ||
-                                          payment.status == 'paid'
+                                          payment.status == 'paid' ||
+                                          payment.status == 'succeeded'
                                       ? Icons.check_circle
                                       : Icons.pending,
                                   // size: 30,
@@ -138,7 +140,8 @@ class _viewPaymentContractState extends State<ViewPaymentContract> {
                                     ),
                                     const SizedBox(height: 4),
                                     if (payment.status != 'confirmed' &&
-                                        payment.status != 'paid')
+                                        payment.status != 'paid' &&
+                                        payment.status != 'succeeded')
                                       Container(
                                         width: double.infinity,
                                         child: OutlinedButton(

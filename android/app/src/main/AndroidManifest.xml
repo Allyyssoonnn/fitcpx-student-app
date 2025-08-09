@@ -1,4 +1,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <uses-permission android:name="android.permission.INTERNET"/>
+
+    <!-- Necessário para Android 9 (API 28) ou inferior -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="28"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
+    <!-- Recomendado para acesso preciso aos metadados da imagem -->
+    <uses-permission android:name="android.permission.ACCESS_MEDIA_LOCATION" />
+
     <application
         android:label="FitCpx Aluno"
         android:name="${applicationName}"

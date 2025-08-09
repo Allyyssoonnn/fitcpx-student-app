@@ -57,25 +57,26 @@ class WorkoutService {
     }
   }
 
-  Future<void> finishWorkout({SessionModel? session}) async {
+  Future<void> finishWorkout({
+    SessionModel? session,
+    int? durationSeconds,
+  }) async {
     try {
       final prefs = await SharedPreferences.getInstance();
-      final token = prefs.getString('token');
+      final id_client = prefs.getInt('id_client');
 
       final response = await _dio.post(
         '/appaluno/finishTreino',
-        data: {},
-        options: Options(headers: {'Authorization': token}),
+        data: {
+          'sessao': session,
+          "cod_aluno": id_client,
+          'tempo': durationSeconds,
+        },
       );
 
-      final data = response.data['treino']?['sessoes'];
-
-      // if (data is List) {
-      //   return data.map((session) => SessionModel.fromJson(session)).toList();
-      // }
+      response.data['treino']?['sessoes'];
 
       return;
-      //
     } on DioException catch (e) {
       final message = DioExceptions.fromDioError(e).toString();
       throw Exception(message);

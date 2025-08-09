@@ -1,4 +1,5 @@
 import 'package:fitcpxaluno/src/models/fitness_assessment_model.dart';
+import 'package:fitcpxaluno/src/screens/view_images_fitness_assessment.dart';
 import 'package:fitcpxaluno/src/services/fitness_assessment_service.dart';
 import 'package:fitcpxaluno/src/utils/exportPDF.dart';
 import 'package:fitcpxaluno/src/widgets/customScaffold.dart';
@@ -103,6 +104,7 @@ class _ViewFitnessAssessmentState extends State<ViewFitnessAssessment>
                   }
 
                   final assessment = snapshot.data!;
+                  print(assessment.images);
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
@@ -135,6 +137,25 @@ class _ViewFitnessAssessmentState extends State<ViewFitnessAssessment>
                           physics: const BouncingScrollPhysics(),
                           child: Column(
                             children: [
+                              const SizedBox(height: 12),
+                              OutlinedButton.icon(
+                                onPressed: () {
+                                  Navigator.of(
+                                    context,
+                                    rootNavigator: true,
+                                  ).push(
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          ViewImagesFitnessAssessment(
+                                            key: UniqueKey(),
+                                            images: assessment.images,
+                                          ),
+                                    ),
+                                  );
+                                },
+                                icon: Icon(Icons.camera_alt),
+                                label: Text('Imagens'),
+                              ),
                               Padding(
                                 padding: const EdgeInsets.symmetric(
                                   horizontal: 24,

@@ -18,6 +18,9 @@ class ContractPaymentModel {
   factory ContractPaymentModel.fromJson(Map<String, dynamic> json) {
     String formattedDueDate = '';
     try {
+      print(
+        'ID: ${json['asaas_id']} status: ${json['status_aluno_contrato_pagamento']}',
+      );
       final parsedDueDate = DateTime.parse(
         json['expiracao_aluno_contrato_pagamento'],
       );
