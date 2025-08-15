@@ -103,13 +103,13 @@ class _SettingsScreen extends State<SettingsScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(userName ?? 'userName'),
-                            Text(
-                              'Ver perfil',
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: Colors.grey,
-                              ),
-                            ),
+                            // Text(
+                            //   'Ver perfil',
+                            //   style: TextStyle(
+                            //     fontSize: 12,
+                            //     color: Colors.grey,
+                            //   ),
+                            // ),
                           ],
                         ),
                       ],
