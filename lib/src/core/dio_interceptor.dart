@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:fitcpxaluno/src/blocs/auth/auth_bloc.dart';
 import 'package:fitcpxaluno/src/blocs/auth/auth_event.dart';
+import 'package:fitcpxaluno/src/utils/variables.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class DioInterceptor extends Interceptor {
@@ -32,7 +33,7 @@ class DioInterceptor extends Interceptor {
         final refreshToken = prefs.getString('refreshToken');
 
         final refreshResponse = await Dio().post(
-          'https://api.fitcpx.com/appaluno/refreshToken',
+          '${Variables.url}/appaluno/refreshToken',
           data: {'refreshToken': refreshToken},
         );
 
