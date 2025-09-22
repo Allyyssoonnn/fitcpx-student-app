@@ -64,9 +64,7 @@ class _LoginScreenState extends State<LoginScreen>
     context.read<AuthBloc>().add(
       AuthLoggedIn(
         email: _email,
-        // email: 'th.aisleao@hotmail.com',
         password: _password,
-        // password: '123',
         context: context,
       ),
     );

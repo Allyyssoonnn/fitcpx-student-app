@@ -2,14 +2,8 @@ import 'package:fitcpxaluno/src/blocs/auth/auth_bloc.dart';
 import 'package:fitcpxaluno/src/blocs/auth/auth_state.dart';
 import 'package:fitcpxaluno/src/blocs/contract/contract_bloc.dart';
 import 'package:fitcpxaluno/src/blocs/contract/contract_event.dart';
-import 'package:fitcpxaluno/src/blocs/exercise/exercise_bloc.dart';
-import 'package:fitcpxaluno/src/blocs/exercise/exercise_event.dart';
 import 'package:fitcpxaluno/src/blocs/fitnessAssessment/fitness_assessment_bloc.dart';
 import 'package:fitcpxaluno/src/blocs/fitnessAssessment/fitness_assessment_event.dart';
-import 'package:fitcpxaluno/src/blocs/joint/joint_bloc.dart';
-import 'package:fitcpxaluno/src/blocs/joint/joint_event.dart';
-import 'package:fitcpxaluno/src/blocs/muscle/muscle_bloc.dart';
-import 'package:fitcpxaluno/src/blocs/muscle/muscle_event.dart';
 import 'package:fitcpxaluno/src/blocs/session/session_bloc.dart';
 import 'package:fitcpxaluno/src/blocs/session/session_event.dart';
 import 'package:fitcpxaluno/src/blocs/session_timer/sessionTimer.dart';
@@ -18,10 +12,7 @@ import 'package:fitcpxaluno/src/blocs/workout/workout_event.dart';
 import 'package:fitcpxaluno/src/core/dio_client.dart';
 import 'package:fitcpxaluno/src/routes/app_routes.dart';
 import 'package:fitcpxaluno/src/services/contract_service.dart';
-import 'package:fitcpxaluno/src/services/exercises_service.dart';
 import 'package:fitcpxaluno/src/services/fitness_assessment_service.dart';
-import 'package:fitcpxaluno/src/services/joints_service.dart';
-import 'package:fitcpxaluno/src/services/muscle_service.dart';
 import 'package:fitcpxaluno/src/services/user_service.dart';
 import 'package:fitcpxaluno/src/services/workout_service.dart';
 import 'package:fitcpxaluno/src/views/auth/login.dart';
@@ -75,15 +66,6 @@ class _MyAppState extends State<MyApp> {
     return MultiBlocProvider(
       key: appKey,
       providers: [
-        BlocProvider(
-          create: (_) => ExerciseBloc(ExercisesService())..add(LoadExercises()),
-        ),
-        BlocProvider(
-          create: (_) => JointBloc(JointsService())..add(LoadJoint()),
-        ),
-        BlocProvider(
-          create: (_) => MuscleBloc(MusclesService())..add(LoadMuscle()),
-        ),
         BlocProvider(
           create: (_) => WorkoutBloc(WorkoutService())..add(LoadWorkouts()),
         ),

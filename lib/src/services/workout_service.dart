@@ -15,42 +15,11 @@ class WorkoutService {
       _dio.options.headers['Authorization'] = token;
       _dio.options.headers['Content-Type'] = 'application/json';
 
-      final response = await _dio.post(
-        '/treino/getTreinos',
-        data: {"cod_aluno": id_client, 'activeOnly': true},
-        // options: Options(headers: {'Authorization': token}),
-      );
+      final response = await _dio.get('/mobile/getWorkouts');
 
-      final data = response.data['treinos'];
+      final data = response.data;
 
       return data;
-    } on DioException catch (e) {
-      final message = DioExceptions.fromDioError(e).toString();
-      throw Exception(message);
-    }
-  }
-
-  Future<List<SessionModel>> getSessions({int? id_workout}) async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      final token = prefs.getString('token');
-
-      _dio.options.headers['Authorization'] = token;
-      _dio.options.headers['Content-Type'] = 'application/json';
-
-      final response = await _dio.post(
-        '/treino/getTreino',
-        data: {"cod_treino": id_workout},
-        // options: Options(headers: {'Authorization': token}),
-      );
-
-      final data = response.data['treino']?['sessoes'];
-
-      if (data is List) {
-        return data.map((session) => SessionModel.fromJson(session)).toList();
-      }
-
-      return [];
     } on DioException catch (e) {
       final message = DioExceptions.fromDioError(e).toString();
       throw Exception(message);
@@ -66,7 +35,7 @@ class WorkoutService {
       final id_client = prefs.getInt('id_client');
 
       final response = await _dio.post(
-        '/appaluno/finishTreino',
+        '/mobile/finishTreino',
         data: {
           'sessao': session,
           "cod_aluno": id_client,
@@ -74,7 +43,7 @@ class WorkoutService {
         },
       );
 
-      response.data['treino']?['sessoes'];
+      response.data;
 
       return;
     } on DioException catch (e) {

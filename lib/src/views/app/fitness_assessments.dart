@@ -30,7 +30,7 @@ class FitnessAssessmentsScreen extends StatelessWidget {
                 return Center(child: Text(state.message));
               } else if (state is FitnessAssessmentLoaded) {
                 if (state.fitnessAssessments.isEmpty) {
-                  return const Center(child: Text('Nenhum treino encontrado'));
+                  return const Center(child: Text('Nenhuma avaliação encontrada'));
                 }
 
                 return Expanded(

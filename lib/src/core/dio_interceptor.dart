@@ -33,7 +33,7 @@ class DioInterceptor extends Interceptor {
         final refreshToken = prefs.getString('refreshToken');
 
         final refreshResponse = await Dio().post(
-          '${Variables.url}/appaluno/refreshToken',
+          '${Variables.url}/mobile/refreshToken',
           data: {'refreshToken': refreshToken},
         );
 

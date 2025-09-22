@@ -4,6 +4,7 @@ import 'package:fitcpxaluno/src/screens/my_contracts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -16,11 +17,20 @@ class SettingsScreen extends StatefulWidget {
 class _SettingsScreen extends State<SettingsScreen> {
   String? userName;
   String? userImg;
+  String _version = "";
 
   @override
   void initState() {
     super.initState();
     _loadUser();
+    _loadVersion();
+  }
+
+  Future<void> _loadVersion() async {
+    final info = await PackageInfo.fromPlatform();
+    setState(() {
+      _version = "${info.version}+${info.buildNumber}";
+    });
   }
 
   Future<void> _loadUser() async {
@@ -148,20 +158,25 @@ class _SettingsScreen extends State<SettingsScreen> {
               ),
               Container(
                 width: double.infinity,
-                child: OutlinedButton(
-                  onPressed: () =>
-                      context.read<AuthBloc>().add(AuthLoggedOut()),
-                  style: OutlinedButton.styleFrom(
-                    side: const BorderSide(color: Colors.red, width: 1.5),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+                child: Column(
+                  children: [
+                    OutlinedButton(
+                      onPressed: () =>
+                          context.read<AuthBloc>().add(AuthLoggedOut()),
+                      style: OutlinedButton.styleFrom(
+                        side: const BorderSide(color: Colors.red, width: 1.5),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        foregroundColor: Colors.red,
+                      ),
+                      child: const Text(
+                        'Sair da conta',
+                        style: TextStyle(fontSize: 16, color: Colors.red),
+                      ),
                     ),
-                    foregroundColor: Colors.red,
-                  ),
-                  child: const Text(
-                    'Sair da conta',
-                    style: TextStyle(fontSize: 16, color: Colors.red),
-                  ),
+                    Text("Version: $_version", style: TextStyle(fontSize: 9)),
+                  ],
                 ),
               ),
             ],

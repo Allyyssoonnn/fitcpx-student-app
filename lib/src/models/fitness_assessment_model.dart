@@ -146,25 +146,25 @@ class FitnessAssessmentModel {
       date: formattedDate,
       weight: json['peso']?.toString() ?? '',
       height: json['altura']?.toString() ?? '',
-      images: (json['images'] as List<dynamic>? ?? [])
+      images: (json['imagem'] as List<dynamic>? ?? [])
           .map((item) => item['url_imagem'] as String)
           .toList(),
 
-      bodyPercFat: _toDouble(json['gordura']),
+      bodyPercFat: _toDouble(json['result']?['compositionPercentage']?['gordura']),
       musclePerMass: _toDouble(
-        json['compositionPercentage']?['massa_muscular'],
+        json['result']?['compositionPercentage']?['massa_muscular'],
       ),
-      leanPercMass: _toDouble(json['compositionPercentage']?['massa_magra']),
-      bonePercMass: _toDouble(json['compositionPercentage']?['massa_ossea']),
+      leanPercMass: _toDouble(json['result']?['compositionPercentage']?['massa_magra']),
+      bonePercMass: _toDouble(json['result']?['compositionPercentage']?['massa_ossea']),
       residualPercMass: _toDouble(
-        json['compositionPercentage']?['massa_residual'],
+        json['result']?['compositionPercentage']?['massa_residual'],
       ),
 
-      bodyFat: _toDouble(json['compositionWeight']?['gordura']),
-      muscleMass: _toDouble(json['compositionWeight']?['massa_muscular']),
-      leanMass: _toDouble(json['compositionWeight']?['massa_magra']),
-      boneMass: _toDouble(json['compositionWeight']?['massa_ossea']),
-      residualMass: _toDouble(json['compositionWeight']?['massa_residual']),
+      bodyFat: _toDouble(json['result']?['compositionWeight']?['gordura']),
+      muscleMass: _toDouble(json['result']?['compositionWeight']?['massa_muscular']),
+      leanMass: _toDouble(json['result']?['compositionWeight']?['massa_magra']),
+      boneMass: _toDouble(json['result']?['compositionWeight']?['massa_ossea']),
+      residualMass: _toDouble(json['result']?['compositionWeight']?['massa_residual']),
 
       trainer: json['usuario']?['nome_usuario']?.toString() ?? '',
       client: json['aluno']?['nome_aluno']?.toString() ?? '',

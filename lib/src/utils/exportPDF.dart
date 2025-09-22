@@ -1,4 +1,5 @@
 import 'package:fitcpxaluno/src/models/fitness_assessment_model.dart';
+import 'package:fitcpxaluno/src/utils/variables.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:pdf/pdf.dart';
@@ -7,7 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 Future<String> carregarHtmlDoServidor() async {
   final response = await http.get(
-    Uri.parse('https://api.fitcpx.com/fitnessassessmentpdf'),
+    Uri.parse('${Variables.url}/physicalAssessments/fitnessassessmentpdf'),
   );
 
   if (response.statusCode == 200) {

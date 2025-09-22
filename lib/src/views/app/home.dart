@@ -21,30 +21,25 @@ class HomeScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Flexible(
-                flex: 1,
                 child: Column(
                   children: [
-                    Image.asset('assets/images/icon.png', height: 60),
                     Text('Bem-vindo de volta'),
                     Divider(),
-                  ],
-                ),
-              ),
-              Flexible(
-                flex: 4,
-                child: Column(
-                  children: [
-                    WelcomeButton(
-                      icon: Icons.fitness_center,
-                      buttonText: 'Meus treinos',
-                      buttonDescription: 'Realizar treino de hoje',
-                      onTap: () => context.go('/workouts'),
-                    ),
-                    WelcomeButton(
-                      icon: Icons.add_chart,
-                      buttonText: 'Minhas avaliações',
-                      buttonDescription: 'Conferir sua evolução',
-                      onTap: () => context.go('/fitness_assessments'),
+                    Column(
+                      children: [
+                        WelcomeButton(
+                          icon: Icons.fitness_center,
+                          buttonText: 'Meus treinos',
+                          buttonDescription: 'Realizar treino de hoje',
+                          onTap: () => context.go('/workouts'),
+                        ),
+                        WelcomeButton(
+                          icon: Icons.add_chart,
+                          buttonText: 'Minhas avaliações',
+                          buttonDescription: 'Conferir sua evolução',
+                          onTap: () => context.go('/fitness_assessments'),
+                        ),
+                      ],
                     ),
                   ],
                 ),

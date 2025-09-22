@@ -55,7 +55,7 @@ class MyContracts extends StatelessWidget {
                                   MaterialPageRoute(
                                     builder: (context) => ViewPaymentContract(
                                       key: UniqueKey(),
-                                      contractId: contract.id,
+                                      payments: contract.payments ?? [],
                                     ),
                                   ),
                                 ),

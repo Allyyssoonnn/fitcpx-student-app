@@ -49,8 +49,8 @@ class WorkoutsScreen extends StatelessWidget {
                               Navigator.of(context, rootNavigator: true).push(
                                 MaterialPageRoute(
                                   builder: (context) => SessionScreen(
-                                    idWorkout: workout.id,
                                     nameWorkout: workout.name,
+                                    sessions: workout.sessions ?? [],
                                   ),
                                 ),
                               ),

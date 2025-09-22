@@ -104,7 +104,6 @@ class _ViewFitnessAssessmentState extends State<ViewFitnessAssessment>
                   }
 
                   final assessment = snapshot.data!;
-                  print(assessment.images);
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [

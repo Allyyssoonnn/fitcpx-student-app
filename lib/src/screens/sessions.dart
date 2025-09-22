@@ -3,21 +3,15 @@ import 'package:fitcpxaluno/src/blocs/session/session_event.dart';
 import 'package:fitcpxaluno/src/blocs/session_timer/sessionTimer.dart';
 import 'package:fitcpxaluno/src/models/session_model.dart';
 import 'package:fitcpxaluno/src/screens/session_exercises.dart';
-import 'package:fitcpxaluno/src/services/workout_service.dart';
 import 'package:fitcpxaluno/src/widgets/customScaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SessionScreen extends StatelessWidget {
-  final int idWorkout;
   final String nameWorkout;
-  final _WorkoutService = WorkoutService();
+  final List<SessionModel> sessions;
 
-  SessionScreen({required this.idWorkout, required this.nameWorkout});
-
-  Future<List<SessionModel>> _getSessions() async {
-    return await _WorkoutService.getSessions(id_workout: idWorkout);
-  }
+  SessionScreen({required this.nameWorkout, required this.sessions});
 
   Future<void> _onStartWorkout(
     BuildContext context,
@@ -76,23 +70,7 @@ class SessionScreen extends StatelessWidget {
             ),
             Text('Sessões'),
             Divider(),
-            FutureBuilder(
-              future: _getSessions(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-
-                if (snapshot.hasError) {
-                  return Center(child: Text('Erro ao carregar os dados'));
-                }
-
-                final sessions = snapshot.data;
-                if (sessions!.isEmpty) {
-                  return Center(child: Text('Nenhuma sessão encontrada'));
-                }
-
-                return Expanded(
+            Expanded(
                   child: ListView.builder(
                     physics: BouncingScrollPhysics(),
                     itemCount: sessions.length,
@@ -164,9 +142,7 @@ class SessionScreen extends StatelessWidget {
                       );
                     },
                   ),
-                );
-              },
-            ),
+                )
           ],
         ),
       ),

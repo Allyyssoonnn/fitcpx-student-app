@@ -1,3 +1,4 @@
+import 'package:fitcpxaluno/src/models/contract_payment_model.dart';
 import 'package:intl/intl.dart';
 
 class ContractModel {
@@ -6,10 +7,12 @@ class ContractModel {
   final String? status;
   final String? date;
   final String? dueDate;
+  final List<ContractPaymentModel>? payments;
 
   ContractModel({
     required this.id,
     required this.description,
+    this.payments,
     this.status,
     this.date,
     this.dueDate,
@@ -34,6 +37,9 @@ class ContractModel {
       status: json['status_aluno_contrato'] ?? '',
       date: formattedDate,
       dueDate: formattedDueDate,
+      payments: (json['pagamentos'] as List<dynamic>?)
+          ?.map((e) => ContractPaymentModel.fromJson(e))
+          .toList(),
     );
   }
 }

@@ -5,21 +5,15 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ViewPaymentContract extends StatefulWidget {
-  final int contractId;
+  final List<ContractPaymentModel> payments;
 
-  const ViewPaymentContract({super.key, required this.contractId});
+  const ViewPaymentContract({super.key, required this.payments});
 
   @override
   State<ViewPaymentContract> createState() => _viewPaymentContractState();
 }
 
 class _viewPaymentContractState extends State<ViewPaymentContract> {
-  final _contractService = ContractService();
-
-  Future<List<ContractPaymentModel>> _onLoadPayments() async {
-    return await _contractService.getContract(contractId: widget.contractId);
-  }
-
   Future<void> _launchUrl(String url) async {
     if (url != null && await canLaunchUrl(Uri.parse(url))) {
       await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
@@ -46,142 +40,123 @@ class _viewPaymentContractState extends State<ViewPaymentContract> {
           children: [
             Text('Pagamentos'),
             Divider(),
-            FutureBuilder(
-              future: _onLoadPayments(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
-                }
+            Expanded(
+              child: ListView.builder(
+                physics: BouncingScrollPhysics(),
+                itemCount: widget.payments.length,
+                itemBuilder: (context, index) {
+                  final payment = widget.payments[index];
 
-                if (snapshot.hasError) {
-                  return Center(child: Text('Erro ao carregar os dados'));
-                }
-
-                final payments = snapshot.data;
-
-                if (payments!.isEmpty) {
-                  return Center(child: Text('Nenhum pagamento encontrado'));
-                }
-
-                return Expanded(
-                  child: ListView.builder(
-                    physics: BouncingScrollPhysics(),
-                    itemCount: payments.length,
-                    itemBuilder: (context, index) {
-                      final payment = payments[index];
-
-                      return Card(
-                        margin: const EdgeInsets.symmetric(vertical: 8),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        elevation: 4,
-                        shadowColor: Colors.black.withOpacity(0.1),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 12,
+                  return Card(
+                    margin: const EdgeInsets.symmetric(vertical: 8),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    elevation: 4,
+                    shadowColor: Colors.black.withOpacity(0.1),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 12,
+                      ),
+                      child: Row(
+                        children: [
+                          Container(
+                            decoration: BoxDecoration(
+                              color: Theme.of(
+                                context,
+                              ).colorScheme.primary.withOpacity(0.1),
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(
+                                color:
+                                    payment.status == 'confirmed' ||
+                                        payment.status == 'paid' ||
+                                        payment.status == 'succeeded'
+                                    ? Colors.green
+                                    : Colors.orange,
+                                width: 1.5,
+                              ),
+                            ),
+                            padding: const EdgeInsets.all(12),
+                            child: Icon(
+                              payment.status == 'confirmed' ||
+                                      payment.status == 'paid' ||
+                                      payment.status == 'succeeded'
+                                  ? Icons.check_circle
+                                  : Icons.pending,
+                              // size: 30,
+                              size: 15,
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
                           ),
-                          child: Row(
-                            children: [
-                              Container(
-                                decoration: BoxDecoration(
-                                  color: Theme.of(
-                                    context,
-                                  ).colorScheme.primary.withOpacity(0.1),
-                                  borderRadius: BorderRadius.circular(12),
-                                  border: Border.all(
-                                    color:
-                                        payment.status == 'confirmed' ||
-                                            payment.status == 'paid' ||
-                                            payment.status == 'succeeded'
-                                        ? Colors.green
-                                        : Colors.orange,
-                                    width: 1.5,
+                          const SizedBox(width: 16),
+                          Expanded(
+                            child: Column(
+                              children: [
+                                Text(
+                                  payment.dueDate,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    // fontSize: 18,
+                                    fontSize: 14,
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.onSurface,
                                   ),
                                 ),
-                                padding: const EdgeInsets.all(12),
-                                child: Icon(
-                                  payment.status == 'confirmed' ||
-                                          payment.status == 'paid' ||
-                                          payment.status == 'succeeded'
-                                      ? Icons.check_circle
-                                      : Icons.pending,
-                                  // size: 30,
-                                  size: 15,
-                                  color: Theme.of(context).colorScheme.primary,
+                                const SizedBox(height: 4),
+                                Text(
+                                  'Valor: R\$ ${payment.amount.toStringAsFixed(2)}',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onSurface
+                                        .withOpacity(0.6),
+                                  ),
                                 ),
-                              ),
-                              const SizedBox(width: 16),
-                              Expanded(
-                                child: Column(
-                                  children: [
-                                    Text(
-                                      payment.dueDate,
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w600,
-                                        // fontSize: 18,
-                                        fontSize: 14,
-                                        color: Theme.of(
-                                          context,
-                                        ).colorScheme.onSurface,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 4),
-                                    Text(
-                                      'Valor: R\$ ${payment.amount.toStringAsFixed(2)}',
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .onSurface
-                                            .withOpacity(0.6),
-                                      ),
-                                    ),
-                                    const SizedBox(height: 4),
-                                    if (payment.status != 'confirmed' &&
-                                        payment.status != 'paid' &&
-                                        payment.status != 'succeeded')
-                                      Container(
-                                        width: double.infinity,
-                                        child: OutlinedButton(
-                                          style: OutlinedButton.styleFrom(
-                                            side: const BorderSide(
-                                              color: Colors.green,
-                                              width: 1.5,
-                                            ),
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(12),
-                                            ),
-                                            foregroundColor: Colors.green,
-                                          ),
-                                          onPressed: () =>
-                                              _launchUrl(payment.invoiceUrl),
-                                          child: Text('Pagar agora'),
+                                const SizedBox(height: 4),
+                                if (payment.status != 'confirmed' &&
+                                    payment.status != 'paid' &&
+                                    payment.status != 'succeeded')
+                                  Container(
+                                    width: double.infinity,
+                                    child: OutlinedButton(
+                                      style: OutlinedButton.styleFrom(
+                                        side: const BorderSide(
+                                          color: Colors.green,
+                                          width: 1.5,
                                         ),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(12),
+                                        ),
+                                        foregroundColor: Colors.green,
                                       ),
-                                    Text(
-                                      'ID: ${payment.id}',
-                                      style: TextStyle(
-                                        fontSize: 10,
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .onSurface
-                                            .withOpacity(0.6),
-                                      ),
+                                      onPressed: () =>
+                                          _launchUrl(payment.invoiceUrl),
+                                      child: Text('Pagar agora'),
                                     ),
-                                  ],
+                                  ),
+                                Text(
+                                  'ID: ${payment.id}',
+                                  style: TextStyle(
+                                    fontSize: 10,
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onSurface
+                                        .withOpacity(0.6),
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
-                      );
-                    },
-                  ),
-                );
-              },
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              ),
             ),
           ],
         ),
