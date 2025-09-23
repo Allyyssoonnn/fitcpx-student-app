@@ -5,16 +5,19 @@ import 'package:fitcpxaluno/src/utils/variables.dart';
 import 'package:flutter/material.dart';
 
 class UserService {
-  final Dio _dio = Dio(
-    BaseOptions(
-      baseUrl: Variables.url,
-      connectTimeout: const Duration(seconds: 10),
-      receiveTimeout: const Duration(seconds: 10),
-      contentType: 'application/json',
-    ),
-  )..interceptors.add(DioInterceptor())..interceptors.add(
-    LogInterceptor(responseBody: true, requestBody: true),
-  );
+  final Dio _dio =
+      Dio(
+          BaseOptions(
+            baseUrl: Variables.url,
+            connectTimeout: const Duration(seconds: 10),
+            receiveTimeout: const Duration(seconds: 10),
+            contentType: 'application/json',
+          ),
+        )
+        ..interceptors.add(DioInterceptor())
+        ..interceptors.add(
+          LogInterceptor(responseBody: true, requestBody: true),
+        );
 
   Future<UserModel> login(
     String email,
@@ -41,20 +44,11 @@ class UserService {
       );
     } on DioException catch (e) {
       final message = DioExceptions.fromDioError(e).toString();
-      showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Text("Erro"),
-            content: Text(e.response?.data['message'] ?? e.message),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: Text("OK"),
-              ),
-            ],
-          );
-        },
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.redAccent,
+          content: Text(e.response?.data['message'] ?? e.message ?? message),
+        ),
       );
       throw Exception('Dio error: $message | URL: ${e.requestOptions.uri}');
     }
