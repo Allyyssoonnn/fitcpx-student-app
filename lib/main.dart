@@ -1,3 +1,5 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:fitcpxaluno/src/blocs/auth/auth_bloc.dart';
 import 'package:fitcpxaluno/src/blocs/auth/auth_state.dart';
 import 'package:fitcpxaluno/src/blocs/contract/contract_bloc.dart';
@@ -19,8 +21,42 @@ import 'package:fitcpxaluno/src/views/auth/login.dart';
 import 'package:flutter/material.dart';
 // import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
-void main() {
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
+
+void _showNotification(RemoteMessage message) {
+  final notification = message.notification;
+  if (notification == null) return;
+
+  flutterLocalNotificationsPlugin.show(
+    notification.hashCode,
+    notification.title,
+    notification.body,
+    const NotificationDetails(
+      android: AndroidNotificationDetails(
+        'default_channel',
+        'Default',
+        importance: Importance.max,
+        priority: Priority.high,
+      ),
+      iOS: DarwinNotificationDetails(),
+    ),
+  );
+}
+
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  await Firebase.initializeApp();
+  print("Mensagem recebida em background: ${message.messageId}");
+}
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+
   runApp(const MyApp());
 }
 
@@ -41,6 +77,30 @@ class _MyAppState extends State<MyApp> {
     authBloc = AuthBloc(UserService());
     DioClient.getInstance(authBloc);
     authBloc.checkLoginStatus();
+    _initNotifications();
+  }
+
+  void _initNotifications() async {
+    // Solicitar permissão no iOS
+    NotificationSettings settings = await FirebaseMessaging.instance
+        .requestPermission(alert: true, badge: true, sound: true);
+    print('Permissão: ${settings.authorizationStatus}');
+
+    // Obter token FCM do dispositivo
+    String? token = await FirebaseMessaging.instance.getToken();
+    print("Token FCM: $token");
+
+    // Quando app está em foreground
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      print("Mensagem recebida em foreground: ${message.notification?.title}");
+      // aqui você pode usar flutter_local_notifications para exibir
+      _showNotification(message);
+    });
+
+    // Quando usuário clica na notificação
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      print("Usuário clicou na notificação: ${message.data}");
+    });
   }
 
   void resetApp() {
