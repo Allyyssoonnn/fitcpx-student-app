@@ -40,6 +40,7 @@ void _showNotification(RemoteMessage message) {
         'Default',
         importance: Importance.max,
         priority: Priority.high,
+        icon: 'ic_launcher',
       ),
       iOS: DarwinNotificationDetails(),
     ),
@@ -95,6 +96,10 @@ class _MyAppState extends State<MyApp> {
       print("Mensagem recebida em foreground: ${message.notification?.title}");
       // aqui você pode usar flutter_local_notifications para exibir
       _showNotification(message);
+    });
+
+    FirebaseMessaging.instance.onTokenRefresh.listen((newToken) async {
+      print("Token FCM atualizado: $newToken");
     });
 
     // Quando usuário clica na notificação

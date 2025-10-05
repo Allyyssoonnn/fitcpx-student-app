@@ -22,12 +22,19 @@ class UserService {
   Future<UserModel> login(
     String email,
     String senha,
+    String deviceToken,
+    String platform,
     BuildContext context,
   ) async {
     try {
       final response = await _dio.post(
         '/mobile/login',
-        data: {'login': email, 'password': senha},
+        data: {
+          'login': email,
+          'password': senha,
+          'deviceToken': deviceToken,
+          'platform': platform,
+        },
       );
 
       final data = response.data;

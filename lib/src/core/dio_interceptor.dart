@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:fitcpxaluno/src/blocs/auth/auth_bloc.dart';
 import 'package:fitcpxaluno/src/blocs/auth/auth_event.dart';
 import 'package:fitcpxaluno/src/utils/variables.dart';
@@ -31,10 +34,15 @@ class DioInterceptor extends Interceptor {
       try {
         final prefs = await SharedPreferences.getInstance();
         final refreshToken = prefs.getString('refreshToken');
+        final deviceToken = await FirebaseMessaging.instance.getToken();
 
         final refreshResponse = await Dio().post(
           '${Variables.url}/mobile/refreshToken',
-          data: {'refreshToken': refreshToken},
+          data: {
+            'refreshToken': refreshToken,
+            'deviceToken': deviceToken,
+            'platform': Platform.isIOS ? "IOS" : "Android",
+          },
         );
 
         final newToken = refreshResponse.data['token'];

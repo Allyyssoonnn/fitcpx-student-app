@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "472252950297",
+    "project_id": "fitcpx-e53b3",
+    "storage_bucket": "fitcpx-e53b3.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:472252950297:android:6adeed7e04c1b575ccc788",
+        "android_client_info": {
+          "package_name": "com.devcomplexlab.alunofitcpx"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBVv9E2JhrGHPixCiBi_cLedp4hNb_zFjw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

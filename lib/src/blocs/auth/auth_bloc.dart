@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:fitcpxaluno/src/blocs/auth/auth_event.dart';
 import 'package:fitcpxaluno/src/blocs/auth/auth_state.dart';
 import 'package:fitcpxaluno/src/core/dio_exceptions.dart';
@@ -12,9 +15,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   AuthBloc(this.userService) : super(AuthUnAuthenticated()) {
     on<AuthLoggedIn>((event, emit) async {
       try {
+        final deviceToken = await FirebaseMessaging.instance.getToken();
+
         final data = await userService.login(
           event.email,
           event.password,
+          deviceToken ?? "",
+          Platform.isIOS ? "IOS" : "Android",
           event.context,
         );
 
