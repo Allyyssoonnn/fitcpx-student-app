@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:fitcpxaluno/src/blocs/auth/auth_bloc.dart';
 import 'package:fitcpxaluno/src/blocs/auth/auth_event.dart';
+import 'package:fitcpxaluno/src/services/user_service.dart';
 import 'package:fitcpxaluno/src/widgets/customScaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -19,12 +20,19 @@ class _LoginScreenState extends State<LoginScreen>
   late final AnimationController _controller;
   late final Animation<Offset> _slideAnimation;
   late final Animation<double> _fadeAnimation;
+  late final UserService _userService = UserService();
 
+  String _name = '';
   String _email = '';
   String _password = '';
 
   bool _isExisting = false;
   Timer? _debounce;
+
+  bool _accountVerified = false;
+  bool _firstAccess = false;
+
+  bool _blockRecoveryRepeat = false;
 
   @override
   void initState() {
@@ -61,11 +69,45 @@ class _LoginScreenState extends State<LoginScreen>
   }
 
   Future<void> _onLogin() async {
-    context.read<AuthBloc>().add(
-      AuthLoggedIn(
-        email: _email,
-        password: _password,
-        context: context,
+    if (_accountVerified) {
+      context.read<AuthBloc>().add(
+        AuthLoggedIn(
+          firstAccess: _firstAccess,
+          email: _email,
+          password: _password,
+          context: context,
+        ),
+      );
+    } else {
+      Map<String, dynamic> response = await _userService.verifyAccount(
+        _email,
+        context,
+      );
+
+      if (response['name'].isNotEmpty) {
+        setState(() {
+          _name = response['name'];
+          _accountVerified = true;
+          _firstAccess = response['firstAccess'];
+        });
+      }
+    }
+  }
+
+  Future<void> _recoveryPassword() async {
+    await _userService.recoveryPassword(_email, context);
+    setState(() {
+      _blockRecoveryRepeat = true;
+    });
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        backgroundColor: Colors.amberAccent,
+        content: Text(
+          "Instruções para recuperar sua conta foram enviadas para seu E-mail",
+          style: TextStyle(color: Colors.black),
+          textAlign: TextAlign.center,
+        ),
       ),
     );
   }
@@ -156,53 +198,72 @@ class _LoginScreenState extends State<LoginScreen>
                                     fontWeight: FontWeight.w600,
                                   ),
                                 ),
-                                const SizedBox(height: 24),
-                                TextField(
-                                  decoration: InputDecoration(
-                                    prefixIcon: const Icon(
-                                      Icons.email_outlined,
+                                if (!_accountVerified)
+                                  const SizedBox(height: 24),
+                                if (!_accountVerified)
+                                  TextField(
+                                    decoration: InputDecoration(
+                                      prefixIcon: const Icon(
+                                        Icons.email_outlined,
+                                      ),
+                                      hintText: 'Email ou CPF',
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(14),
+                                      ),
                                     ),
-                                    hintText: 'Email ou CPF',
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(14),
-                                    ),
+                                    onChanged: (value) {
+                                      if (_debounce?.isActive ?? false)
+                                        _debounce!.cancel();
+                                      _debounce = Timer(
+                                        const Duration(milliseconds: 300),
+                                        () {
+                                          setState(() {
+                                            _email = value;
+                                          });
+                                        },
+                                      );
+                                    },
                                   ),
-                                  onChanged: (value) {
-                                    if (_debounce?.isActive ?? false)
-                                      _debounce!.cancel();
-                                    _debounce = Timer(
-                                      const Duration(milliseconds: 300),
-                                      () {
-                                        setState(() {
-                                          _email = value;
-                                        });
-                                      },
-                                    );
-                                  },
-                                ),
                                 const SizedBox(height: 16),
-                                TextField(
-                                  obscureText: true,
-                                  decoration: InputDecoration(
-                                    prefixIcon: const Icon(Icons.lock_outline),
-                                    hintText: 'Senha',
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(14),
-                                    ),
+                                if (_accountVerified)
+                                  Text(
+                                    "Bem-vindo(a) $_name",
+                                    textAlign: TextAlign.center,
                                   ),
-                                  onChanged: (value) {
-                                    if (_debounce?.isActive ?? false)
-                                      _debounce!.cancel();
-                                    _debounce = Timer(
-                                      const Duration(milliseconds: 300),
-                                      () {
-                                        setState(() {
-                                          _password = value;
-                                        });
-                                      },
-                                    );
-                                  },
-                                ),
+                                if (_accountVerified)
+                                  const SizedBox(height: 24),
+                                if (_firstAccess)
+                                  const Text(
+                                    "Esse é seu primeiro acesso, crie sua senha.",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(color: Colors.green),
+                                  ),
+                                if (_firstAccess) const SizedBox(height: 10),
+                                if (_accountVerified)
+                                  TextField(
+                                    obscureText: true,
+                                    decoration: InputDecoration(
+                                      prefixIcon: const Icon(
+                                        Icons.lock_outline,
+                                      ),
+                                      hintText: 'Senha',
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(14),
+                                      ),
+                                    ),
+                                    onChanged: (value) {
+                                      if (_debounce?.isActive ?? false)
+                                        _debounce!.cancel();
+                                      _debounce = Timer(
+                                        const Duration(milliseconds: 300),
+                                        () {
+                                          setState(() {
+                                            _password = value;
+                                          });
+                                        },
+                                      );
+                                    },
+                                  ),
                                 const SizedBox(height: 24),
                                 ElevatedButton(
                                   style: ElevatedButton.styleFrom(
@@ -226,6 +287,44 @@ class _LoginScreenState extends State<LoginScreen>
                                 ),
                               ],
                             ),
+                            if (_accountVerified && !_blockRecoveryRepeat)
+                              TextButton(
+                                onPressed: _recoveryPassword,
+                                style: TextButton.styleFrom(
+                                  foregroundColor: Colors.black54,
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 8,
+                                  ),
+                                  textStyle: const TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w500,
+                                    decoration: TextDecoration.underline,
+                                  ),
+                                ),
+                                child: const Text("Esqueci minha senha"),
+                              ),
+                            if (_accountVerified)
+                              TextButton(
+                                onPressed: () {
+                                  setState(() {
+                                    _name = "";
+                                    _accountVerified = false;
+                                    _firstAccess = false;
+                                  });
+                                },
+                                style: TextButton.styleFrom(
+                                  foregroundColor: Colors.black54,
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 8,
+                                  ),
+                                  textStyle: const TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w500,
+                                    decoration: TextDecoration.underline,
+                                  ),
+                                ),
+                                child: const Text("Voltar"),
+                              ),
 
                             const SizedBox(height: 12),
 

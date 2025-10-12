@@ -88,8 +88,8 @@ class _MyAppState extends State<MyApp> {
     print('Permissão: ${settings.authorizationStatus}');
 
     // Obter token FCM do dispositivo
-    String? token = await FirebaseMessaging.instance.getToken();
-    print("Token FCM: $token");
+    // String? token = await FirebaseMessaging.instance.getToken();
+    // print("Token FCM: $token");
 
     // Quando app está em foreground
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {

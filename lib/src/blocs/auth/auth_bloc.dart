@@ -15,9 +15,16 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   AuthBloc(this.userService) : super(AuthUnAuthenticated()) {
     on<AuthLoggedIn>((event, emit) async {
       try {
-        final deviceToken = await FirebaseMessaging.instance.getToken();
+        String? deviceToken;
+
+        try {
+          deviceToken = await FirebaseMessaging.instance.getToken();
+        } catch (e) {
+          deviceToken = ''; // garante que não quebre o login
+        }
 
         final data = await userService.login(
+          event.firstAccess,
           event.email,
           event.password,
           deviceToken ?? "",

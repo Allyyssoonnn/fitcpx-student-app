@@ -19,7 +19,58 @@ class UserService {
           LogInterceptor(responseBody: true, requestBody: true),
         );
 
+  Future<void> recoveryPassword(String email, BuildContext context) async {
+    try {
+      await _dio.post('/mobile/recoveryPassword', data: {'login': email});
+      return;
+    } on DioException catch (e) {
+      final message = DioExceptions.fromDioError(e).toString();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.redAccent,
+          content: Text(
+            e.response?.data['message'] ?? e.message ?? message,
+            textAlign: TextAlign.center,
+          ),
+        ),
+      );
+      throw Exception('Dio error: $message | URL: ${e.requestOptions.uri}');
+    }
+  }
+
+  Future<Map<String, dynamic>> verifyAccount(
+    String email,
+    BuildContext context,
+  ) async {
+    try {
+      final response = await _dio.post(
+        '/mobile/verifyAccount',
+        data: {'login': email},
+      );
+
+      final data = response.data;
+
+      String name = data['name'] ?? "";
+      bool firstAccess = data['firstAccess'] ?? false;
+
+      return {'firstAccess': firstAccess, 'name': name};
+    } on DioException catch (e) {
+      final message = DioExceptions.fromDioError(e).toString();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.redAccent,
+          content: Text(
+            e.response?.data['message'] ?? e.message ?? message,
+            textAlign: TextAlign.center,
+          ),
+        ),
+      );
+      throw Exception('Dio error: $message | URL: ${e.requestOptions.uri}');
+    }
+  }
+
   Future<UserModel> login(
+    bool firstAccess,
     String email,
     String senha,
     String deviceToken,
@@ -34,6 +85,7 @@ class UserService {
           'password': senha,
           'deviceToken': deviceToken,
           'platform': platform,
+          'firstAccess': firstAccess,
         },
       );
 
@@ -54,7 +106,10 @@ class UserService {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           backgroundColor: Colors.redAccent,
-          content: Text(e.response?.data['message'] ?? e.message ?? message),
+          content: Text(
+            e.response?.data['message'] ?? e.message ?? message,
+            textAlign: TextAlign.center,
+          ),
         ),
       );
       throw Exception('Dio error: $message | URL: ${e.requestOptions.uri}');
