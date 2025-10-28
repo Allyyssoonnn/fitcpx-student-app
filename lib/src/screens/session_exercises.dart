@@ -88,27 +88,6 @@ class SessionExerciseScreen extends StatelessWidget {
                                 ),
                                 child: Row(
                                   children: [
-                                    // Container(
-                                    //   decoration: BoxDecoration(
-                                    //     color: Theme.of(context)
-                                    //         .colorScheme
-                                    //         .primary
-                                    //         .withOpacity(0.1),
-                                    //     borderRadius: BorderRadius.circular(
-                                    //       12,
-                                    //     ),
-                                    //   ),
-                                    //   padding: const EdgeInsets.all(12),
-                                    //   child: Icon(
-                                    //     Icons.fitness_center,
-                                    //     // size: 30,
-                                    //     size: 15,
-                                    //     color: Theme.of(
-                                    //       context,
-                                    //     ).colorScheme.primary,
-                                    //   ),
-                                    // ),
-                                    // const SizedBox(width: 16),
                                     Expanded(
                                       child: Column(
                                         crossAxisAlignment:
@@ -129,6 +108,19 @@ class SessionExerciseScreen extends StatelessWidget {
                                           Text(
                                             '${exercise.nSets}x${exercise.repetition} - ${exercise.weight}kg',
                                           ),
+                                          const SizedBox(height: 4),
+                                          if (exercise.superSet.isNotEmpty)
+                                            Text(
+                                              style: TextStyle(
+                                                color: Colors.green,
+                                              ),
+                                              exercise.superSet.length == 1
+                                                  ? "Bi-set"
+                                                  : exercise.superSet.length ==
+                                                        2
+                                                  ? "Tri-set"
+                                                  : "Super-set",
+                                            ),
                                         ],
                                       ),
                                     ),

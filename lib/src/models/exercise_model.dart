@@ -4,6 +4,7 @@ class ExerciseModel {
   final int cod_sessao_exercicio;
   final int cod_exercicio;
   final String nome_exercicio;
+  final String? observacao_exercicio;
   final String? url_exercicio;
   final int nSets;
   final int weight;
@@ -36,6 +37,7 @@ class ExerciseModel {
       cod_sessao_exercicio: id ?? this.cod_sessao_exercicio,
       cod_exercicio: id ?? this.cod_exercicio,
       nome_exercicio: name ?? this.nome_exercicio,
+      observacao_exercicio: observacao_exercicio,
       url_exercicio: this.url_exercicio,
       nSets: this.nSets,
       superSet: superSet ?? this.superSet,
@@ -51,6 +53,7 @@ class ExerciseModel {
     required this.cod_sessao_exercicio,
     required this.cod_exercicio,
     required this.nome_exercicio,
+    required this.observacao_exercicio,
     required this.url_exercicio,
     required this.nSets,
     required this.weight,
@@ -76,6 +79,7 @@ class ExerciseModel {
       cod_sessao_exercicio: json['cod_sessao_exercicio'] ?? 0,
       cod_exercicio: json['cod_exercicio'] ?? 0,
       nome_exercicio: json['nome_exercicio'] ?? '',
+      observacao_exercicio: json['observacao_sessao_exercicio'] ?? null,
       url_exercicio: json['url_exercicio'] ?? '',
       nSets: json['serie_sessao_exercicio'] ?? 0,
       weight: json['carga_sessao_exercicio'] ?? 0,
@@ -117,6 +121,7 @@ class ExerciseModel {
       'cod_sessao_exercicio': cod_sessao_exercicio,
       'cod_exercicio': cod_exercicio,
       'nome_exercicio': nome_exercicio,
+      'observacao_exercicio': observacao_exercicio,
       'url_exercicio': url_exercicio,
       'serie_sessao_exercicio': nSets,
       'carga_sessao_exercicio': weight,

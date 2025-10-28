@@ -42,6 +42,40 @@ class _ExerciseInfoHeaderState extends State<ExerciseInfoHeader> {
     super.initState();
   }
 
+  void showObservation() {
+    // 1. Pega o exercício correto (mesma lógica do build)
+    final exercise = (widget.exerciseSuperSet == null)
+        ? widget.exercise
+        : widget.exerciseSuperSet;
+
+    // 2. Pega o texto da observação.
+    // O botão só aparece se não for nulo, então podemos usar '!'
+    final String observationText = exercise!.observacao_exercicio!;
+
+    // 3. Exibe o modal
+    showDialog(
+      context: context,
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          title: const Text('Observação'),
+          content: SingleChildScrollView(
+            // 4. SingleChildScrollView para evitar overflow se o texto for longo
+            child: Text(observationText),
+          ),
+          actions: [
+            TextButton(
+              child: const Text('Fechar'),
+              onPressed: () {
+                // 5. Fecha o modal
+                Navigator.of(dialogContext).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final exercise = (widget.exerciseSuperSet == null)
@@ -60,6 +94,7 @@ class _ExerciseInfoHeaderState extends State<ExerciseInfoHeader> {
             style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
           ),
         ),
+        const Divider(),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8),
           child: Row(
@@ -76,7 +111,16 @@ class _ExerciseInfoHeaderState extends State<ExerciseInfoHeader> {
                 icon: const Icon(Icons.arrow_back_ios),
                 label: const Text('Anterior'),
               ),
-              OutlinedButton.icon(
+              if (exercise?.observacao_exercicio != null)
+                Badge(
+                  label: Text("1"),
+                  backgroundColor: Colors.green,
+                  child: IconButton.outlined(
+                    onPressed: showObservation,
+                    icon: const Icon(Icons.message),
+                  ),
+                ),
+              IconButton.outlined(
                 onPressed: () {
                   Navigator.push(
                     context,
@@ -89,7 +133,6 @@ class _ExerciseInfoHeaderState extends State<ExerciseInfoHeader> {
                   );
                 },
                 icon: const Icon(Icons.alarm),
-                label: const Text('Intervalo'),
               ),
               if (widget.indexExerciseSelected <
                   widget.sessionExerciseLength - 1)
@@ -126,47 +169,54 @@ class _ExerciseInfoHeaderState extends State<ExerciseInfoHeader> {
             ],
           ),
         ),
+        const Divider(),
         if (widget.allSuperSets.isNotEmpty)
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: SizedBox(
-              height: allExercises.length * 56,
-              child: ListView.builder(
-                itemCount: allExercises.length,
-                itemBuilder: (context, index) {
-                  final superSetExercise = allExercises[index];
-                  final isSelected =
-                      superSetExercise.cod_exercicio == exercise.cod_exercicio;
-
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 4),
-                    child: SizedBox(
-                      width: double.infinity,
-                      height: 46,
-                      child: FilterChip(
-                        selected: isSelected,
-                        onSelected: (_) {
-                          widget.changeExercise(
-                            widget.indexExerciseSelected,
-                            allExercises,
-                            index,
-                          );
-                        },
-                        label: SizedBox(
-                          width: double.infinity,
-                          child: Text(
-                            superSetExercise.nome_exercicio,
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                      ),
+            // 1. Use o widget Wrap
+            child: Wrap(
+              spacing: 8.0, // Espaçamento horizontal entre os chips
+              runSpacing: 4.0, // Espaçamento vertical entre as linhas
+              children: List.generate(allExercises.length + 1, (index) {
+                if (index == 0) {
+                  return FilterChip(
+                    selected: false,
+                    onSelected: null,
+                    label: Text(
+                      // Use a contagem de 'allExercises' para definir o texto
+                      allExercises.length == 2
+                          ? "Bi-set"
+                          : allExercises.length == 3
+                          ? "Tri-set"
+                          : "Super-set",
                     ),
                   );
-                },
-              ),
+                }
+
+                // 2. Gere a lista de chips
+                final superSetExercise = allExercises[index - 1];
+                final isSelected =
+                    superSetExercise.cod_exercicio == exercise.cod_exercicio;
+
+                // 3. Retorne o FilterChip diretamente
+                return FilterChip(
+                  selected: isSelected,
+                  onSelected: (_) {
+                    widget.changeExercise(
+                      widget.indexExerciseSelected,
+                      allExercises,
+                      index - 1,
+                    );
+                  },
+                  label: Text(
+                    // superSetExercise.nome_exercicio,
+                    (index).toString(),
+                  ),
+                );
+              }),
             ),
           ),
-        const Divider(),
+        // const Divider(),
       ],
     );
   }
