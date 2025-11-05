@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class CustomScaffold extends StatelessWidget {
@@ -8,27 +9,43 @@ class CustomScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: true,
-      floatingActionButton: floatingActionButton,
-      appBar: AppBar(backgroundColor: Colors.transparent, elevation: 0),
-      extendBodyBehindAppBar: true,
-      body: Stack(
-        children: [
-          Container(
-            color: const Color.fromRGBO(40, 167, 69, 1),
-            // color: Colors.green,
-            width: double.infinity,
-            height: double.infinity,
-          ),
-          // Image.asset(
-          //   "assets/images/bg2.png",
-          //   fit: BoxFit.cover,
-          //   width: double.infinity,
-          //   height: double.infinity,
-          // ),
-          SafeArea(bottom: false, child: child!),
-        ],
+    return Material(
+      child: CupertinoPageScaffold(
+        // backgroundColor: const Color.fromRGBO(40, 167, 69, 1),
+        // navigationBar: const CupertinoNavigationBar(
+        //   backgroundColor: Color.fromRGBO(40, 167, 69, 1),
+        //   border: null,
+        //   middle: Text(
+        //     'FitCpx Aluno',
+        //     style: TextStyle(color: CupertinoColors.white),
+        //   ),
+        // ),
+        resizeToAvoidBottomInset: true,
+        child: Stack(
+          children: [
+            Container(
+              // color: const Color.fromRGBO(40, 167, 69, 1),
+              width: double.infinity,
+              height: double.infinity,
+              decoration: BoxDecoration(
+                color: CupertinoColors.transparent,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(16),
+                  topRight: Radius.circular(16),
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Color.fromRGBO(0, 0, 0, 0.1),
+                    spreadRadius: 2,
+                    blurRadius: 8,
+                    offset: Offset(0, 3),
+                  ),
+                ],
+              ),
+            ),
+            SafeArea(bottom: false, child: child!),
+          ],
+        ),
       ),
     );
   }

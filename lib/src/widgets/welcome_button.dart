@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class WelcomeButton extends StatelessWidget {
@@ -7,6 +8,7 @@ class WelcomeButton extends StatelessWidget {
     required this.buttonDescription,
     required this.onTap,
     required this.icon,
+    this.color,
     this.showBadge,
   });
 
@@ -14,6 +16,7 @@ class WelcomeButton extends StatelessWidget {
   final String buttonDescription;
   final VoidCallback onTap;
   final IconData icon;
+  final Color? color;
   final bool? showBadge;
 
   @override
@@ -31,7 +34,9 @@ class WelcomeButton extends StatelessWidget {
               margin: const EdgeInsets.all(10),
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: CupertinoColors.tertiarySystemBackground.resolveFrom(
+                  context,
+                ),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withOpacity(0.2),
@@ -48,20 +53,20 @@ class WelcomeButton extends StatelessWidget {
                   Icon(icon),
                   Text(
                     buttonText,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 20,
-                      color: Colors.black87,
+                      color: CupertinoColors.label.resolveFrom(context),
                     ),
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 8),
                   Text(
                     buttonDescription,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontWeight: FontWeight.normal,
                       fontSize: 15,
-                      color: Colors.black54,
+                      color: CupertinoColors.label.resolveFrom(context),
                     ),
                     textAlign: TextAlign.center,
                   ),

@@ -2,7 +2,7 @@ import 'package:fitcpxaluno/src/blocs/session/session_bloc.dart';
 import 'package:fitcpxaluno/src/blocs/session/session_state.dart';
 import 'package:fitcpxaluno/src/blocs/session_timer/sessionTimer.dart';
 import 'package:fitcpxaluno/src/screens/session_exercises.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class BadgeSession extends StatelessWidget {
@@ -24,15 +24,19 @@ class BadgeSession extends StatelessWidget {
           return Stack(
             clipBehavior: Clip.none,
             children: [
-              ElevatedButton(
+              CupertinoButton.filled(
+                color: Color.fromRGBO(242, 245, 237, 1),
                 onPressed: () {
                   Navigator.of(context, rootNavigator: true).push(
-                    MaterialPageRoute(
+                    CupertinoPageRoute(
                       builder: (context) => SessionExerciseScreen(),
                     ),
                   );
                 },
-                child: Text(session.name ?? 'sessionName'),
+                child: Text(
+                  session.name ?? 'sessionName',
+                  style: TextStyle(color: CupertinoColors.darkBackgroundGray),
+                ),
               ),
               // Icon(Icons.notifications, size: 36),
               Positioned(
@@ -41,7 +45,7 @@ class BadgeSession extends StatelessWidget {
                 child: Container(
                   padding: EdgeInsets.all(2),
                   decoration: BoxDecoration(
-                    color: Colors.red,
+                    color: CupertinoColors.destructiveRed,
                     borderRadius: BorderRadius.circular(5),
                     // shape: BoxShape.circle,
                   ),
@@ -53,7 +57,7 @@ class BadgeSession extends StatelessWidget {
                           child: Text(
                             _formatDuration(state.secondsElapsed ?? 0),
                             style: TextStyle(
-                              color: Colors.white,
+                              color: CupertinoColors.white,
                               fontSize: 12,
                               fontWeight: FontWeight.bold,
                             ),

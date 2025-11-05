@@ -2,6 +2,7 @@ import 'package:fitcpxaluno/src/models/exercise_model.dart';
 import 'package:fitcpxaluno/src/screens/interval.dart';
 import 'package:fitcpxaluno/src/screens/review_session.dart';
 import 'package:fitcpxaluno/src/widgets/video_player.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class ExerciseInfoHeader extends StatefulWidget {
@@ -53,20 +54,16 @@ class _ExerciseInfoHeaderState extends State<ExerciseInfoHeader> {
     final String observationText = exercise!.observacao_exercicio!;
 
     // 3. Exibe o modal
-    showDialog(
+    showCupertinoDialog(
       context: context,
       builder: (BuildContext dialogContext) {
-        return AlertDialog(
+        return CupertinoAlertDialog(
           title: const Text('Observação'),
-          content: SingleChildScrollView(
-            // 4. SingleChildScrollView para evitar overflow se o texto for longo
-            child: Text(observationText),
-          ),
+          content: SingleChildScrollView(child: Text(observationText)),
           actions: [
-            TextButton(
+            CupertinoDialogAction(
               child: const Text('Fechar'),
               onPressed: () {
-                // 5. Fecha o modal
                 Navigator.of(dialogContext).pop();
               },
             ),
@@ -94,13 +91,17 @@ class _ExerciseInfoHeaderState extends State<ExerciseInfoHeader> {
             style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
           ),
         ),
-        const Divider(),
+        Padding(
+          padding: EdgeInsetsGeometry.symmetric(vertical: 12),
+          child: Container(height: 0.5, color: CupertinoColors.separator),
+        ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              OutlinedButton.icon(
+              CupertinoButton.tinted(
+                color: CupertinoColors.activeGreen,
                 onPressed: (widget.indexExerciseSelected > 0)
                     ? () => widget.changeExercise(
                         widget.indexExerciseSelected - 1,
@@ -108,19 +109,32 @@ class _ExerciseInfoHeaderState extends State<ExerciseInfoHeader> {
                         null,
                       )
                     : null,
-                icon: const Icon(Icons.arrow_back_ios),
-                label: const Text('Anterior'),
+                child: const Row(
+                  spacing: 3,
+                  children: [
+                    Icon(CupertinoIcons.chevron_back),
+                    Text(
+                      'Anterior',
+                      style: TextStyle(color: CupertinoColors.activeGreen),
+                    ),
+                  ],
+                ),
               ),
               if (exercise?.observacao_exercicio != null)
                 Badge(
                   label: Text("1"),
-                  backgroundColor: Colors.green,
-                  child: IconButton.outlined(
+                  backgroundColor: CupertinoColors.activeGreen,
+                  child: CupertinoButton.tinted(
+                    color: CupertinoColors.activeGreen,
                     onPressed: showObservation,
-                    icon: const Icon(Icons.message),
+                    child: const Icon(
+                      Icons.message,
+                      color: CupertinoColors.activeGreen,
+                    ),
                   ),
                 ),
-              IconButton.outlined(
+              CupertinoButton.tinted(
+                color: CupertinoColors.activeGreen,
                 onPressed: () {
                   Navigator.push(
                     context,
@@ -132,12 +146,15 @@ class _ExerciseInfoHeaderState extends State<ExerciseInfoHeader> {
                     ),
                   );
                 },
-                icon: const Icon(Icons.alarm),
+                child: const Icon(
+                  CupertinoIcons.alarm,
+                  color: CupertinoColors.activeGreen,
+                ),
               ),
               if (widget.indexExerciseSelected <
                   widget.sessionExerciseLength - 1)
-                OutlinedButton.icon(
-                  iconAlignment: IconAlignment.end,
+                CupertinoButton.tinted(
+                  color: CupertinoColors.activeGreen,
                   onPressed:
                       (widget.indexExerciseSelected <
                           widget.sessionExerciseLength - 1)
@@ -147,8 +164,16 @@ class _ExerciseInfoHeaderState extends State<ExerciseInfoHeader> {
                           null,
                         )
                       : null,
-                  icon: const Icon(Icons.arrow_forward_ios),
-                  label: const Text('Próximo'),
+                  child: Row(
+                    spacing: 3,
+                    children: [
+                      const Text(
+                        'Próximo',
+                        style: TextStyle(color: CupertinoColors.activeGreen),
+                      ),
+                      const Icon(CupertinoIcons.chevron_forward),
+                    ],
+                  ),
                 ),
               if (widget.indexExerciseSelected >=
                   widget.sessionExerciseLength - 1)
@@ -169,7 +194,10 @@ class _ExerciseInfoHeaderState extends State<ExerciseInfoHeader> {
             ],
           ),
         ),
-        const Divider(),
+        Padding(
+          padding: EdgeInsetsGeometry.symmetric(vertical: 12),
+          child: Container(height: 0.5, color: CupertinoColors.separator),
+        ),
         if (widget.allSuperSets.isNotEmpty)
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8),

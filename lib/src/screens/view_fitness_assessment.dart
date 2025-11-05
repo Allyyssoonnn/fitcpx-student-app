@@ -2,10 +2,12 @@ import 'package:fitcpxaluno/src/models/fitness_assessment_model.dart';
 import 'package:fitcpxaluno/src/screens/view_images_fitness_assessment.dart';
 import 'package:fitcpxaluno/src/services/fitness_assessment_service.dart';
 import 'package:fitcpxaluno/src/utils/exportPDF.dart';
+import 'package:fitcpxaluno/src/widgets/cupertino_card.dart';
 import 'package:fitcpxaluno/src/widgets/customScaffold.dart';
 import 'package:fitcpxaluno/src/widgets/pie_chart.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class ViewFitnessAssessment extends StatefulWidget {
   final int? idAssessment;
@@ -77,8 +79,10 @@ class _ViewFitnessAssessmentState extends State<ViewFitnessAssessment>
             child: Container(
               width: double.infinity,
               height: mediaHeight,
-              decoration: const BoxDecoration(
-                color: Colors.white,
+              decoration: BoxDecoration(
+                color: CupertinoColors.secondarySystemBackground.resolveFrom(
+                  context,
+                ),
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(16),
                   topRight: Radius.circular(16),
@@ -96,7 +100,7 @@ class _ViewFitnessAssessmentState extends State<ViewFitnessAssessment>
                 future: _loadFitnessAssessment(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(child: CircularProgressIndicator());
+                    return const Center(child: CupertinoActivityIndicator());
                   }
 
                   if (snapshot.hasError) {
@@ -116,34 +120,44 @@ class _ViewFitnessAssessmentState extends State<ViewFitnessAssessment>
                             Text(
                               "Avaliação de ${assessment.date}",
                               textAlign: TextAlign.center,
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.w700,
+                                color: CupertinoColors.label.resolveFrom(
+                                  context,
+                                ),
                               ),
                             ),
-                            InkWell(
+                            GestureDetector(
                               onTap: () =>
                                   exportFullContentAsPdf(assessment, context),
-                              child: Icon(Icons.ios_share_outlined),
+                              child: Icon(FontAwesomeIcons.share),
                             ),
                           ],
                         ),
                       ),
                       const SizedBox(height: 12),
-                      const Divider(),
+                      Padding(
+                        padding: EdgeInsetsGeometry.symmetric(vertical: 12),
+                        child: Container(
+                          height: 0.5,
+                          color: CupertinoColors.separator,
+                        ),
+                      ),
                       Expanded(
                         child: SingleChildScrollView(
                           physics: const BouncingScrollPhysics(),
                           child: Column(
                             children: [
                               const SizedBox(height: 12),
-                              OutlinedButton.icon(
+                              CupertinoButton.tinted(
+                                color: CupertinoColors.activeGreen,
                                 onPressed: () {
                                   Navigator.of(
                                     context,
                                     rootNavigator: true,
                                   ).push(
-                                    MaterialPageRoute(
+                                    CupertinoPageRoute(
                                       builder: (context) =>
                                           ViewImagesFitnessAssessment(
                                             key: UniqueKey(),
@@ -152,8 +166,12 @@ class _ViewFitnessAssessmentState extends State<ViewFitnessAssessment>
                                     ),
                                   );
                                 },
-                                icon: Icon(Icons.camera_alt),
-                                label: Text('Imagens'),
+                                child: Text(
+                                  'Imagens',
+                                  style: TextStyle(
+                                    color: CupertinoColors.activeGreen,
+                                  ),
+                                ),
                               ),
                               Padding(
                                 padding: const EdgeInsets.symmetric(
@@ -161,7 +179,10 @@ class _ViewFitnessAssessmentState extends State<ViewFitnessAssessment>
                                 ),
                                 child: AspectRatio(
                                   aspectRatio: 1.3,
-                                  child: MyPieChart(assessment: assessment),
+                                  child: MyPieChart(
+                                    assessment: assessment,
+                                    context: context,
+                                  ),
                                 ),
                               ),
                               const SizedBox(height: 12),
@@ -169,7 +190,7 @@ class _ViewFitnessAssessmentState extends State<ViewFitnessAssessment>
                                 'Avaliador: ${assessment.trainer}',
                                 'Altura: ${assessment.height} cm',
                                 'Peso: ${assessment.weight} kg',
-                              ]),
+                              ], context),
                               CardItem('Dobras', [
                                 'Tríceps: ${assessment.tricepsFold}',
                                 'Peitoral: ${assessment.chestFold}',
@@ -181,7 +202,7 @@ class _ViewFitnessAssessmentState extends State<ViewFitnessAssessment>
                                 'Supraespinhal: ${assessment.supraspinatusFold}',
                                 'Bíceps: ${assessment.bicepsFold}',
                                 'Panturrilha: ${assessment.calfFold}',
-                              ]),
+                              ], context),
                               CardItem('Geral - Perimetria', [
                                 'Pescoço: ${assessment.neck}',
                                 'Ombro: ${assessment.shoulder}',
@@ -190,21 +211,21 @@ class _ViewFitnessAssessmentState extends State<ViewFitnessAssessment>
                                 'Abdomên: ${assessment.waist}',
                                 'Abdômen: ${assessment.abdomen}',
                                 'Quadril: ${assessment.hips}',
-                              ]),
+                              ], context),
                               CardItem('Geral - Lado Direito', [
                                 'Braço Relaxado Direito: ${assessment.rightArmRelaxed}',
                                 'Braço Contraído Direito: ${assessment.rightArmContracted}',
                                 'Antebraço Direito: ${assessment.rightForearm}',
                                 'Coxa Direita: ${assessment.rightThigh}',
                                 'Panturrilha Direita: ${assessment.rightCalf}',
-                              ]),
+                              ], context),
                               CardItem('Geral - Lado Esquerdo', [
                                 'Braço Relaxado Direito: ${assessment.leftArmRelaxed}',
                                 'Braço Contraído Direito: ${assessment.leftArmContracted}',
                                 'Antebraço Direito: ${assessment.leftForearm}',
                                 'Coxa Direita: ${assessment.leftThigh}',
                                 'Panturrilha Direita: ${assessment.leftCalf}',
-                              ]),
+                              ], context),
                             ],
                           ),
                         ),
@@ -221,7 +242,7 @@ class _ViewFitnessAssessmentState extends State<ViewFitnessAssessment>
   }
 }
 
-Widget CardItem(String title, List<String?> items) {
+Widget CardItem(String title, List<String?> items, BuildContext context) {
   final chips = items
       .where((e) => e != null && e.isNotEmpty)
       .cast<String>()
@@ -239,13 +260,7 @@ Widget CardItem(String title, List<String?> items) {
           style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
         ),
         const SizedBox(height: 8),
-        Card(
-          margin: const EdgeInsets.symmetric(vertical: 8),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
-          ),
-          elevation: 4,
-          shadowColor: Colors.black.withOpacity(0.1),
+        CupertinoCard(
           child: Container(
             width: double.infinity,
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -270,12 +285,18 @@ Widget CardItem(String title, List<String?> items) {
                       Expanded(
                         child: Text(
                           chip.split(":").first + ":",
-                          style: const TextStyle(fontWeight: FontWeight.w500),
+                          style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            color: CupertinoColors.label.resolveFrom(context),
+                          ),
                         ),
                       ),
                       Text(
                         chip.contains(":") ? chip.split(":").last.trim() : '',
                         textAlign: TextAlign.right,
+                        style: TextStyle(
+                          color: CupertinoColors.label.resolveFrom(context),
+                        ),
                       ),
                     ],
                   ),

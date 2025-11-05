@@ -2,8 +2,9 @@ import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fitcpxaluno/src/widgets/customScaffold.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gallery_saver_plus/gallery_saver.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
@@ -27,12 +28,11 @@ class ViewImagesFitnessAssessment extends StatelessWidget {
   }
 
   void _showFullImage(BuildContext context, String imageUrl) {
-    showDialog(
+    showCupertinoDialog(
       context: context,
       builder: (_) {
-        return Dialog(
-          insetPadding: EdgeInsets.zero,
-          backgroundColor: Colors.black,
+        return CupertinoPageScaffold(
+          backgroundColor: CupertinoColors.black,
           child: Stack(
             children: [
               Center(
@@ -40,33 +40,42 @@ class ViewImagesFitnessAssessment extends StatelessWidget {
                   child: CachedNetworkImage(
                     imageUrl: imageUrl,
                     placeholder: (context, url) =>
-                        const Center(child: CircularProgressIndicator()),
-                    errorWidget: (context, url, error) =>
-                        const Icon(Icons.error),
+                        const Center(child: CupertinoActivityIndicator()),
+                    errorWidget: (context, url, error) => const Icon(
+                      FontAwesomeIcons.x,
+                      color: CupertinoColors.white,
+                      size: 30,
+                    ),
                   ),
                 ),
               ),
               Positioned(
                 top: 40,
                 left: 20,
-                child: IconButton(
-                  icon: const Icon(Icons.close, color: Colors.white, size: 30),
-                  onPressed: () => Navigator.pop(context),
+                child: CupertinoButton(
+                  padding: EdgeInsets.zero,
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: const Icon(
+                    CupertinoIcons.clear,
+                    color: CupertinoColors.white,
+                    size: 30,
+                  ),
                 ),
               ),
               Positioned(
                 top: 40,
                 right: 20,
-                child: IconButton(
-                  icon: const Icon(
-                    Icons.download,
-                    color: Colors.white,
-                    size: 30,
-                  ),
+                child: CupertinoButton(
+                  padding: EdgeInsets.zero,
                   onPressed: () async {
                     await _saveImage(imageUrl);
-                    Navigator.pop(context);
+                    Navigator.of(context).pop();
                   },
+                  child: const Icon(
+                    CupertinoIcons.arrow_down_circle,
+                    color: CupertinoColors.white,
+                    size: 30,
+                  ),
                 ),
               ),
             ],
@@ -83,7 +92,7 @@ class ViewImagesFitnessAssessment extends StatelessWidget {
         padding: const EdgeInsets.fromLTRB(24, 32, 24, 40),
         width: double.infinity,
         decoration: const BoxDecoration(
-          color: Colors.white,
+          color: CupertinoColors.white,
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(16),
             topRight: Radius.circular(16),
@@ -103,13 +112,19 @@ class ViewImagesFitnessAssessment extends StatelessWidget {
               'Imagens',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
-            const Divider(),
+            Padding(
+              padding: EdgeInsetsGeometry.symmetric(vertical: 12),
+              child: Container(height: 0.5, color: CupertinoColors.separator),
+            ),
             Expanded(
               child: (images == null || images!.isEmpty)
                   ? const Center(
                       child: Text(
                         'Nenhuma imagem disponível',
-                        style: TextStyle(fontSize: 16, color: Colors.grey),
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: CupertinoColors.systemGrey,
+                        ),
                       ),
                     )
                   : MasonryGridView.count(
@@ -125,15 +140,15 @@ class ViewImagesFitnessAssessment extends StatelessWidget {
                             child: CachedNetworkImage(
                               imageUrl: images![index],
                               placeholder: (context, url) => Container(
-                                color: Colors.grey[300],
+                                color: CupertinoColors.systemGrey,
                                 child: const Center(
-                                  child: CircularProgressIndicator(),
+                                  child: CupertinoActivityIndicator(),
                                 ),
                                 height:
                                     150, // pode ajustar altura do placeholder
                               ),
                               errorWidget: (context, url, error) =>
-                                  const Icon(Icons.error),
+                                  const Icon(FontAwesomeIcons.x),
                               fit: BoxFit.cover,
                             ),
                           ),

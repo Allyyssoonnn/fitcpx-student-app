@@ -1,8 +1,14 @@
 import 'package:fitcpxaluno/src/models/contract_payment_model.dart';
-import 'package:fitcpxaluno/src/services/contract_service.dart';
+import 'package:fitcpxaluno/src/widgets/cupertino_card.dart';
 import 'package:fitcpxaluno/src/widgets/customScaffold.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+void showCupertinoSnackBar(BuildContext context, String message) =>
+    showCupertinoDialog(
+      context: context,
+      builder: (_) => CupertinoAlertDialog(content: Text(message)),
+    );
 
 class ViewPaymentContract extends StatefulWidget {
   final List<ContractPaymentModel> payments;
@@ -18,9 +24,7 @@ class _viewPaymentContractState extends State<ViewPaymentContract> {
     if (url != null && await canLaunchUrl(Uri.parse(url))) {
       await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
     } else {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('Não foi possível abrir o link')));
+      showCupertinoSnackBar(context, 'Não foi possível abrir o link');
     }
   }
 
@@ -30,7 +34,7 @@ class _viewPaymentContractState extends State<ViewPaymentContract> {
       child: Container(
         padding: const EdgeInsets.fromLTRB(24, 32, 24, 40),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: CupertinoColors.secondarySystemBackground.resolveFrom(context),
           borderRadius: BorderRadius.only(
             topRight: Radius.circular(20),
             topLeft: Radius.circular(20),
@@ -38,8 +42,16 @@ class _viewPaymentContractState extends State<ViewPaymentContract> {
         ),
         child: Column(
           children: [
-            Text('Pagamentos'),
-            Divider(),
+            Text(
+              'Pagamentos',
+              style: TextStyle(
+                color: CupertinoColors.label.resolveFrom(context),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsetsGeometry.symmetric(vertical: 12),
+              child: Container(height: 0.5, color: CupertinoColors.separator),
+            ),
             Expanded(
               child: ListView.builder(
                 physics: BouncingScrollPhysics(),
@@ -47,112 +59,92 @@ class _viewPaymentContractState extends State<ViewPaymentContract> {
                 itemBuilder: (context, index) {
                   final payment = widget.payments[index];
 
-                  return Card(
-                    margin: const EdgeInsets.symmetric(vertical: 8),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    elevation: 4,
-                    shadowColor: Colors.black.withOpacity(0.1),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 12,
-                      ),
-                      child: Row(
-                        children: [
-                          Container(
-                            decoration: BoxDecoration(
-                              color: Theme.of(
-                                context,
-                              ).colorScheme.primary.withOpacity(0.1),
-                              borderRadius: BorderRadius.circular(12),
-                              border: Border.all(
-                                color:
-                                    payment.status == 'confirmed' ||
-                                        payment.status == 'paid' ||
-                                        payment.status == 'succeeded'
-                                    ? Colors.green
-                                    : Colors.orange,
-                                width: 1.5,
-                              ),
-                            ),
-                            padding: const EdgeInsets.all(12),
-                            child: Icon(
-                              payment.status == 'confirmed' ||
+                  return CupertinoCard(
+                    child: Row(
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            color: CupertinoColors.systemGrey4.withOpacity(0.3),
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(
+                              color:
+                                  payment.status == 'confirmed' ||
                                       payment.status == 'paid' ||
                                       payment.status == 'succeeded'
-                                  ? Icons.check_circle
-                                  : Icons.pending,
-                              // size: 30,
-                              size: 15,
-                              color: Theme.of(context).colorScheme.primary,
+                                  ? CupertinoColors.activeGreen
+                                  : CupertinoColors.activeOrange,
+                              width: 1.5,
                             ),
                           ),
-                          const SizedBox(width: 16),
-                          Expanded(
-                            child: Column(
-                              children: [
-                                Text(
-                                  payment.dueDate,
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                    // fontSize: 18,
-                                    fontSize: 14,
-                                    color: Theme.of(
-                                      context,
-                                    ).colorScheme.onSurface,
+                          padding: const EdgeInsets.all(12),
+                          child: Icon(
+                            payment.status == 'confirmed' ||
+                                    payment.status == 'paid' ||
+                                    payment.status == 'succeeded'
+                                ? CupertinoIcons.check_mark
+                                : CupertinoIcons.arrow_2_circlepath,
+                            // size: 30,
+                            size: 15,
+                            color: CupertinoColors.activeGreen,
+                          ),
+                        ),
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: Column(
+                            children: [
+                              Text(
+                                payment.dueDate,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  // fontSize: 18,
+                                  fontSize: 14,
+                                  color: CupertinoColors.label.resolveFrom(
+                                    context,
                                   ),
                                 ),
-                                const SizedBox(height: 4),
-                                Text(
-                                  'Valor: R\$ ${payment.amount.toStringAsFixed(2)}',
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .onSurface
-                                        .withOpacity(0.6),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                'Valor: R\$ ${payment.amount.toStringAsFixed(2)}',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: CupertinoColors.label.resolveFrom(
+                                    context,
                                   ),
                                 ),
-                                const SizedBox(height: 4),
-                                if (payment.status != 'confirmed' &&
-                                    payment.status != 'paid' &&
-                                    payment.status != 'succeeded')
-                                  Container(
-                                    width: double.infinity,
-                                    child: OutlinedButton(
-                                      style: OutlinedButton.styleFrom(
-                                        side: const BorderSide(
-                                          color: Colors.green,
-                                          width: 1.5,
-                                        ),
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(12),
-                                        ),
-                                        foregroundColor: Colors.green,
+                              ),
+                              const SizedBox(height: 4),
+                              if (payment.status != 'confirmed' &&
+                                  payment.status != 'paid' &&
+                                  payment.status != 'succeeded')
+                                Container(
+                                  width: double.infinity,
+                                  child: CupertinoButton.tinted(
+                                    sizeStyle: CupertinoButtonSize.medium,
+                                    color: CupertinoColors.activeGreen,
+                                    onPressed: () =>
+                                        _launchUrl(payment.invoiceUrl),
+                                    child: Text(
+                                      'Pagar agora',
+                                      style: TextStyle(
+                                        color: CupertinoColors.activeGreen,
                                       ),
-                                      onPressed: () =>
-                                          _launchUrl(payment.invoiceUrl),
-                                      child: Text('Pagar agora'),
                                     ),
                                   ),
-                                Text(
-                                  'ID: ${payment.id}',
-                                  style: TextStyle(
-                                    fontSize: 10,
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .onSurface
-                                        .withOpacity(0.6),
+                                ),
+                              Text(
+                                'ID: ${payment.id}',
+                                style: TextStyle(
+                                  fontSize: 10,
+                                  color: CupertinoColors.label.resolveFrom(
+                                    context,
                                   ),
                                 ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   );
                 },

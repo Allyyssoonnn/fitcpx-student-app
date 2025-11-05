@@ -1,7 +1,7 @@
 import 'package:fitcpxaluno/src/blocs/auth/auth_bloc.dart';
 import 'package:fitcpxaluno/src/blocs/auth/auth_event.dart';
 import 'package:fitcpxaluno/src/screens/my_contracts.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -46,7 +46,9 @@ class _SettingsScreen extends State<SettingsScreen> {
     return Container(
           padding: const EdgeInsets.fromLTRB(24, 32, 24, 40),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: CupertinoColors.secondarySystemBackground.resolveFrom(
+              context,
+            ),
             borderRadius: BorderRadius.only(
               topRight: Radius.circular(20),
               topLeft: Radius.circular(20),
@@ -57,7 +59,7 @@ class _SettingsScreen extends State<SettingsScreen> {
             children: [
               Column(
                 children: [
-                  InkWell(
+                  GestureDetector(
                     onTap: () {},
                     child: Row(
                       spacing: 10,
@@ -75,21 +77,19 @@ class _SettingsScreen extends State<SettingsScreen> {
                                       height: 50,
                                       width: 50,
                                       alignment: Alignment.center,
-                                      child: const CircularProgressIndicator(
-                                        strokeWidth: 2,
-                                      ),
+                                      child: const CupertinoActivityIndicator(),
                                     );
                                   },
                               errorBuilder: (context, error, stackTrace) {
                                 return Container(
                                   height: 50,
                                   width: 50,
-                                  color: Colors.grey[300],
+                                  // color: Colors.grey[300],
                                   alignment: Alignment.center,
                                   child: const Icon(
-                                    Icons.person,
+                                    CupertinoIcons.person,
                                     size: 24,
-                                    color: Colors.grey,
+                                    // color: Colors.grey,
                                   ),
                                 );
                               },
@@ -100,12 +100,11 @@ class _SettingsScreen extends State<SettingsScreen> {
                             child: Container(
                               height: 50,
                               width: 50,
-                              color: Colors.grey[300],
+                              // color: Colors.grey[300],
                               alignment: Alignment.center,
                               child: const Icon(
-                                Icons.person,
+                                CupertinoIcons.person,
                                 size: 24,
-                                color: Colors.grey,
                               ),
                             ),
                           ),
@@ -126,15 +125,21 @@ class _SettingsScreen extends State<SettingsScreen> {
                     ),
                   ),
                   SizedBox(height: 16),
-                  Divider(),
-                  InkWell(
+                  Padding(
+                    padding: EdgeInsetsGeometry.symmetric(vertical: 12),
+                    child: Container(
+                      height: 0.5,
+                      color: CupertinoColors.separator,
+                    ),
+                  ),
+                  GestureDetector(
                     onTap: () {},
                     child: Container(
                       padding: EdgeInsets.all(20),
-                      child: InkWell(
+                      child: GestureDetector(
                         onTap: () =>
                             Navigator.of(context, rootNavigator: true).push(
-                              MaterialPageRoute(
+                              CupertinoPageRoute(
                                 builder: (context) => MyContracts(),
                               ),
                             ),
@@ -144,11 +149,11 @@ class _SettingsScreen extends State<SettingsScreen> {
                             Row(
                               spacing: 16,
                               children: [
-                                Icon(Icons.monetization_on),
+                                Icon(CupertinoIcons.money_dollar),
                                 Text('Pagamentos'),
                               ],
                             ),
-                            Icon(Icons.arrow_forward_ios),
+                            Icon(CupertinoIcons.chevron_right),
                           ],
                         ),
                       ),
@@ -156,28 +161,20 @@ class _SettingsScreen extends State<SettingsScreen> {
                   ),
                 ],
               ),
-              Container(
-                width: double.infinity,
-                child: Column(
-                  children: [
-                    OutlinedButton(
-                      onPressed: () =>
-                          context.read<AuthBloc>().add(AuthLoggedOut()),
-                      style: OutlinedButton.styleFrom(
-                        side: const BorderSide(color: Colors.red, width: 1.5),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        foregroundColor: Colors.red,
-                      ),
-                      child: const Text(
-                        'Sair da conta',
-                        style: TextStyle(fontSize: 16, color: Colors.red),
-                      ),
+              Column(
+                children: [
+                  CupertinoButton.tinted(
+                    sizeStyle: CupertinoButtonSize.medium,
+                    color: CupertinoColors.destructiveRed,
+                    onPressed: () =>
+                        context.read<AuthBloc>().add(AuthLoggedOut()),
+                    child: const Text(
+                      'Sair da conta',
+                      style: TextStyle(color: CupertinoColors.destructiveRed),
                     ),
-                    Text("Version: $_version", style: TextStyle(fontSize: 9)),
-                  ],
-                ),
+                  ),
+                  Text("Version: $_version", style: TextStyle(fontSize: 9)),
+                ],
               ),
             ],
           ),

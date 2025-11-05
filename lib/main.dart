@@ -143,7 +143,7 @@ class _MyAppState extends State<MyApp> {
           create: (_) => ContractBloc(ContractService())..add(LoadContract()),
         ),
         BlocProvider(create: (_) => SessionBloc()..add(LoadSession())),
-        BlocProvider(create: (_) => TimerBloc()..add(LoadTimer())),
+        BlocProvider(create: (_) => TimerBloc()..add(StopTimer())),
         BlocProvider(create: (_) => authBloc),
       ],
       child: MaterialApp(

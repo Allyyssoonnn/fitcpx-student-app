@@ -2,7 +2,8 @@ import 'package:fitcpxaluno/src/blocs/session/session_bloc.dart';
 import 'package:fitcpxaluno/src/blocs/session/session_event.dart';
 import 'package:fitcpxaluno/src/models/exercise_model.dart';
 import 'package:fitcpxaluno/src/models/sets_model.dart';
-import 'package:flutter/material.dart';
+import 'package:fitcpxaluno/src/widgets/cupertino_card.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ExerciseInfoBody extends StatefulWidget {
@@ -95,104 +96,87 @@ class _ExerciseInfoBodyState extends State<ExerciseInfoBody> {
         itemBuilder: (context, index) {
           final set = widget.sets[index];
 
-          return Card(
-            margin: const EdgeInsets.symmetric(vertical: 8),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
-            ),
-            elevation: 4,
-            shadowColor: Colors.black.withOpacity(0.1),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              child: Column(
-                children: [
-                  Text(
-                    '${index + 1}ª Série',
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 12,
+          return CupertinoCard(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Cabeçalho da série
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      '${index + 1}ª Série',
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 13,
+                        color: CupertinoColors.label,
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 4),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: const [
-                      Text('Carga', style: TextStyle(fontSize: 10)),
-                      Text('Repetição', style: TextStyle(fontSize: 10)),
-                    ],
-                  ),
-                  const Divider(),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: TextField(
-                          controller: _cargaControllers[index],
-                          keyboardType: TextInputType.number,
-                          decoration: InputDecoration(
-                            contentPadding: const EdgeInsets.symmetric(
-                              vertical: 8,
-                              horizontal: 12,
-                            ),
-                            hintText: 'Carga',
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(14),
-                            ),
+                    CupertinoSwitch(
+                      key: ValueKey(set.id),
+                      value: _checkedList[index],
+                      onChanged: (value) {
+                        setState(() => _checkedList[index] = value);
+                        context.read<SessionBloc>().add(
+                          UpdateSetExercise(
+                            check: value,
+                            exerciseId: widget.exercise.cod_sessao_exercicio,
+                            setId: set.id,
+                            exerciseSuperSetId:
+                                widget.exerciseSuperSet?.cod_sessao_exercicio,
                           ),
-                          onChanged: (value) {
-                            context.read<SessionBloc>().add(
-                              UpdateSetExercise(
-                                newWeight: int.tryParse(value) ?? 0,
-                                exerciseId:
-                                    widget.exercise.cod_sessao_exercicio,
-                                setId: set.id,
-                                exerciseSuperSetId: widget
-                                    .exerciseSuperSet
-                                    ?.cod_sessao_exercicio,
-                              ),
-                            );
-                          },
+                        );
+                      },
+                    ),
+                  ],
+                ),
+                Padding(
+                  padding: EdgeInsetsGeometry.symmetric(vertical: 12),
+                  child: Container(
+                    height: 0.5,
+                    color: CupertinoColors.separator,
+                  ),
+                ),
+                // Títulos dos campos
+                Row(
+                  children: const [
+                    Expanded(
+                      child: Text(
+                        'Carga (kg)',
+                        style: TextStyle(
+                          fontSize: 11,
+                          color: CupertinoColors.systemGrey,
                         ),
                       ),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        child: TextField(
-                          controller: _repControllers[index],
-                          keyboardType: TextInputType.number,
-                          decoration: InputDecoration(
-                            contentPadding: const EdgeInsets.symmetric(
-                              vertical: 8,
-                              horizontal: 12,
-                            ),
-                            hintText: 'Rep.',
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(14),
-                            ),
-                          ),
-                          onChanged: (value) {
-                            context.read<SessionBloc>().add(
-                              UpdateSetExercise(
-                                newRepetition: int.tryParse(value) ?? 0,
-                                exerciseId:
-                                    widget.exercise.cod_sessao_exercicio,
-                                setId: set.id,
-                                exerciseSuperSetId: widget
-                                    .exerciseSuperSet
-                                    ?.cod_sessao_exercicio,
-                              ),
-                            );
-                          },
+                    ),
+                    SizedBox(width: 16),
+                    Expanded(
+                      child: Text(
+                        'Repetição',
+                        style: TextStyle(
+                          fontSize: 11,
+                          color: CupertinoColors.systemGrey,
                         ),
                       ),
-                      Switch(
-                        key: ValueKey(set.id),
-                        value: _checkedList[index],
+                    ),
+                  ],
+                ),
+
+                const SizedBox(height: 6),
+
+                // Campos de entrada
+                Row(
+                  children: [
+                    Expanded(
+                      child: CupertinoTextField(
+                        controller: _cargaControllers[index],
+                        keyboardType: TextInputType.number,
+                        placeholder: 'Ex: 40',
+                        textAlign: TextAlign.center,
                         onChanged: (value) {
-                          setState(() {
-                            _checkedList[index] = value;
-                          });
                           context.read<SessionBloc>().add(
                             UpdateSetExercise(
-                              check: value,
+                              newWeight: int.tryParse(value) ?? 0,
                               exerciseId: widget.exercise.cod_sessao_exercicio,
                               setId: set.id,
                               exerciseSuperSetId:
@@ -201,10 +185,30 @@ class _ExerciseInfoBodyState extends State<ExerciseInfoBody> {
                           );
                         },
                       ),
-                    ],
-                  ),
-                ],
-              ),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: CupertinoTextField(
+                        controller: _repControllers[index],
+                        keyboardType: TextInputType.number,
+                        placeholder: 'Ex: 12',
+                        textAlign: TextAlign.center,
+                        onChanged: (value) {
+                          context.read<SessionBloc>().add(
+                            UpdateSetExercise(
+                              newRepetition: int.tryParse(value) ?? 0,
+                              exerciseId: widget.exercise.cod_sessao_exercicio,
+                              setId: set.id,
+                              exerciseSuperSetId:
+                                  widget.exerciseSuperSet?.cod_sessao_exercicio,
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ),
           );
         },

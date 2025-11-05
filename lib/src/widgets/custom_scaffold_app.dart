@@ -1,13 +1,17 @@
-import 'package:fitcpxaluno/src/widgets/badge_session.dart';
-import 'package:flutter/material.dart';
+import 'package:fitcpxaluno/src/blocs/session_timer/sessionTimer.dart';
+import 'package:fitcpxaluno/src/screens/session_exercises.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 
-class CustomScaffoldApp extends StatelessWidget {
-  const CustomScaffoldApp({
+class CustomCupertinoScaffold extends StatelessWidget {
+  const CustomCupertinoScaffold({
     super.key,
     this.child,
     required this.currentLocation,
   });
+
   final Widget? child;
   final String currentLocation;
 
@@ -15,54 +19,115 @@ class CustomScaffoldApp extends StatelessWidget {
     '/home',
     '/fitness_assessments',
     '/workouts',
+    '/chat',
     '/settings',
   ];
+
+  String _formatDuration(int seconds) {
+    final minutes = (seconds ~/ 60).toString().padLeft(2, '0');
+    final remainingSeconds = (seconds % 60).toString().padLeft(2, '0');
+    return '$minutes:$remainingSeconds';
+  }
 
   @override
   Widget build(BuildContext context) {
     final index = routes.indexWhere((t) => currentLocation.startsWith(t));
 
-    return Scaffold(
-      floatingActionButton: BadgeSession(),
-      backgroundColor: Color.fromRGBO(40, 167, 69, 1),
-      appBar: AppBar(
+    return CupertinoPageScaffold(
+      backgroundColor: const Color.fromRGBO(40, 167, 69, 1),
+      navigationBar: const CupertinoNavigationBar(
         backgroundColor: Color.fromRGBO(40, 167, 69, 1),
-        elevation: 0,
-        // title: const Text('FitCpx App'),
+        border: null,
+        middle: Text(
+          'FitCpx Aluno',
+          style: TextStyle(color: CupertinoColors.white),
+        ),
       ),
-      // appBar: AppBar(backgroundColor: Colors.transparent, elevation: 0),
-      // extendBodyBehindAppBar: true,
-      body: child,
-      bottomNavigationBar: NavigationBar(
-        height: 55,
-        // backgroundColor: Colors.white.withOpacity(0.9),
-        elevation: 8,
-        surfaceTintColor: Colors.transparent,
-        shadowColor: Colors.black12,
-        selectedIndex: index >= 0 ? index : 0,
-        onDestinationSelected: (i) {
-          if (index != i) context.go(routes[i]);
-        },
-        destinations: const [
-          NavigationDestination(
-            icon: Icon(Icons.home_outlined),
-            selectedIcon: Icon(Icons.home),
-            label: 'Início',
+      child: Stack(
+        children: [
+          Positioned.fill(
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 60),
+              child: child ?? const SizedBox(),
+            ),
           ),
-          NavigationDestination(
-            icon: Icon(Icons.add_chart_outlined),
-            selectedIcon: Icon(Icons.add_chart_outlined),
-            label: 'Avaliações',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.fitness_center),
-            selectedIcon: Icon(Icons.fitness_center),
-            label: 'Treinos',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.person_outline),
-            selectedIcon: Icon(Icons.person),
-            label: 'Minha conta',
+
+          // Bottom + Badge
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // ⬇️ BlocBuilder apenas na TabBar
+                BlocBuilder<TimerBloc, TimerState>(
+                  builder: (context, state) {
+                    bool isRunning = state is RunningTimerState;
+                    String timeText = '';
+                    if (isRunning) {
+                      timeText = _formatDuration(state.secondsElapsed ?? 0);
+                    }
+
+                    return CupertinoTabBar(
+                      backgroundColor: CupertinoColors.systemBackground
+                          .resolveFrom(context),
+                      currentIndex: index >= 0 ? index : 0,
+                      onTap: (i) {
+                        if (i == 2 && isRunning) {
+                          // 👇 se treino está rolando, abre direto a tela do treino
+                          Navigator.of(context, rootNavigator: true).push(
+                            CupertinoPageRoute(
+                              builder: (context) => SessionExerciseScreen(),
+                            ),
+                          );
+                          return;
+                        }
+
+                        if (index != i) context.go(routes[i]);
+                      },
+                      items: [
+                        const BottomNavigationBarItem(
+                          icon: Icon(FontAwesomeIcons.house, size: 20),
+                          label: 'Início',
+                        ),
+                        const BottomNavigationBarItem(
+                          icon: Icon(FontAwesomeIcons.chartLine, size: 20),
+                          label: 'Avaliações',
+                        ),
+
+                        // 🔥 Aqui o item muda dinamicamente
+                        BottomNavigationBarItem(
+                          icon: isRunning
+                              ? Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 2,
+                                  ),
+                                  child: Text(
+                                    timeText,
+                                    style: const TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.bold,
+                                      color: CupertinoColors.activeGreen,
+                                    ),
+                                  ),
+                                )
+                              : const Icon(FontAwesomeIcons.dumbbell, size: 20),
+                          label: isRunning ? 'Ativo' : 'Treinos',
+                        ),
+
+                        const BottomNavigationBarItem(
+                          icon: Icon(FontAwesomeIcons.message, size: 20),
+                          label: 'Chat',
+                        ),
+                        const BottomNavigationBarItem(
+                          icon: Icon(FontAwesomeIcons.user, size: 20),
+                          label: 'Minha conta',
+                        ),
+                      ],
+                    );
+                  },
+                ),
+              ],
+            ),
           ),
         ],
       ),

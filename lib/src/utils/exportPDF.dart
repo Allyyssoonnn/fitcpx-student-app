@@ -1,6 +1,6 @@
 import 'package:fitcpxaluno/src/models/fitness_assessment_model.dart';
 import 'package:fitcpxaluno/src/utils/variables.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'package:pdf/pdf.dart';
 import 'package:printing/printing.dart';

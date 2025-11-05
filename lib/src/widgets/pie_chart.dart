@@ -1,11 +1,17 @@
 import 'package:fitcpxaluno/src/models/fitness_assessment_model.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class MyPieChart extends StatelessWidget {
   final FitnessAssessmentModel assessment;
+  final BuildContext context;
 
-  const MyPieChart({super.key, required this.assessment});
+  const MyPieChart({
+    super.key,
+    required this.assessment,
+    required this.context,
+  });
 
   Widget legendItem(Color color, String text) {
     return Row(
@@ -16,7 +22,13 @@ class MyPieChart extends StatelessWidget {
           decoration: BoxDecoration(shape: BoxShape.rectangle, color: color),
         ),
         const SizedBox(width: 8),
-        Text(text, style: const TextStyle(fontSize: 14)),
+        Text(
+          text,
+          style: TextStyle(
+            fontSize: 14,
+            color: CupertinoColors.label.resolveFrom(context),
+          ),
+        ),
       ],
     );
   }
