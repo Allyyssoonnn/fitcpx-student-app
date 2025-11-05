@@ -25,7 +25,10 @@ class WorkoutsScreen extends StatelessWidget {
           Text('Meus treinos'),
           Padding(
             padding: EdgeInsetsGeometry.symmetric(vertical: 12),
-            child: Container(height: 0.5, color: CupertinoColors.separator),
+            child: Container(
+              height: 0.5,
+              color: CupertinoColors.separator.resolveFrom(context),
+            ),
           ),
           BlocBuilder<WorkoutBloc, WorkoutState>(
             builder: (context, state) {

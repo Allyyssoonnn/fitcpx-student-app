@@ -11,9 +11,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class ViewFitnessAssessment extends StatefulWidget {
   final int? idAssessment;
-  final int? idClient;
 
-  const ViewFitnessAssessment({super.key, this.idAssessment, this.idClient});
+  const ViewFitnessAssessment({super.key, this.idAssessment});
 
   @override
   State<ViewFitnessAssessment> createState() => _ViewFitnessAssessmentState();
@@ -50,7 +49,6 @@ class _ViewFitnessAssessmentState extends State<ViewFitnessAssessment>
   Future<FitnessAssessmentModel> _loadFitnessAssessment() async {
     return await _fitnessAssessmentService.getFitnessAssessmentResult(
       id_assessment: widget.idAssessment,
-      id_client: widget.idClient,
     );
   }
 
@@ -72,6 +70,10 @@ class _ViewFitnessAssessmentState extends State<ViewFitnessAssessment>
         if (!didPop) _exitScreen();
       },
       child: CustomScaffold(
+        navigationBar: const CupertinoNavigationBar(
+          border: null,
+          middle: Text('Detalhes da Avaliação'),
+        ),
         child: SlideTransition(
           position: _slideAnimation,
           child: FadeTransition(
@@ -141,7 +143,7 @@ class _ViewFitnessAssessmentState extends State<ViewFitnessAssessment>
                         padding: EdgeInsetsGeometry.symmetric(vertical: 12),
                         child: Container(
                           height: 0.5,
-                          color: CupertinoColors.separator,
+                          color: CupertinoColors.separator.resolveFrom(context),
                         ),
                       ),
                       Expanded(

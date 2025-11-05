@@ -6,14 +6,9 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 
 class CustomCupertinoScaffold extends StatelessWidget {
-  const CustomCupertinoScaffold({
-    super.key,
-    this.child,
-    required this.currentLocation,
-  });
+  const CustomCupertinoScaffold({super.key, required this.navigationShell});
 
-  final Widget? child;
-  final String currentLocation;
+  final StatefulNavigationShell navigationShell;
 
   static const routes = [
     '/home',
@@ -31,7 +26,8 @@ class CustomCupertinoScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final index = routes.indexWhere((t) => currentLocation.startsWith(t));
+    // final index = routes.indexWhere((t) => currentLocation.startsWith(t));
+    final index = navigationShell.currentIndex;
 
     return CupertinoPageScaffold(
       backgroundColor: const Color.fromRGBO(40, 167, 69, 1),
@@ -48,7 +44,7 @@ class CustomCupertinoScaffold extends StatelessWidget {
           Positioned.fill(
             child: Padding(
               padding: const EdgeInsets.only(bottom: 60),
-              child: child ?? const SizedBox(),
+              child: navigationShell ?? const SizedBox(),
             ),
           ),
 

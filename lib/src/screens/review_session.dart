@@ -52,7 +52,7 @@ class ReviewSessionScreen extends StatelessWidget {
                   padding: EdgeInsetsGeometry.symmetric(vertical: 12),
                   child: Container(
                     height: 0.5,
-                    color: CupertinoColors.separator,
+                    color: CupertinoColors.separator.resolveFrom(context),
                   ),
                 ),
                 Expanded(
@@ -138,7 +138,8 @@ class ReviewSessionScreen extends StatelessWidget {
                                                 ),
                                             child: Container(
                                               height: 0.5,
-                                              color: CupertinoColors.separator,
+                                              color: CupertinoColors.separator
+                                                  .resolveFrom(context),
                                             ),
                                           ),
                                           const SizedBox(height: 20),

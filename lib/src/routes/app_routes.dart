@@ -1,3 +1,4 @@
+import 'package:fitcpxaluno/src/screens/view_fitness_assessment.dart';
 import 'package:fitcpxaluno/src/views/app/chat.dart';
 import 'package:fitcpxaluno/src/views/app/fitness_assessments.dart';
 import 'package:fitcpxaluno/src/views/app/home.dart';
@@ -39,6 +40,13 @@ class AppRoutes extends StatelessWidget {
             ),
             GoRoute(path: '/chat', builder: (context, state) => ChatScreen()),
           ],
+        ),
+        GoRoute(
+          path: '/fitness_assessment/:id',
+          builder: (context, state) {
+            final id = int.parse(state.pathParameters['id']!);
+            return ViewFitnessAssessment(idAssessment: id);
+          },
         ),
       ],
     );

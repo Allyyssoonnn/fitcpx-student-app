@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:dio/dio.dart';
 import 'package:fitcpxaluno/src/core/dio_client.dart';
 import 'package:fitcpxaluno/src/core/dio_exceptions.dart';
@@ -30,7 +28,6 @@ class FitnessAssessmentService {
 
   Future<FitnessAssessmentModel> getFitnessAssessmentResult({
     int? id_assessment,
-    int? id_client,
   }) async {
     try {
       final prefs = await SharedPreferences.getInstance();

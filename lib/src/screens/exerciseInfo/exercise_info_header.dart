@@ -88,12 +88,19 @@ class _ExerciseInfoHeaderState extends State<ExerciseInfoHeader> {
           child: Text(
             exercise.nome_exercicio,
             textAlign: TextAlign.center,
-            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.w700,
+              color: CupertinoColors.label.resolveFrom(context),
+            ),
           ),
         ),
         Padding(
           padding: EdgeInsetsGeometry.symmetric(vertical: 12),
-          child: Container(height: 0.5, color: CupertinoColors.separator),
+          child: Container(
+            height: 0.5,
+            color: CupertinoColors.separator.resolveFrom(context),
+          ),
         ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8),
@@ -196,7 +203,10 @@ class _ExerciseInfoHeaderState extends State<ExerciseInfoHeader> {
         ),
         Padding(
           padding: EdgeInsetsGeometry.symmetric(vertical: 12),
-          child: Container(height: 0.5, color: CupertinoColors.separator),
+          child: Container(
+            height: 0.5,
+            color: CupertinoColors.separator.resolveFrom(context),
+          ),
         ),
         if (widget.allSuperSets.isNotEmpty)
           Padding(

@@ -1,10 +1,10 @@
 import 'package:fitcpxaluno/src/blocs/fitnessAssessment/fitness_assessment_bloc.dart';
 import 'package:fitcpxaluno/src/blocs/fitnessAssessment/fitness_assessment_state.dart';
-import 'package:fitcpxaluno/src/screens/view_fitness_assessment.dart';
 import 'package:fitcpxaluno/src/widgets/cupertino_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:go_router/go_router.dart';
 
 class FitnessAssessmentsScreen extends StatelessWidget {
   FitnessAssessmentsScreen({super.key});
@@ -25,7 +25,10 @@ class FitnessAssessmentsScreen extends StatelessWidget {
           Text('Minhas avaliações'),
           Padding(
             padding: EdgeInsetsGeometry.symmetric(vertical: 12),
-            child: Container(height: 0.5, color: CupertinoColors.separator),
+            child: Container(
+              height: 0.5,
+              color: CupertinoColors.separator.resolveFrom(context),
+            ),
           ),
           BlocBuilder<FitnessAssessmentBloc, FitnessAssessmentState>(
             builder: (context, state) {
@@ -47,15 +50,11 @@ class FitnessAssessmentsScreen extends StatelessWidget {
                     itemBuilder: (context, index) {
                       final assessment = state.fitnessAssessments[index];
                       return CupertinoCard(
-                        onTap: () => Navigator.of(context).push(
-                          CupertinoPageRoute(
-                            builder: (context) => ViewFitnessAssessment(
-                              key: UniqueKey(),
-                              idAssessment: assessment.id,
-                              idClient: assessment.idClient,
-                            ),
+                        onTap: () => {
+                          context.push(
+                            "/fitness_assessments/view/${assessment.id}",
                           ),
-                        ),
+                        },
                         child: Row(
                           children: [
                             Container(

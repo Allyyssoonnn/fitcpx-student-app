@@ -2,8 +2,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class CustomScaffold extends StatelessWidget {
-  const CustomScaffold({super.key, this.child, this.floatingActionButton});
+  const CustomScaffold({
+    super.key,
+    this.child,
+    this.floatingActionButton,
+    this.navigationBar,
+  });
 
+  final CupertinoNavigationBar? navigationBar;
   final Widget? floatingActionButton;
   final Widget? child;
 
@@ -12,14 +18,7 @@ class CustomScaffold extends StatelessWidget {
     return Material(
       child: CupertinoPageScaffold(
         // backgroundColor: const Color.fromRGBO(40, 167, 69, 1),
-        // navigationBar: const CupertinoNavigationBar(
-        //   backgroundColor: Color.fromRGBO(40, 167, 69, 1),
-        //   border: null,
-        //   middle: Text(
-        //     'FitCpx Aluno',
-        //     style: TextStyle(color: CupertinoColors.white),
-        //   ),
-        // ),
+        navigationBar: navigationBar,
         resizeToAvoidBottomInset: true,
         child: Stack(
           children: [

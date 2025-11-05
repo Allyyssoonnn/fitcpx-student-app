@@ -106,10 +106,10 @@ class _ExerciseInfoBodyState extends State<ExerciseInfoBody> {
                   children: [
                     Text(
                       '${index + 1}ª Série',
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontWeight: FontWeight.w600,
                         fontSize: 13,
-                        color: CupertinoColors.label,
+                        color: CupertinoColors.label.resolveFrom(context),
                       ),
                     ),
                     CupertinoSwitch(
@@ -134,7 +134,7 @@ class _ExerciseInfoBodyState extends State<ExerciseInfoBody> {
                   padding: EdgeInsetsGeometry.symmetric(vertical: 12),
                   child: Container(
                     height: 0.5,
-                    color: CupertinoColors.separator,
+                    color: CupertinoColors.separator.resolveFrom(context),
                   ),
                 ),
                 // Títulos dos campos

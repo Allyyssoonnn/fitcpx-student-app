@@ -7,6 +7,7 @@ import 'package:fitcpxaluno/src/widgets/customScaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -78,6 +79,7 @@ class _LoginScreenState extends State<LoginScreen>
           context: context,
         ),
       );
+      context.go("/home");
     } else {
       Map<String, dynamic> response = await _userService.verifyAccount(
         _email,

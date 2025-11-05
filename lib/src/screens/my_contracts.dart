@@ -12,6 +12,10 @@ class MyContracts extends StatelessWidget {
 
   Widget build(BuildContext context) {
     return CustomScaffold(
+      navigationBar: const CupertinoNavigationBar(
+        border: null,
+        middle: Text('Meus contratos'),
+      ),
       child: Container(
         padding: const EdgeInsets.fromLTRB(24, 32, 24, 40),
         decoration: BoxDecoration(
@@ -24,14 +28,17 @@ class MyContracts extends StatelessWidget {
         child: Column(
           children: [
             Text(
-              'Meus contratos',
+              'Contratos',
               style: TextStyle(
                 color: CupertinoColors.label.resolveFrom(context),
               ),
             ),
             Padding(
               padding: EdgeInsetsGeometry.symmetric(vertical: 12),
-              child: Container(height: 0.5, color: CupertinoColors.separator),
+              child: Container(
+                height: 0.5,
+                color: CupertinoColors.separator.resolveFrom(context),
+              ),
             ),
             BlocBuilder<ContractBloc, ContractState>(
               builder: (context, state) {

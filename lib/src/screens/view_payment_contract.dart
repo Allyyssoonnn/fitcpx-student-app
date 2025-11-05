@@ -50,7 +50,10 @@ class _viewPaymentContractState extends State<ViewPaymentContract> {
             ),
             Padding(
               padding: EdgeInsetsGeometry.symmetric(vertical: 12),
-              child: Container(height: 0.5, color: CupertinoColors.separator),
+              child: Container(
+                height: 0.5,
+                color: CupertinoColors.separator.resolveFrom(context),
+              ),
             ),
             Expanded(
               child: ListView.builder(

@@ -57,8 +57,12 @@ class SessionScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomScaffold(
+      navigationBar: const CupertinoNavigationBar(
+        border: null,
+        middle: Text('Sessões do treino'),
+      ),
       child: Container(
-        padding: const EdgeInsets.fromLTRB(24, 32, 24, 40),
+        padding: const EdgeInsets.symmetric(vertical: 20),
         decoration: BoxDecoration(
           color: CupertinoColors.secondarySystemBackground.resolveFrom(context),
           borderRadius: BorderRadius.only(
@@ -72,10 +76,20 @@ class SessionScreen extends StatelessWidget {
               nameWorkout,
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
-            Text('Sessões'),
+            Text(
+              'Sessões',
+              style: TextStyle(
+                color: CupertinoColors.label.resolveFrom(context),
+              ),
+            ),
             Padding(
               padding: EdgeInsetsGeometry.symmetric(vertical: 12),
-              child: Container(height: 0.5, color: CupertinoColors.separator),
+              child: Container(
+                height: 0.5,
+                color: CupertinoColors.separator
+                    .resolveFrom(context)
+                    .resolveFrom(context),
+              ),
             ),
             Expanded(
               child: ListView.builder(
@@ -110,6 +124,9 @@ class SessionScreen extends StatelessWidget {
                                   fontWeight: FontWeight.w600,
                                   // fontSize: 18,
                                   fontSize: 14,
+                                  color: CupertinoColors.label.resolveFrom(
+                                    context,
+                                  ),
                                 ),
                               ),
                               const SizedBox(height: 4),

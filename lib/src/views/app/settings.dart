@@ -129,7 +129,7 @@ class _SettingsScreen extends State<SettingsScreen> {
                     padding: EdgeInsetsGeometry.symmetric(vertical: 12),
                     child: Container(
                       height: 0.5,
-                      color: CupertinoColors.separator,
+                      color: CupertinoColors.separator.resolveFrom(context),
                     ),
                   ),
                   GestureDetector(

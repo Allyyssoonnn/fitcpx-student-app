@@ -88,6 +88,10 @@ class ViewImagesFitnessAssessment extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomScaffold(
+      navigationBar: const CupertinoNavigationBar(
+        border: null,
+        middle: Text('Imagens da Avaliação'),
+      ),
       child: Container(
         padding: const EdgeInsets.fromLTRB(24, 32, 24, 40),
         width: double.infinity,
@@ -114,7 +118,10 @@ class ViewImagesFitnessAssessment extends StatelessWidget {
             ),
             Padding(
               padding: EdgeInsetsGeometry.symmetric(vertical: 12),
-              child: Container(height: 0.5, color: CupertinoColors.separator),
+              child: Container(
+                height: 0.5,
+                color: CupertinoColors.separator.resolveFrom(context),
+              ),
             ),
             Expanded(
               child: (images == null || images!.isEmpty)

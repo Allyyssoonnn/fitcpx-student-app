@@ -1,7 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:fitcpxaluno/src/blocs/auth/auth_bloc.dart';
-import 'package:fitcpxaluno/src/blocs/auth/auth_state.dart';
 import 'package:fitcpxaluno/src/blocs/contract/contract_bloc.dart';
 import 'package:fitcpxaluno/src/blocs/contract/contract_event.dart';
 import 'package:fitcpxaluno/src/blocs/fitnessAssessment/fitness_assessment_bloc.dart';
@@ -12,16 +11,17 @@ import 'package:fitcpxaluno/src/blocs/session_timer/sessionTimer.dart';
 import 'package:fitcpxaluno/src/blocs/workout/workout_bloc.dart';
 import 'package:fitcpxaluno/src/blocs/workout/workout_event.dart';
 import 'package:fitcpxaluno/src/core/dio_client.dart';
-import 'package:fitcpxaluno/src/routes/app_routes.dart';
+import 'package:fitcpxaluno/src/routes/app_routes2.dart';
 import 'package:fitcpxaluno/src/services/contract_service.dart';
 import 'package:fitcpxaluno/src/services/fitness_assessment_service.dart';
 import 'package:fitcpxaluno/src/services/user_service.dart';
 import 'package:fitcpxaluno/src/services/workout_service.dart';
-import 'package:fitcpxaluno/src/views/auth/login.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 // import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:go_router/go_router.dart';
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
@@ -71,6 +71,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   late AuthBloc authBloc;
   Key appKey = UniqueKey();
+  late GoRouter appRouter;
 
   @override
   void initState() {
@@ -79,6 +80,9 @@ class _MyAppState extends State<MyApp> {
     DioClient.getInstance(authBloc);
     authBloc.checkLoginStatus();
     _initNotifications();
+
+    // O Roteador é criado aqui, usando o AuthBloc
+    appRouter = createRouter(authBloc);
   }
 
   void _initNotifications() async {
@@ -108,18 +112,6 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
-  void resetApp() {
-    setState(() {
-      // Troca a key para reinicializar o MultiBlocProvider e fechar os blocos antigos
-      appKey = UniqueKey();
-
-      // Cria um novo AuthBloc para a nova árvore
-      authBloc = AuthBloc(UserService());
-      DioClient.getInstance(authBloc);
-      authBloc.checkLoginStatus();
-    });
-  }
-
   @override
   void dispose() {
     authBloc.close();
@@ -146,37 +138,37 @@ class _MyAppState extends State<MyApp> {
         BlocProvider(create: (_) => TimerBloc()..add(StopTimer())),
         BlocProvider(create: (_) => authBloc),
       ],
-      child: MaterialApp(
+      child: CupertinoApp.router(
+        localizationsDelegates: const [
+          DefaultMaterialLocalizations.delegate,
+          DefaultCupertinoLocalizations.delegate,
+          DefaultWidgetsLocalizations.delegate,
+        ],
         debugShowCheckedModeBanner: false,
         title: 'FitCpx Aluno',
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
-        ),
-        home: BlocListener<AuthBloc, AuthState>(
-          bloc: authBloc,
-          listener: (context, state) {
-            if (state is AuthUnAuthenticated) {
-              resetApp();
-            }
-          },
-          child: BlocBuilder<AuthBloc, AuthState>(
-            bloc: authBloc,
-            builder: (context, state) {
-              if (state is AuthAuthenticated) {
-                // Pode disparar os eventos para recarregar dados aqui
-                context.read<WorkoutBloc>().add(LoadWorkouts());
-                context.read<FitnessAssessmentBloc>().add(
-                  LoadFitnessAssessment(),
-                );
-                context.read<ContractBloc>().add(LoadContract());
-                return const AppRoutes();
-              } else {
-                return const LoginScreen();
-              }
-            },
-          ),
-        ),
+        theme: cupertinoThemeData,
+        routerConfig: appRouter,
       ),
     );
   }
 }
+
+// Defina seu ThemeData Material para reutilização
+final materialTheme = ThemeData(
+  colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
+  // Mantenha seu override Cupertino aqui, caso algum widget Material
+  // queira buscar um tema Cupertino (embora o CupertinoApp resolva melhor)
+  cupertinoOverrideTheme: const CupertinoThemeData(
+    primaryColor: Color.fromRGBO(40, 167, 69, 1),
+    barBackgroundColor: Color.fromRGBO(40, 167, 69, 1),
+    scaffoldBackgroundColor: Color.fromRGBO(242, 245, 237, 1),
+  ),
+);
+
+// Defina seu CupertinoThemeData para reutilização (se for diferente)
+const cupertinoThemeData = CupertinoThemeData(
+  // brightness: Brightness.light,
+  primaryColor: Color.fromRGBO(40, 167, 69, 1),
+  // barBackgroundColor: Color.fromRGBO(40, 167, 69, 1),
+  // scaffoldBackgroundColor: CupertinoColors.systemBackground,
+);
