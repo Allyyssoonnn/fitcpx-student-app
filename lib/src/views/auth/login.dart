@@ -124,6 +124,7 @@ class _LoginScreenState extends State<LoginScreen>
         if (!didPop) _exitScreen();
       },
       child: CustomScaffold(
+        color: Color.fromRGBO(40, 167, 69, 1),
         child: GestureDetector(
           behavior: HitTestBehavior.translucent,
           onTap: () => FocusScope.of(context).unfocus(),

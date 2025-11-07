@@ -17,7 +17,7 @@ class MyContracts extends StatelessWidget {
         middle: Text('Meus contratos'),
       ),
       child: Container(
-        padding: const EdgeInsets.fromLTRB(24, 32, 24, 40),
+        padding: const EdgeInsets.symmetric(vertical: 40),
         decoration: BoxDecoration(
           color: CupertinoColors.secondarySystemBackground.resolveFrom(context),
           borderRadius: BorderRadius.only(

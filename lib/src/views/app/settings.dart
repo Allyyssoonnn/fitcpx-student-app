@@ -4,6 +4,7 @@ import 'package:fitcpxaluno/src/screens/my_contracts.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -44,7 +45,7 @@ class _SettingsScreen extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     return Container(
-          padding: const EdgeInsets.fromLTRB(24, 32, 24, 40),
+          padding: const EdgeInsets.symmetric(vertical: 50, horizontal: 10),
           decoration: BoxDecoration(
             color: CupertinoColors.secondarySystemBackground.resolveFrom(
               context,
@@ -149,7 +150,7 @@ class _SettingsScreen extends State<SettingsScreen> {
                             Row(
                               spacing: 16,
                               children: [
-                                Icon(CupertinoIcons.money_dollar),
+                                Icon(FontAwesomeIcons.moneyBillWave),
                                 Text('Pagamentos'),
                               ],
                             ),
@@ -159,6 +160,33 @@ class _SettingsScreen extends State<SettingsScreen> {
                       ),
                     ),
                   ),
+                  // GestureDetector(
+                  //   onTap: () {},
+                  //   child: Container(
+                  //     padding: EdgeInsets.all(20),
+                  //     child: GestureDetector(
+                  //       onTap: () =>
+                  //           Navigator.of(context, rootNavigator: true).push(
+                  //             CupertinoPageRoute(
+                  //               builder: (context) => MyContracts(),
+                  //             ),
+                  //           ),
+                  //       child: Row(
+                  //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //         children: [
+                  //           Row(
+                  //             spacing: 16,
+                  //             children: [
+                  //               Icon(FontAwesomeIcons.dumbbell),
+                  //               Text('Treino realizados'),
+                  //             ],
+                  //           ),
+                  //           Icon(CupertinoIcons.chevron_right),
+                  //         ],
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ),
                 ],
               ),
               Column(

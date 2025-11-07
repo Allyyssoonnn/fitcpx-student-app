@@ -1,14 +1,28 @@
+import 'dart:async';
+
 import 'package:fitcpxaluno/src/blocs/session_timer/sessionTimer.dart';
 import 'package:fitcpxaluno/src/screens/session_exercises.dart';
+import 'package:fitcpxaluno/src/services/chat_service.dart';
+import 'package:fitcpxaluno/src/views/app/chat.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 
-class CustomCupertinoScaffold extends StatelessWidget {
+class CustomCupertinoScaffold extends StatefulWidget {
   const CustomCupertinoScaffold({super.key, required this.navigationShell});
 
   final StatefulNavigationShell navigationShell;
+
+  @override
+  State<CustomCupertinoScaffold> createState() =>
+      _CustomCupertinoScaffoldState();
+}
+
+class _CustomCupertinoScaffoldState extends State<CustomCupertinoScaffold> {
+  final chatService = ChatService();
+  String unreadCount = "0";
+  Timer? _timer;
 
   static const routes = [
     '/home',
@@ -17,6 +31,33 @@ class CustomCupertinoScaffold extends StatelessWidget {
     '/chat',
     '/settings',
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUnreadMessages();
+
+    _timer = Timer.periodic(const Duration(minutes: 5), (_) {
+      _loadUnreadMessages();
+    });
+  }
+
+  @override
+  void dispose() {
+    // 🔹 cancela o timer quando o widget é destruído
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  Future<void> _loadUnreadMessages() async {
+    try {
+      final count = await chatService.getUnreadMessages();
+      if (!mounted) return;
+      setState(() => unreadCount = count);
+    } catch (e) {
+      debugPrint('Erro ao buscar mensagens não lidas: $e');
+    }
+  }
 
   String _formatDuration(int seconds) {
     final minutes = (seconds ~/ 60).toString().padLeft(2, '0');
@@ -27,7 +68,7 @@ class CustomCupertinoScaffold extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // final index = routes.indexWhere((t) => currentLocation.startsWith(t));
-    final index = navigationShell.currentIndex;
+    final index = widget.navigationShell.currentIndex;
 
     return CupertinoPageScaffold(
       backgroundColor: const Color.fromRGBO(40, 167, 69, 1),
@@ -43,8 +84,8 @@ class CustomCupertinoScaffold extends StatelessWidget {
         children: [
           Positioned.fill(
             child: Padding(
-              padding: const EdgeInsets.only(bottom: 60),
-              child: navigationShell ?? const SizedBox(),
+              padding: const EdgeInsets.only(bottom: 50),
+              child: widget.navigationShell,
             ),
           ),
 
@@ -73,6 +114,16 @@ class CustomCupertinoScaffold extends StatelessWidget {
                           Navigator.of(context, rootNavigator: true).push(
                             CupertinoPageRoute(
                               builder: (context) => SessionExerciseScreen(),
+                            ),
+                          );
+                          return;
+                        }
+
+                        if (i == 3) {
+                          setState(() => unreadCount = "0");
+                          Navigator.of(context, rootNavigator: true).push(
+                            CupertinoPageRoute(
+                              builder: (context) => ChatScreen(),
                             ),
                           );
                           return;
@@ -110,8 +161,39 @@ class CustomCupertinoScaffold extends StatelessWidget {
                           label: isRunning ? 'Ativo' : 'Treinos',
                         ),
 
-                        const BottomNavigationBarItem(
-                          icon: Icon(FontAwesomeIcons.message, size: 20),
+                        BottomNavigationBarItem(
+                          icon: Stack(
+                            clipBehavior: Clip.none,
+                            children: [
+                              const Icon(FontAwesomeIcons.message, size: 20),
+                              if (unreadCount != "0")
+                                Positioned(
+                                  right: -6,
+                                  top: -2,
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 5,
+                                      vertical: 1,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: CupertinoColors.activeGreen,
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    constraints: const BoxConstraints(
+                                      minWidth: 14,
+                                      minHeight: 14,
+                                    ),
+                                    child: Text(
+                                      unreadCount,
+                                      style: const TextStyle(
+                                        color: CupertinoColors.white,
+                                        fontSize: 10,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                            ],
+                          ),
                           label: 'Chat',
                         ),
                         const BottomNavigationBarItem(

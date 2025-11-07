@@ -47,6 +47,13 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
     final savedTime = prefs.getInt('session_timer') ?? 0;
     _secondsElapsed = savedTime;
 
+    final sessionJson = prefs.getString('session');
+    final hasActiveWorkout = sessionJson != null;
+
+    if (!hasActiveWorkout) {
+      add(StopTimer());
+    }
+
     _timer?.cancel();
     _timer = Timer.periodic(Duration(seconds: 1), (_) {
       _secondsElapsed++;

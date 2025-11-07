@@ -1,6 +1,7 @@
 import 'package:fitcpxaluno/src/screens/my_contracts.dart';
 import 'package:fitcpxaluno/src/widgets/welcome_button.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
@@ -11,7 +12,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-          padding: const EdgeInsets.fromLTRB(24, 32, 24, 40),
+          padding: const EdgeInsets.symmetric(vertical: 40),
           decoration: BoxDecoration(
             color: CupertinoColors.secondarySystemBackground.resolveFrom(
               context,
@@ -38,8 +39,10 @@ class HomeScreen extends StatelessWidget {
                     Column(
                       children: [
                         WelcomeButton(
+                          color: Colors.green,
+                          labelColor: Colors.black,
                           icon: FontAwesomeIcons.dumbbell,
-                          buttonText: 'Meus treinos',
+                          buttonText: 'Treinar agora',
                           buttonDescription: 'Realizar treino de hoje',
                           onTap: () => context.go('/workouts'),
                         ),

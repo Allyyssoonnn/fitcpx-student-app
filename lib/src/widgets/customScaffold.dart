@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -7,17 +9,20 @@ class CustomScaffold extends StatelessWidget {
     this.child,
     this.floatingActionButton,
     this.navigationBar,
+    this.color,
   });
 
   final CupertinoNavigationBar? navigationBar;
   final Widget? floatingActionButton;
   final Widget? child;
+  final Color? color;
 
   @override
   Widget build(BuildContext context) {
     return Material(
       child: CupertinoPageScaffold(
         // backgroundColor: const Color.fromRGBO(40, 167, 69, 1),
+        backgroundColor: color,
         navigationBar: navigationBar,
         resizeToAvoidBottomInset: true,
         child: Stack(
@@ -42,7 +47,7 @@ class CustomScaffold extends StatelessWidget {
                 ],
               ),
             ),
-            SafeArea(bottom: false, child: child!),
+            SafeArea(bottom: Platform.isAndroid ? true : false, child: child!),
           ],
         ),
       ),

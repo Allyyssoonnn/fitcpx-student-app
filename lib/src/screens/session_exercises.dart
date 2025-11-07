@@ -67,17 +67,17 @@ class SessionExerciseScreen extends StatelessWidget {
                           final exercise = session.exercises![index];
 
                           return CupertinoCard(
-                            child: GestureDetector(
-                              onTap: () => Navigator.push(
-                                context,
-                                CupertinoPageRoute(
-                                  builder: (context) => ExerciseInfoScreen(
-                                    key: UniqueKey(),
-                                    exerciseIndex: index,
-                                    allExercises: session!.exercises ?? [],
-                                  ),
+                            onTap: () => Navigator.push(
+                              context,
+                              CupertinoPageRoute(
+                                builder: (context) => ExerciseInfoScreen(
+                                  key: UniqueKey(),
+                                  exerciseIndex: index,
+                                  allExercises: session!.exercises ?? [],
                                 ),
                               ),
+                            ),
+                            child: GestureDetector(
                               child: Row(
                                 children: [
                                   Expanded(

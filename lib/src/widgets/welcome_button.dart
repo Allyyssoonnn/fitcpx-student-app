@@ -9,6 +9,7 @@ class WelcomeButton extends StatelessWidget {
     required this.onTap,
     required this.icon,
     this.color,
+    this.labelColor,
     this.showBadge,
   });
 
@@ -17,6 +18,7 @@ class WelcomeButton extends StatelessWidget {
   final VoidCallback onTap;
   final IconData icon;
   final Color? color;
+  final Color? labelColor;
   final bool? showBadge;
 
   @override
@@ -34,9 +36,11 @@ class WelcomeButton extends StatelessWidget {
               margin: const EdgeInsets.all(10),
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: CupertinoColors.tertiarySystemBackground.resolveFrom(
-                  context,
-                ),
+                color:
+                    color ??
+                    CupertinoColors.tertiarySystemBackground.resolveFrom(
+                      context,
+                    ),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withOpacity(0.2),
@@ -50,7 +54,7 @@ class WelcomeButton extends StatelessWidget {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(icon),
+                  Icon(icon, color: labelColor),
                   Text(
                     buttonText,
                     style: TextStyle(

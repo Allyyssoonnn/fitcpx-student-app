@@ -25,6 +25,7 @@ class _YoutubeWebViewPlayerState extends State<YoutubeWebViewPlayer> {
         autoPlay: false,
         enableCaption: true,
         forceHD: true,
+        mute: true,
       ),
     );
   }
@@ -56,7 +57,11 @@ class _YoutubeWebViewPlayerState extends State<YoutubeWebViewPlayer> {
             builder: (_) {
               final fullscreenController = YoutubePlayerController(
                 initialVideoId: videoId,
-                flags: YoutubePlayerFlags(autoPlay: true, forceHD: true),
+                flags: YoutubePlayerFlags(
+                  autoPlay: false,
+                  forceHD: true,
+                  mute: true,
+                ),
               );
 
               fullscreenController.toggleFullScreenMode();

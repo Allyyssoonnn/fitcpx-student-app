@@ -31,8 +31,12 @@ class _viewPaymentContractState extends State<ViewPaymentContract> {
   @override
   Widget build(BuildContext context) {
     return CustomScaffold(
+      navigationBar: const CupertinoNavigationBar(
+        border: null,
+        middle: Text('Pagamentos do contrato'),
+      ),
       child: Container(
-        padding: const EdgeInsets.fromLTRB(24, 32, 24, 40),
+        padding: const EdgeInsets.symmetric(vertical: 40),
         decoration: BoxDecoration(
           color: CupertinoColors.secondarySystemBackground.resolveFrom(context),
           borderRadius: BorderRadius.only(
