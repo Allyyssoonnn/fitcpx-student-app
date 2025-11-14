@@ -16,8 +16,10 @@ import 'package:fitcpxaluno/src/services/contract_service.dart';
 import 'package:fitcpxaluno/src/services/fitness_assessment_service.dart';
 import 'package:fitcpxaluno/src/services/user_service.dart';
 import 'package:fitcpxaluno/src/services/workout_service.dart';
+import 'package:fitcpxaluno/src/utils/variables.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 // import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -54,7 +56,9 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   await Firebase.initializeApp();
+  await Variables.loadEnv(); // ← CARREGA ANTES DO DIO
 
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 

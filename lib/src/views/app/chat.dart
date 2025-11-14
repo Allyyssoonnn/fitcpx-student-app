@@ -69,7 +69,11 @@ class _ChatScreenState extends State<ChatScreen> {
             ),
           ),
           actionButton: ChatActionButton(
-            child: const Icon(CupertinoIcons.paperplane_fill, size: 20),
+            child: Icon(
+              CupertinoIcons.paperplane_fill,
+              color: CupertinoColors.label.resolveFrom(context),
+              size: 20,
+            ),
             onPressed: (String newMessage) {
               if (newMessage.trim().isNotEmpty) {
                 _sendMessage(newMessage);

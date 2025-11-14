@@ -184,7 +184,8 @@ class _ExerciseInfoHeaderState extends State<ExerciseInfoHeader> {
                 ),
               if (widget.indexExerciseSelected >=
                   widget.sessionExerciseLength - 1)
-                OutlinedButton.icon(
+                CupertinoButton.tinted(
+                  color: CupertinoColors.activeGreen,
                   onPressed: () {
                     Navigator.pop(context);
                     Navigator.push(
@@ -195,8 +196,15 @@ class _ExerciseInfoHeaderState extends State<ExerciseInfoHeader> {
                       ),
                     );
                   },
-                  icon: const Icon(Icons.add_chart_outlined),
-                  label: const Text('Finalizar'),
+                  child: Row(
+                    children: [
+                      const Text(
+                        'Finalizar',
+                        style: TextStyle(color: CupertinoColors.activeGreen),
+                      ),
+                      const Icon(CupertinoIcons.chart_bar),
+                    ],
+                  ),
                 ),
             ],
           ),

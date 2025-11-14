@@ -1,3 +1,5 @@
+import 'package:dio/dio.dart';
+import 'package:fitcpxaluno/src/core/dio_client.dart';
 import 'package:fitcpxaluno/src/models/fitness_assessment_model.dart';
 import 'package:fitcpxaluno/src/utils/variables.dart';
 import 'package:flutter/cupertino.dart';
@@ -7,6 +9,8 @@ import 'package:printing/printing.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 Future<String> carregarHtmlDoServidor() async {
+  final Dio _dio = DioClient.instance;
+
   final response = await http.get(
     Uri.parse('${Variables.url}/physicalAssessments/fitnessassessmentpdf'),
   );

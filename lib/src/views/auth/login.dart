@@ -2,7 +2,9 @@ import 'dart:async';
 
 import 'package:fitcpxaluno/src/blocs/auth/auth_bloc.dart';
 import 'package:fitcpxaluno/src/blocs/auth/auth_event.dart';
+import 'package:fitcpxaluno/src/core/dio_client.dart';
 import 'package:fitcpxaluno/src/services/user_service.dart';
+import 'package:fitcpxaluno/src/utils/variables.dart';
 import 'package:fitcpxaluno/src/widgets/customScaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -21,7 +23,7 @@ class _LoginScreenState extends State<LoginScreen>
   late final AnimationController _controller;
   late final Animation<Offset> _slideAnimation;
   late final Animation<double> _fadeAnimation;
-  late final UserService _userService = UserService();
+  late UserService _userService = UserService();
 
   String _name = '';
   String _email = '';
@@ -81,6 +83,26 @@ class _LoginScreenState extends State<LoginScreen>
       );
       context.go("/home");
     } else {
+      if (_email == "devapp") {
+        Variables.setEnv(Env.test);
+        DioClient.reset(context.read<AuthBloc>());
+        setState(() {
+          _name = "";
+          _userService = UserService();
+        });
+        return;
+      }
+
+      if (_email == "prodapp") {
+        Variables.setEnv(Env.production);
+        DioClient.reset(context.read<AuthBloc>());
+        setState(() {
+          _name = "";
+          _userService = UserService();
+        });
+        return;
+      }
+
       Map<String, dynamic> response = await _userService.verifyAccount(
         _email,
         context,
@@ -331,8 +353,23 @@ class _LoginScreenState extends State<LoginScreen>
 
                             const SizedBox(height: 12),
 
+                            if (Variables.envLabel.isNotEmpty)
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 6),
+                                child: Text(
+                                  Variables.envLabel,
+                                  textAlign: TextAlign.center,
+                                  style: const TextStyle(
+                                    fontSize: 10,
+                                    color: Colors.black38,
+                                    // color: Colors.redAccent,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+
                             const Text(
-                              'Developed by Lab Complex Dev LTDA - 59.820.051/0001-02',
+                              'Developed by Lab Complex Dev LTDA',
                               style: TextStyle(
                                 fontSize: 10,
                                 color: Colors.black38,

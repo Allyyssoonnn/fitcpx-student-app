@@ -33,4 +33,9 @@ class DioClient {
     }
     return _dio!;
   }
+
+  static void reset(AuthBloc authBloc) {
+    _dio = null;
+    getInstance(authBloc);
+  }
 }
