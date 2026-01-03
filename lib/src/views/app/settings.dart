@@ -1,6 +1,7 @@
 import 'package:fitcpxaluno/src/blocs/auth/auth_bloc.dart';
 import 'package:fitcpxaluno/src/blocs/auth/auth_event.dart';
 import 'package:fitcpxaluno/src/screens/my_contracts.dart';
+import 'package:fitcpxaluno/src/screens/workout_history.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -160,33 +161,33 @@ class _SettingsScreen extends State<SettingsScreen> {
                       ),
                     ),
                   ),
-                  // GestureDetector(
-                  //   onTap: () {},
-                  //   child: Container(
-                  //     padding: EdgeInsets.all(20),
-                  //     child: GestureDetector(
-                  //       onTap: () =>
-                  //           Navigator.of(context, rootNavigator: true).push(
-                  //             CupertinoPageRoute(
-                  //               builder: (context) => MyContracts(),
-                  //             ),
-                  //           ),
-                  //       child: Row(
-                  //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //         children: [
-                  //           Row(
-                  //             spacing: 16,
-                  //             children: [
-                  //               Icon(FontAwesomeIcons.dumbbell),
-                  //               Text('Treino realizados'),
-                  //             ],
-                  //           ),
-                  //           Icon(CupertinoIcons.chevron_right),
-                  //         ],
-                  //       ),
-                  //     ),
-                  //   ),
-                  // ),
+                  GestureDetector(
+                    onTap: () {},
+                    child: Container(
+                      padding: EdgeInsets.all(20),
+                      child: GestureDetector(
+                        onTap: () =>
+                            Navigator.of(context, rootNavigator: true).push(
+                              CupertinoPageRoute(
+                                builder: (context) => WorkoutHistory(),
+                              ),
+                            ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              spacing: 16,
+                              children: [
+                                Icon(FontAwesomeIcons.dumbbell),
+                                Text('Histórico de treinos'),
+                              ],
+                            ),
+                            Icon(CupertinoIcons.chevron_right),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
                 ],
               ),
               Column(
