@@ -107,6 +107,7 @@ class _LoginScreenState extends State<LoginScreen>
         _email,
         context,
       );
+      print(response);
 
       if (response['name'].isNotEmpty) {
         setState(() {

@@ -275,7 +275,6 @@ class ReviewSessionScreen extends StatelessWidget {
                   ),
 
                   CupertinoButton.tinted(
-                    sizeStyle: CupertinoButtonSize.medium,
                     color: CupertinoColors.activeGreen,
                     onPressed: () {
                       context.read<SessionBloc>().add(FinishWorkout());

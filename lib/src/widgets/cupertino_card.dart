@@ -4,13 +4,20 @@ import 'package:flutter/material.dart';
 class CupertinoCard extends StatelessWidget {
   final Widget child;
   final VoidCallback? onTap;
+  final BoxBorder? border;
 
-  const CupertinoCard({super.key, required this.child, this.onTap});
+  const CupertinoCard({
+    super.key,
+    required this.child,
+    this.onTap,
+    this.border,
+  });
 
   @override
   Widget build(BuildContext context) {
     final cardContent = Container(
       decoration: BoxDecoration(
+        border: border,
         color: CupertinoColors.tertiarySystemBackground.resolveFrom(context),
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
@@ -30,9 +37,10 @@ class CupertinoCard extends StatelessWidget {
       return Material(
         color: Colors.transparent,
         borderRadius: BorderRadius.circular(12),
-        child: InkWell(
+        child: CupertinoButton(
+          padding: EdgeInsets.zero,
           borderRadius: BorderRadius.circular(12),
-          onTap: onTap,
+          onPressed: onTap,
           child: cardContent,
         ),
       );

@@ -35,14 +35,13 @@ class ExerciseInfoHeader extends StatefulWidget {
 }
 
 class _ExerciseInfoHeaderState extends State<ExerciseInfoHeader> {
-  late final List<ExerciseModel> allExercises;
+  // late final List<ExerciseModel> allExercises;
 
   @override
-  void initState() {
-    allExercises = [widget.exercise, ...widget.exercise.superSet];
-    super.initState();
-  }
-
+  // void initState() {
+  // allExercises = [widget.exercise, ...widget.exercise.superSet];
+  // super.initState();
+  // }
   void showObservation() {
     // 1. Pega o exercício correto (mesma lógica do build)
     final exercise = (widget.exerciseSuperSet == null)
@@ -75,13 +74,18 @@ class _ExerciseInfoHeaderState extends State<ExerciseInfoHeader> {
 
   @override
   Widget build(BuildContext context) {
+    final currentSetExercises = [widget.exercise, ...widget.exercise.superSet];
+
     final exercise = (widget.exerciseSuperSet == null)
         ? widget.exercise
         : widget.exerciseSuperSet;
 
     return Column(
       children: [
-        YoutubeWebViewPlayer(videoUrl: exercise!.url_exercicio ?? ''),
+        YoutubeWebViewPlayer(
+          key: ValueKey(exercise!.url_exercicio),
+          videoUrl: exercise!.url_exercicio ?? '',
+        ),
         const SizedBox(height: 16),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -216,23 +220,23 @@ class _ExerciseInfoHeaderState extends State<ExerciseInfoHeader> {
             color: CupertinoColors.separator.resolveFrom(context),
           ),
         ),
-        if (widget.allSuperSets.isNotEmpty)
+        if (currentSetExercises.length > 1)
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8),
             // 1. Use o widget Wrap
             child: Wrap(
               spacing: 8.0, // Espaçamento horizontal entre os chips
               runSpacing: 4.0, // Espaçamento vertical entre as linhas
-              children: List.generate(allExercises.length + 1, (index) {
+              children: List.generate(currentSetExercises.length + 1, (index) {
                 if (index == 0) {
                   return FilterChip(
                     selected: false,
                     onSelected: null,
                     label: Text(
                       // Use a contagem de 'allExercises' para definir o texto
-                      allExercises.length == 2
+                      currentSetExercises.length == 2
                           ? "Bi-set"
-                          : allExercises.length == 3
+                          : currentSetExercises.length == 3
                           ? "Tri-set"
                           : "Super-set",
                     ),
@@ -240,7 +244,7 @@ class _ExerciseInfoHeaderState extends State<ExerciseInfoHeader> {
                 }
 
                 // 2. Gere a lista de chips
-                final superSetExercise = allExercises[index - 1];
+                final superSetExercise = currentSetExercises[index - 1];
                 final isSelected =
                     superSetExercise.cod_exercicio == exercise.cod_exercicio;
 
@@ -250,7 +254,7 @@ class _ExerciseInfoHeaderState extends State<ExerciseInfoHeader> {
                   onSelected: (_) {
                     widget.changeExercise(
                       widget.indexExerciseSelected,
-                      allExercises,
+                      currentSetExercises,
                       index - 1,
                     );
                   },

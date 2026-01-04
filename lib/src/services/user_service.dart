@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:fitcpxaluno/src/core/dio_exceptions.dart';
 import 'package:fitcpxaluno/src/models/user_model.dart';
 import 'package:fitcpxaluno/src/utils/variables.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class UserService {
@@ -55,17 +56,29 @@ class UserService {
 
       return {'firstAccess': firstAccess, 'name': name};
     } on DioException catch (e) {
-      final message = DioExceptions.fromDioError(e).toString();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          backgroundColor: Colors.redAccent,
-          content: Text(
-            e.response?.data['message'] ?? e.message ?? message,
-            textAlign: TextAlign.center,
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      final userMessage =
+          e.response?.data['message'] ?? e.message ?? errorMessage;
+
+      if (context.mounted) {
+        showCupertinoDialog(
+          context: context,
+          builder: (context) => CupertinoAlertDialog(
+            title: const Text('Atenção'),
+            content: Text(userMessage),
+            actions: [
+              CupertinoDialogAction(
+                isDefaultAction: true,
+                onPressed: () => Navigator.pop(context),
+                child: const Text('OK'),
+              ),
+            ],
           ),
-        ),
+        );
+      }
+      throw Exception(
+        'Dio error: $errorMessage | URL: ${e.requestOptions.uri}',
       );
-      throw Exception('Dio error: $message | URL: ${e.requestOptions.uri}');
     }
   }
 
@@ -102,17 +115,29 @@ class UserService {
         refreshToken: data['refreshToken'],
       );
     } on DioException catch (e) {
-      final message = DioExceptions.fromDioError(e).toString();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          backgroundColor: Colors.redAccent,
-          content: Text(
-            e.response?.data['message'] ?? e.message ?? message,
-            textAlign: TextAlign.center,
+      final errorMessage = DioExceptions.fromDioError(e).toString();
+      final userMessage =
+          e.response?.data['message'] ?? e.message ?? errorMessage;
+
+      if (context.mounted) {
+        showCupertinoDialog(
+          context: context,
+          builder: (context) => CupertinoAlertDialog(
+            title: const Text('Atenção'),
+            content: Text(userMessage),
+            actions: [
+              CupertinoDialogAction(
+                isDefaultAction: true,
+                onPressed: () => Navigator.pop(context),
+                child: const Text('OK'),
+              ),
+            ],
           ),
-        ),
+        );
+      }
+      throw Exception(
+        'Dio error: $errorMessage | URL: ${e.requestOptions.uri}',
       );
-      throw Exception('Dio error: $message | URL: ${e.requestOptions.uri}');
     }
   }
 }

@@ -193,7 +193,6 @@ class _SettingsScreen extends State<SettingsScreen> {
               Column(
                 children: [
                   CupertinoButton.tinted(
-                    sizeStyle: CupertinoButtonSize.medium,
                     color: CupertinoColors.destructiveRed,
                     onPressed: () =>
                         context.read<AuthBloc>().add(AuthLoggedOut()),

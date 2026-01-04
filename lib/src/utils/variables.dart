@@ -3,8 +3,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 enum Env { local, network, production, test }
 
 class Variables {
-  static String url = 'https://api.fitcpx.com';
-  static Env currentEnv = Env.production;
+  // static String url = 'https://api.fitcpx.com';
+  static String url = 'http://localhost:8070';
+  static Env currentEnv = Env.local;
 
   static Future<void> setEnv(Env env) async {
     currentEnv = env;

@@ -12,13 +12,16 @@ class StartWorkout extends SessionEvent {
 
 class FinishWorkout extends SessionEvent {}
 
+class CancelWorkout extends SessionEvent {}
+
 class LoadSession extends SessionEvent {}
 
 class CheckExerciseSession extends SessionEvent {
   final bool check;
   final int exerciseId;
+  final int? setId;
 
-  CheckExerciseSession(this.check, this.exerciseId);
+  CheckExerciseSession(this.check, this.exerciseId, this.setId);
 }
 
 class UpdateSetExercise extends SessionEvent {

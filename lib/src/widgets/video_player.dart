@@ -30,14 +30,16 @@ class _YoutubeWebViewPlayerState extends State<YoutubeWebViewPlayer> {
     );
   }
 
-  @override
-  void didUpdateWidget(covariant YoutubeWebViewPlayer oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (oldWidget.videoUrl != widget.videoUrl) {
-      final newVideoId = YoutubePlayer.convertUrlToId(widget.videoUrl) ?? '';
-      _controller.load(newVideoId);
-    }
-  }
+  //Nunca mais chamado pois agora controla via Key no componente pai
+  // @override
+  // void didUpdateWidget(covariant YoutubeWebViewPlayer oldWidget) {
+  //   super.didUpdateWidget(oldWidget);
+  //   if (oldWidget.videoUrl != widget.videoUrl) {
+  //     final newVideoId = YoutubePlayer.convertUrlToId(widget.videoUrl) ?? '';
+  //     // _controller.load(newVideoId);
+  //     _controller.cue(newVideoId);
+  //   }
+  // }
 
   @override
   void dispose() {

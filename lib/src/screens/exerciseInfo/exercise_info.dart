@@ -14,9 +14,11 @@ class ExerciseInfoScreen extends StatefulWidget {
     super.key,
     required this.exerciseIndex,
     required this.allExercises,
+    this.setIndex,
   });
 
   final int exerciseIndex;
+  final int? setIndex;
   final List<ExerciseModel> allExercises;
 
   @override
@@ -32,6 +34,7 @@ class _ExerciseInfoState extends State<ExerciseInfoScreen> {
   void initState() {
     super.initState();
     _exerciseIndex = widget.exerciseIndex;
+    if (widget.setIndex != null) _exerciseSuperSetIndex = widget.setIndex;
   }
 
   void _changeExercise(

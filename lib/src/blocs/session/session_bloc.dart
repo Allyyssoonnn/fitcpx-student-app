@@ -17,6 +17,7 @@ class SessionBloc extends Bloc<SessionEvent, SessionState> {
     on<CheckExerciseSession>(_checkExerciseSession);
     on<UpdateSetExercise>(_updateSetExercise);
     on<FinishWorkout>(_finishWorkout);
+    on<CancelWorkout>(_cancelWorkout);
   }
 
   Future<void> _saveSessionPrefs() async {
@@ -77,6 +78,22 @@ class SessionBloc extends Bloc<SessionEvent, SessionState> {
     }
   }
 
+  Future<void> _cancelWorkout(
+    CancelWorkout event,
+    Emitter<SessionState> emit,
+  ) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+
+      await SharedPreferences.getInstance().then(
+        (prefs) => prefs.remove('session'),
+      );
+      emit(SessionInitial());
+    } catch (e) {
+      emit(SessionError('Error finish workout $e'));
+    }
+  }
+
   Future<void> _checkExerciseSession(
     CheckExerciseSession event,
     Emitter<SessionState> emit,
@@ -85,6 +102,7 @@ class SessionBloc extends Bloc<SessionEvent, SessionState> {
       final idExercise = event.exerciseId;
       final checked = event.check;
       final exercises = _session!.exercises;
+      final setId = event.setId;
 
       if (exercises == null) {
         emit(SessionError('Sessão ou lista de exercícios não encontrada.'));
@@ -93,23 +111,46 @@ class SessionBloc extends Bloc<SessionEvent, SessionState> {
 
       final updatedExercises = exercises.map((e) {
         if (e.cod_exercicio == idExercise) {
+          if (setId != null) {
+            // Aqui iteramos sobre os EXERCÍCIOS do super-set procurando pelo índice correto
+            final updatedSuperSet = e.superSet.asMap().entries.map((entry) {
+              final index = entry.key;
+              final superExercise = entry.value;
+
+              // Se este for o exercício do super-set que clicamos (pelo índice)
+              if (index == setId) {
+                // Marcamos TODAS as séries dele como true/false
+                final updatedSets = superExercise.setsInfo
+                    ?.map((s) => s.copyWith(check: checked))
+                    .toList();
+
+                return superExercise.copyWith(setsInfo: updatedSets);
+              }
+
+              // Se não for o índice clicado, retorna como estava
+              return superExercise;
+            }).toList();
+
+            return e.copyWith(checked: checked, superSet: updatedSuperSet);
+          }
+
           // Atualiza setsInfo do exercício principal
           final updatedSets = e.setsInfo
               ?.map((set) => set.copyWith(check: checked))
               .toList();
 
           // Se existir superSet, atualiza os setsInfo de cada exercício do superSet
-          final updatedSuperSet = e.superSet.map((superExercise) {
-            final updatedSuperSets = superExercise.setsInfo
-                ?.map((set) => set.copyWith(check: checked))
-                .toList();
-            return superExercise.copyWith(setsInfo: updatedSuperSets);
-          }).toList();
+          // final updatedSuperSet = e.superSet.map((superExercise) {
+          //   final updatedSuperSets = superExercise.setsInfo
+          //       ?.map((set) => set.copyWith(check: checked))
+          //       .toList();
+          //   return superExercise.copyWith(setsInfo: updatedSuperSets);
+          // }).toList();
 
           return e.copyWith(
             checked: checked,
             setsInfo: updatedSets,
-            superSet: updatedSuperSet,
+            // superSet: updatedSuperSet,
           );
         }
         return e;

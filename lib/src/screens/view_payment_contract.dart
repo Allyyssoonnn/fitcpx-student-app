@@ -138,7 +138,6 @@ class _viewPaymentContractState extends State<ViewPaymentContract> {
                                 Container(
                                   width: double.infinity,
                                   child: CupertinoButton.tinted(
-                                    sizeStyle: CupertinoButtonSize.medium,
                                     color: CupertinoColors.activeGreen,
                                     onPressed: () =>
                                         _launchUrl(payment.invoiceUrl),
