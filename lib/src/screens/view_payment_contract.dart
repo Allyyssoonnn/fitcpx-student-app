@@ -121,6 +121,17 @@ class _viewPaymentContractState extends State<ViewPaymentContract> {
                                 ),
                               ),
                               const SizedBox(height: 4),
+                              if (payment.status == 'confirmed' ||
+                                  payment.status == 'paid' ||
+                                  payment.status == 'succeeded')
+                                Text(
+                                  "Pago",
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                    color: CupertinoColors.systemGreen,
+                                  ),
+                                ),
                               if (payment.status != 'confirmed' &&
                                   payment.status != 'paid' &&
                                   payment.status != 'succeeded')
