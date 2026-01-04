@@ -4,6 +4,7 @@ class SessionModel {
   final String workoutId;
   final String id;
   final String name;
+  final bool lastWorkout;
   final List<ExerciseModel>? exercises;
 
   SessionModel copyWith({
@@ -16,6 +17,7 @@ class SessionModel {
       id: id ?? this.id,
       name: name ?? this.name,
       exercises: exercises ?? this.exercises,
+      lastWorkout: this.lastWorkout,
     );
   }
 
@@ -23,6 +25,7 @@ class SessionModel {
     required this.workoutId,
     required this.id,
     required this.name,
+    required this.lastWorkout,
     this.exercises,
   });
 
@@ -34,6 +37,7 @@ class SessionModel {
       exercises: (json['exercicios'] as List<dynamic>?)
           ?.map((e) => ExerciseModel.fromJson(e))
           .toList(),
+      lastWorkout: json['lastWorkout'] == true,
     );
   }
 

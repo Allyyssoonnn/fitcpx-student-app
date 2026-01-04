@@ -2,6 +2,8 @@ import 'package:fitcpxaluno/src/blocs/session/session_bloc.dart';
 import 'package:fitcpxaluno/src/blocs/session/session_event.dart';
 import 'package:fitcpxaluno/src/blocs/session/session_state.dart';
 import 'package:fitcpxaluno/src/blocs/session_timer/sessionTimer.dart';
+import 'package:fitcpxaluno/src/blocs/workout/workout_bloc.dart';
+import 'package:fitcpxaluno/src/blocs/workout/workout_event.dart';
 import 'package:fitcpxaluno/src/widgets/cupertino_card.dart';
 import 'package:fitcpxaluno/src/widgets/customScaffold.dart';
 import 'package:flutter/cupertino.dart';
@@ -278,6 +280,7 @@ class ReviewSessionScreen extends StatelessWidget {
                     onPressed: () {
                       context.read<SessionBloc>().add(FinishWorkout());
                       context.read<TimerBloc>().add(StopTimer());
+                      context.read<WorkoutBloc>().add(LoadWorkouts());
                       Navigator.pop(context);
                       Navigator.pop(context);
                     },

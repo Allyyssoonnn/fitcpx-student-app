@@ -129,7 +129,15 @@ class SessionScreen extends StatelessWidget {
                                   ),
                                 ),
                               ),
-                              const SizedBox(height: 4),
+                              if (session.lastWorkout)
+                                Text(
+                                  "Último treino",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 10,
+                                    color: CupertinoColors.systemGreen,
+                                  ),
+                                ),
                             ],
                           ),
                         ),
