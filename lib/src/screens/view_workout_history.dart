@@ -53,6 +53,24 @@ class _viewWorkoutHistory extends State<ViewWorkoutHistory> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
+                    widget.workout.name,
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      // fontSize: 16,
+                      fontSize: 14,
+                      color: CupertinoColors.label.resolveFrom(context),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 4),
+            Padding(
+              padding: EdgeInsetsGeometry.symmetric(horizontal: 16),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
                     widget.workout.date,
                     style: TextStyle(
                       fontWeight: FontWeight.w600,

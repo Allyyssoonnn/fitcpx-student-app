@@ -128,6 +128,16 @@ class WorkoutHistory extends StatelessWidget {
                                   ),
                                   const SizedBox(height: 4),
                                   Text(
+                                    workout.name,
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: CupertinoColors.label.resolveFrom(
+                                        context,
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(
                                     workout.timeRange,
                                     style: TextStyle(
                                       fontSize: 14,

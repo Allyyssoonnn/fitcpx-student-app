@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 class WorkoutHistoryModel {
   final int id;
   final int duration;
+  final String name;
   final String date; // Data formatada (ex: 20/10/2023)
   final String startTime; // Hora formatada (ex: 23:30)
   final String endTime; // Hora formatada (ex: 00:45)
@@ -11,6 +12,7 @@ class WorkoutHistoryModel {
 
   WorkoutHistoryModel({
     required this.id,
+    required this.name,
     required this.duration,
     required this.date,
     required this.startTime,
@@ -82,6 +84,7 @@ class WorkoutHistoryModel {
 
     return WorkoutHistoryModel(
       id: json['cod_treino_execucao'] ?? 0,
+      name: json['sessao']['nome_sessao'] ?? "-",
       duration: parsedDuration,
       date: formattedDate,
       startTime: formattedStart,
