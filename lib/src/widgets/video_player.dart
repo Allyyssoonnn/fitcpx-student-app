@@ -31,15 +31,16 @@ class _YoutubeWebViewPlayerState extends State<YoutubeWebViewPlayer> {
   }
 
   //Nunca mais chamado pois agora controla via Key no componente pai
-  // @override
-  // void didUpdateWidget(covariant YoutubeWebViewPlayer oldWidget) {
-  //   super.didUpdateWidget(oldWidget);
-  //   if (oldWidget.videoUrl != widget.videoUrl) {
-  //     final newVideoId = YoutubePlayer.convertUrlToId(widget.videoUrl) ?? '';
-  //     // _controller.load(newVideoId);
-  //     _controller.cue(newVideoId);
-  //   }
-  // }
+  @override
+  void didUpdateWidget(covariant YoutubeWebViewPlayer oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.videoUrl != widget.videoUrl) {
+      final newVideoId = YoutubePlayer.convertUrlToId(widget.videoUrl) ?? '';
+      // _controller.load(newVideoId);
+      _controller.cue(newVideoId);
+      setState(() {});
+    }
+  }
 
   @override
   void dispose() {
@@ -116,6 +117,8 @@ class _YoutubeWebViewPlayerState extends State<YoutubeWebViewPlayer> {
 
   @override
   Widget build(BuildContext context) {
+    final videoId = YoutubePlayer.convertUrlToId(widget.videoUrl);
+
     return ClipRRect(
       borderRadius: BorderRadius.circular(16),
       child: YoutubePlayer(
@@ -128,6 +131,22 @@ class _YoutubeWebViewPlayerState extends State<YoutubeWebViewPlayer> {
         onEnded: (metaData) {
           _controller.seekTo(Duration.zero);
         },
+        thumbnail: Image.network(
+          // 1. Tenta carregar a imagem em HD (Max Resolution)
+          'https://img.youtube.com/vi/$videoId/maxresdefault.jpg',
+          fit: BoxFit.cover,
+          errorBuilder: (context, error, stackTrace) {
+            // 2. Se a HD não existir (erro 404), carrega a HQ (480p) como garantia
+            return Image.network(
+              'https://img.youtube.com/vi/$videoId/hqdefault.jpg',
+              fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) {
+                // 3. Se tudo falhar, tela preta
+                return Container(color: Colors.black);
+              },
+            );
+          },
+        ),
         bottomActions: [
           CurrentPosition(),
           ProgressBar(isExpanded: true),

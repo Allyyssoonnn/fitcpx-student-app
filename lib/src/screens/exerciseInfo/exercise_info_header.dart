@@ -83,7 +83,7 @@ class _ExerciseInfoHeaderState extends State<ExerciseInfoHeader> {
     return Column(
       children: [
         YoutubeWebViewPlayer(
-          key: ValueKey(exercise!.url_exercicio),
+          // key: ValueKey(exercise!.url_exercicio),
           videoUrl: exercise!.url_exercicio ?? '',
         ),
         const SizedBox(height: 16),
@@ -206,7 +206,7 @@ class _ExerciseInfoHeaderState extends State<ExerciseInfoHeader> {
                         'Finalizar',
                         style: TextStyle(color: CupertinoColors.activeGreen),
                       ),
-                      const Icon(CupertinoIcons.chart_bar),
+                      const Icon(CupertinoIcons.chevron_forward),
                     ],
                   ),
                 ),
