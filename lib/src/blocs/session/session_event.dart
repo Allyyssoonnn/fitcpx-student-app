@@ -24,6 +24,18 @@ class CheckExerciseSession extends SessionEvent {
   CheckExerciseSession(this.check, this.exerciseId, this.setId);
 }
 
+class UpdateObservationExerciseSession extends SessionEvent {
+  final String observation;
+  final int exerciseId;
+  final int? setId;
+
+  UpdateObservationExerciseSession({
+    required this.observation,
+    required this.exerciseId,
+    this.setId,
+  });
+}
+
 class UpdateSetExercise extends SessionEvent {
   final bool? check;
   final int exerciseId;

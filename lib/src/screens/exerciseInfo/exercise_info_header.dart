@@ -1,9 +1,12 @@
+import 'package:fitcpxaluno/src/blocs/session/session_bloc.dart';
+import 'package:fitcpxaluno/src/blocs/session/session_event.dart';
 import 'package:fitcpxaluno/src/models/exercise_model.dart';
 import 'package:fitcpxaluno/src/screens/interval.dart';
 import 'package:fitcpxaluno/src/screens/review_session.dart';
 import 'package:fitcpxaluno/src/widgets/video_player.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ExerciseInfoHeader extends StatefulWidget {
   const ExerciseInfoHeader({
@@ -35,13 +38,8 @@ class ExerciseInfoHeader extends StatefulWidget {
 }
 
 class _ExerciseInfoHeaderState extends State<ExerciseInfoHeader> {
-  // late final List<ExerciseModel> allExercises;
+  late final TextEditingController _observation = TextEditingController();
 
-  @override
-  // void initState() {
-  // allExercises = [widget.exercise, ...widget.exercise.superSet];
-  // super.initState();
-  // }
   void showObservation() {
     // 1. Pega o exercício correto (mesma lógica do build)
     final exercise = (widget.exerciseSuperSet == null)
@@ -50,23 +48,130 @@ class _ExerciseInfoHeaderState extends State<ExerciseInfoHeader> {
 
     // 2. Pega o texto da observação.
     // O botão só aparece se não for nulo, então podemos usar '!'
-    final String observationText = exercise!.observacao_exercicio!;
+    final String observationText = exercise!.observacao_exercicio ?? "";
+    _observation.text = exercise.observation ?? "";
 
-    // 3. Exibe o modal
-    showCupertinoDialog(
+    showModalBottomSheet(
       context: context,
-      builder: (BuildContext dialogContext) {
-        return CupertinoAlertDialog(
-          title: const Text('Observação'),
-          content: SingleChildScrollView(child: Text(observationText)),
-          actions: [
-            CupertinoDialogAction(
-              child: const Text('Fechar'),
-              onPressed: () {
-                Navigator.of(dialogContext).pop();
-              },
+      isScrollControlled:
+          true, // Permite que o modal ocupe o tamanho necessário
+      backgroundColor:
+          Colors.transparent, // Transparente para usar o estilo Cupertino
+      builder: (context) {
+        return Container(
+          decoration: BoxDecoration(
+            color: CupertinoColors.systemBackground.resolveFrom(context),
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+          ),
+          padding: EdgeInsets.fromLTRB(
+            20,
+            20,
+            20,
+            20 + MediaQuery.of(context).viewInsets.bottom,
+          ),
+          child: SafeArea(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: 40,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: CupertinoColors.systemGrey4,
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                  margin: const EdgeInsets.only(bottom: 20),
+                ),
+                const Text(
+                  "Observações",
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                if (observationText.isNotEmpty) const SizedBox(height: 20),
+                if (observationText.isNotEmpty)
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      const Text(
+                        "Observação do responsável",
+                        style: TextStyle(
+                          fontSize: 12, // Ajustei levemente para legibilidade
+                          fontWeight: FontWeight.bold,
+                          color: CupertinoColors.systemGrey,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      CupertinoTextField(
+                        controller: TextEditingController(
+                          text: observationText,
+                        ),
+                        readOnly: true, // Torna não editável
+                        maxLines: 3, // Altura de "TextArea"
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color:
+                              CupertinoColors.systemGrey6, // Fundo cinza claro
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        style: TextStyle(
+                          color: CupertinoColors.label.resolveFrom(context),
+                        ),
+                      ),
+                    ],
+                  ),
+                const SizedBox(height: 20),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      "Observação do aluno",
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                        color: CupertinoColors.systemGrey,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    CupertinoTextField(
+                      controller: _observation, // Use seu controller aqui
+                      placeholder: "Escreva sua observação aqui...",
+                      maxLines: 4, // Altura maior para digitar
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: CupertinoColors.systemBackground,
+                        border: Border.all(color: CupertinoColors.systemGrey4),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      // onChanged: (value) {
+
+                      // },
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 30),
+                SizedBox(
+                  width: double.infinity,
+                  child: CupertinoButton.filled(
+                    child: const Text("Salvar"),
+                    onPressed: () {
+                      if (_observation.text.isNotEmpty) {
+                        context.read<SessionBloc>().add(
+                          UpdateObservationExerciseSession(
+                            observation: _observation.text,
+                            exerciseId: widget.exercise.cod_sessao_exercicio,
+                            setId:
+                                widget.exerciseSuperSet?.cod_sessao_exercicio,
+                          ),
+                        );
+                      }
+                      Navigator.pop(context);
+                    },
+                  ),
+                ),
+                const SizedBox(height: 10),
+              ],
             ),
-          ],
+          ),
         );
       },
     );
@@ -82,10 +187,7 @@ class _ExerciseInfoHeaderState extends State<ExerciseInfoHeader> {
 
     return Column(
       children: [
-        YoutubeWebViewPlayer(
-          // key: ValueKey(exercise!.url_exercicio),
-          videoUrl: exercise!.url_exercicio ?? '',
-        ),
+        YoutubeWebViewPlayer(videoUrl: exercise!.url_exercicio ?? ''),
         const SizedBox(height: 16),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -112,6 +214,7 @@ class _ExerciseInfoHeaderState extends State<ExerciseInfoHeader> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               CupertinoButton.tinted(
+                sizeStyle: CupertinoButtonSize.medium,
                 color: CupertinoColors.activeGreen,
                 onPressed: (widget.indexExerciseSelected > 0)
                     ? () => widget.changeExercise(
@@ -131,20 +234,17 @@ class _ExerciseInfoHeaderState extends State<ExerciseInfoHeader> {
                   ],
                 ),
               ),
-              if (exercise?.observacao_exercicio != null)
-                Badge(
-                  label: Text("1"),
-                  backgroundColor: CupertinoColors.activeGreen,
-                  child: CupertinoButton.tinted(
-                    color: CupertinoColors.activeGreen,
-                    onPressed: showObservation,
-                    child: const Icon(
-                      Icons.message,
-                      color: CupertinoColors.activeGreen,
-                    ),
-                  ),
-                ),
               CupertinoButton.tinted(
+                sizeStyle: CupertinoButtonSize.medium,
+                color: CupertinoColors.activeGreen,
+                onPressed: showObservation,
+                child: const Icon(
+                  Icons.message,
+                  color: CupertinoColors.activeGreen,
+                ),
+              ),
+              CupertinoButton.tinted(
+                sizeStyle: CupertinoButtonSize.medium,
                 color: CupertinoColors.activeGreen,
                 onPressed: () {
                   Navigator.push(
@@ -165,6 +265,7 @@ class _ExerciseInfoHeaderState extends State<ExerciseInfoHeader> {
               if (widget.indexExerciseSelected <
                   widget.sessionExerciseLength - 1)
                 CupertinoButton.tinted(
+                  sizeStyle: CupertinoButtonSize.medium,
                   color: CupertinoColors.activeGreen,
                   onPressed:
                       (widget.indexExerciseSelected <
@@ -189,6 +290,7 @@ class _ExerciseInfoHeaderState extends State<ExerciseInfoHeader> {
               if (widget.indexExerciseSelected >=
                   widget.sessionExerciseLength - 1)
                 CupertinoButton.tinted(
+                  sizeStyle: CupertinoButtonSize.medium,
                   color: CupertinoColors.activeGreen,
                   onPressed: () {
                     Navigator.pop(context);
@@ -266,7 +368,6 @@ class _ExerciseInfoHeaderState extends State<ExerciseInfoHeader> {
               }),
             ),
           ),
-        // const Divider(),
       ],
     );
   }

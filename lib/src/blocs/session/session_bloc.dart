@@ -15,6 +15,7 @@ class SessionBloc extends Bloc<SessionEvent, SessionState> {
     on<StartWorkout>(_startWorkout);
     on<LoadSession>(_onLoadSessions);
     on<CheckExerciseSession>(_checkExerciseSession);
+    on<UpdateObservationExerciseSession>(_updateObservation);
     on<UpdateSetExercise>(_updateSetExercise);
     on<FinishWorkout>(_finishWorkout);
     on<CancelWorkout>(_cancelWorkout);
@@ -220,6 +221,55 @@ class SessionBloc extends Bloc<SessionEvent, SessionState> {
 
             return e.copyWith(checked: checked, setsInfo: updatedSets);
           }
+        }
+        return e;
+      }).toList();
+
+      _session = _session!.copyWith(exercises: updatedExercises);
+
+      await _saveSessionPrefs();
+
+      emit(SessionLoaded(_session!));
+    } catch (e) {
+      emit(SessionError('Error check exercise session $e'));
+    }
+  }
+
+  Future<void> _updateObservation(
+    UpdateObservationExerciseSession event,
+    Emitter<SessionState> emit,
+  ) async {
+    try {
+      final idExercise = event.exerciseId;
+      final observation = event.observation;
+      final exercises = _session!.exercises;
+      final idSuperSetExercise = event.setId;
+
+      if (exercises == null) {
+        emit(SessionError('Sessão ou lista de exercícios não encontrada.'));
+        return;
+      }
+
+      final updatedExercises = exercises.map((e) {
+        // Verifica se é o exercício pai correto
+        // RECOMENDAÇÃO: Use cod_sessao_exercicio se possível, é mais seguro que cod_exercicio
+        if (e.cod_sessao_exercicio == idExercise) {
+          if (idSuperSetExercise != null) {
+            // Lógica para SuperSet
+            final updatedSuperSet = e.superSet.map((superExercise) {
+              // CORREÇÃO: Comparar ID com ID, não com Index
+              if (superExercise.cod_sessao_exercicio == idSuperSetExercise) {
+                // Certifique-se que seu copyWith atualiza a 'observacao_aluno'
+                return superExercise.copyWith(observation: observation);
+              }
+              return superExercise;
+            }).toList();
+
+            return e.copyWith(superSet: updatedSuperSet);
+          }
+
+          // Lógica para exercício normal
+          return e.copyWith(observation: observation);
         }
         return e;
       }).toList();

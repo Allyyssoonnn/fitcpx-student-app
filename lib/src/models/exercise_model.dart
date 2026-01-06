@@ -5,6 +5,7 @@ class ExerciseModel {
   final int cod_exercicio;
   final String nome_exercicio;
   final String? observacao_exercicio;
+  final String? observation;
   final String? url_exercicio;
   final int nSets;
   final int weight;
@@ -27,6 +28,7 @@ class ExerciseModel {
   ExerciseModel copyWith({
     int? id,
     String? name,
+    String? observation,
     bool? checked,
     int? weight,
     int? repetition,
@@ -38,6 +40,7 @@ class ExerciseModel {
       cod_exercicio: id ?? this.cod_exercicio,
       nome_exercicio: name ?? this.nome_exercicio,
       observacao_exercicio: observacao_exercicio,
+      observation: observation,
       url_exercicio: this.url_exercicio,
       nSets: this.nSets,
       superSet: superSet ?? this.superSet,
@@ -54,6 +57,7 @@ class ExerciseModel {
     required this.cod_exercicio,
     required this.nome_exercicio,
     required this.observacao_exercicio,
+    this.observation,
     required this.url_exercicio,
     required this.nSets,
     required this.weight,
@@ -113,6 +117,7 @@ class ExerciseModel {
       nome_equipamento_2: json['equipamento_2']?['nome_equipamento'] ?? '',
       cod_equipamento_3: json['cod_equipamento_3'] ?? 0,
       nome_equipamento_3: json['equipamento_3']?['nome_equipamento'] ?? '',
+      observation: json['observacao_sessao_exercicio_aluno'] ?? '',
     );
   }
 
@@ -122,6 +127,7 @@ class ExerciseModel {
       'cod_exercicio': cod_exercicio,
       'nome_exercicio': nome_exercicio,
       'observacao_exercicio': observacao_exercicio,
+      'observation': observation,
       'url_exercicio': url_exercicio,
       'serie_sessao_exercicio': nSets,
       'carga_sessao_exercicio': weight,
