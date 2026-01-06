@@ -1,6 +1,7 @@
 import 'package:fitcpxaluno/src/blocs/contract/contract_bloc.dart';
 import 'package:fitcpxaluno/src/blocs/contract/contract_state.dart';
 import 'package:fitcpxaluno/src/screens/view_payment_contract.dart';
+import 'package:fitcpxaluno/src/widgets/backgroundAlert.dart';
 import 'package:fitcpxaluno/src/widgets/cupertino_card.dart';
 import 'package:fitcpxaluno/src/widgets/customScaffold.dart';
 import 'package:flutter/cupertino.dart';
@@ -48,8 +49,9 @@ class MyContracts extends StatelessWidget {
                   return Center(child: Text(state.message));
                 } else if (state is ContractLoaded) {
                   if (state.contracts.isEmpty) {
-                    return const Center(
-                      child: Text('Nenhum contrato encontrado'),
+                    return BackgroundAlert(
+                      text: "Nenhum contrato encontrado",
+                      icon: FontAwesomeIcons.link,
                     );
                   }
 
@@ -86,6 +88,7 @@ class MyContracts extends StatelessWidget {
                               const SizedBox(width: 16),
                               Expanded(
                                 child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
                                       contract.description,

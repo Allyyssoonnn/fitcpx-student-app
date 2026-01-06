@@ -1,6 +1,7 @@
 import 'package:fitcpxaluno/src/blocs/workout/workout_bloc.dart';
 import 'package:fitcpxaluno/src/blocs/workout/workout_state.dart';
 import 'package:fitcpxaluno/src/screens/sessions.dart';
+import 'package:fitcpxaluno/src/widgets/backgroundAlert.dart';
 import 'package:fitcpxaluno/src/widgets/cupertino_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -36,7 +37,10 @@ class WorkoutsScreen extends StatelessWidget {
                 return const Center(child: CupertinoActivityIndicator());
               } else if (state is WorkoutLoaded) {
                 if (state.workouts.isEmpty) {
-                  return const Center(child: Text('Nenhum treino encontrado'));
+                  return BackgroundAlert(
+                    text: "Nenhum treino encontrado",
+                    icon: FontAwesomeIcons.dumbbell,
+                  );
                 }
 
                 return Expanded(

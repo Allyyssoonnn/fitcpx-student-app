@@ -1,7 +1,9 @@
 import 'package:fitcpxaluno/src/models/contract_payment_model.dart';
+import 'package:fitcpxaluno/src/widgets/backgroundAlert.dart';
 import 'package:fitcpxaluno/src/widgets/cupertino_card.dart';
 import 'package:fitcpxaluno/src/widgets/customScaffold.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 void showCupertinoSnackBar(BuildContext context, String message) =>
@@ -59,6 +61,11 @@ class _viewPaymentContractState extends State<ViewPaymentContract> {
                 color: CupertinoColors.separator.resolveFrom(context),
               ),
             ),
+            if (widget.payments.isEmpty)
+              BackgroundAlert(
+                text: "Nenhum pagamento encontrado",
+                icon: FontAwesomeIcons.link,
+              ),
             Expanded(
               child: ListView.builder(
                 physics: BouncingScrollPhysics(),

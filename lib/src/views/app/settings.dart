@@ -1,5 +1,6 @@
 import 'package:fitcpxaluno/src/blocs/auth/auth_bloc.dart';
 import 'package:fitcpxaluno/src/blocs/auth/auth_event.dart';
+import 'package:fitcpxaluno/src/screens/events.dart';
 import 'package:fitcpxaluno/src/screens/my_contracts.dart';
 import 'package:fitcpxaluno/src/screens/workout_history.dart';
 import 'package:flutter/cupertino.dart';
@@ -180,6 +181,33 @@ class _SettingsScreen extends State<SettingsScreen> {
                               children: [
                                 Icon(FontAwesomeIcons.dumbbell),
                                 Text('Histórico de treinos'),
+                              ],
+                            ),
+                            Icon(CupertinoIcons.chevron_right),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () {},
+                    child: Container(
+                      padding: EdgeInsets.all(20),
+                      child: GestureDetector(
+                        onTap: () =>
+                            Navigator.of(context, rootNavigator: true).push(
+                              CupertinoPageRoute(
+                                builder: (context) => Events(),
+                              ),
+                            ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              spacing: 16,
+                              children: [
+                                Icon(FontAwesomeIcons.calendar),
+                                Text('Agenda'),
                               ],
                             ),
                             Icon(CupertinoIcons.chevron_right),

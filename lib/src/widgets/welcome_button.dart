@@ -11,6 +11,7 @@ class WelcomeButton extends StatelessWidget {
     this.color,
     this.labelColor,
     this.showBadge,
+    this.messageBadge,
   });
 
   final String buttonText;
@@ -20,6 +21,7 @@ class WelcomeButton extends StatelessWidget {
   final Color? color;
   final Color? labelColor;
   final bool? showBadge;
+  final String? messageBadge;
 
   @override
   Widget build(BuildContext context) {
@@ -77,7 +79,7 @@ class WelcomeButton extends StatelessWidget {
                 ],
               ),
             ),
-            if (showBadge == true)
+            if (messageBadge != null)
               Positioned(
                 top: 0,
                 right: 10,
@@ -87,9 +89,9 @@ class WelcomeButton extends StatelessWidget {
                     borderRadius: BorderRadius.circular(10),
                     color: Colors.green,
                   ),
-                  child: const Text(
-                    style: TextStyle(color: Colors.white),
-                    'Gratuito',
+                  child: Text(
+                    style: const TextStyle(color: Colors.white),
+                    messageBadge ?? "",
                   ),
                 ),
               ),

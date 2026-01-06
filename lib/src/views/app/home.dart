@@ -1,8 +1,12 @@
+import 'package:fitcpxaluno/src/blocs/events/calendar_bloc.dart';
+import 'package:fitcpxaluno/src/blocs/events/calendar_state.dart';
+import 'package:fitcpxaluno/src/screens/events.dart';
 import 'package:fitcpxaluno/src/screens/my_contracts.dart';
 import 'package:fitcpxaluno/src/widgets/welcome_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 
@@ -62,6 +66,31 @@ class HomeScreen extends StatelessWidget {
                                 builder: (context) => MyContracts(),
                               ),
                             ),
+                          },
+                        ),
+                        BlocBuilder<CalendarBloc, CalendarState>(
+                          builder: (context, state) {
+                            final avaliableEventsToShow =
+                                (state is CalendarLoaded &&
+                                    state.avaliableEvents.isNotEmpty)
+                                ? true
+                                : false;
+
+                            return WelcomeButton(
+                              messageBadge: avaliableEventsToShow
+                                  ? "Eventos disponíveis"
+                                  : null,
+                              icon: FontAwesomeIcons.calendar,
+                              buttonText: 'Agenda',
+                              buttonDescription: 'Conferir eventos',
+                              onTap: () => {
+                                Navigator.of(context, rootNavigator: true).push(
+                                  CupertinoPageRoute(
+                                    builder: (context) => Events(),
+                                  ),
+                                ),
+                              },
+                            );
                           },
                         ),
                       ],

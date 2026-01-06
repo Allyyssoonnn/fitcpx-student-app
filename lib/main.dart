@@ -3,6 +3,8 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:fitcpxaluno/src/blocs/auth/auth_bloc.dart';
 import 'package:fitcpxaluno/src/blocs/contract/contract_bloc.dart';
 import 'package:fitcpxaluno/src/blocs/contract/contract_event.dart';
+import 'package:fitcpxaluno/src/blocs/events/calendar_bloc.dart';
+import 'package:fitcpxaluno/src/blocs/events/calendar_event.dart';
 import 'package:fitcpxaluno/src/blocs/fitnessAssessment/fitness_assessment_bloc.dart';
 import 'package:fitcpxaluno/src/blocs/fitnessAssessment/fitness_assessment_event.dart';
 import 'package:fitcpxaluno/src/blocs/session/session_bloc.dart';
@@ -12,6 +14,7 @@ import 'package:fitcpxaluno/src/blocs/workout/workout_bloc.dart';
 import 'package:fitcpxaluno/src/blocs/workout/workout_event.dart';
 import 'package:fitcpxaluno/src/core/dio_client.dart';
 import 'package:fitcpxaluno/src/routes/app_routes2.dart';
+import 'package:fitcpxaluno/src/services/calendar_service.dart';
 import 'package:fitcpxaluno/src/services/contract_service.dart';
 import 'package:fitcpxaluno/src/services/fitness_assessment_service.dart';
 import 'package:fitcpxaluno/src/services/user_service.dart';
@@ -127,6 +130,9 @@ class _MyAppState extends State<MyApp> {
     return MultiBlocProvider(
       key: appKey,
       providers: [
+        BlocProvider(
+          create: (_) => CalendarBloc(CalendarService())..add(LoadCalendar()),
+        ),
         BlocProvider(
           create: (_) => WorkoutBloc(WorkoutService())..add(LoadWorkouts()),
         ),

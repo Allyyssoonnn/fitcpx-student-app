@@ -1,5 +1,6 @@
 import 'package:fitcpxaluno/src/blocs/fitnessAssessment/fitness_assessment_bloc.dart';
 import 'package:fitcpxaluno/src/blocs/fitnessAssessment/fitness_assessment_state.dart';
+import 'package:fitcpxaluno/src/widgets/backgroundAlert.dart';
 import 'package:fitcpxaluno/src/widgets/cupertino_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -38,8 +39,9 @@ class FitnessAssessmentsScreen extends StatelessWidget {
                 return Center(child: Text(state.message));
               } else if (state is FitnessAssessmentLoaded) {
                 if (state.fitnessAssessments.isEmpty) {
-                  return const Center(
-                    child: Text('Nenhuma avaliação encontrada'),
+                  return BackgroundAlert(
+                    text: "Nenhum avaliação encontrada",
+                    icon: FontAwesomeIcons.chartLine,
                   );
                 }
 
@@ -66,7 +68,7 @@ class FitnessAssessmentsScreen extends StatelessWidget {
                               ),
                               padding: const EdgeInsets.all(12),
                               child: Icon(
-                                FontAwesomeIcons.dumbbell,
+                                FontAwesomeIcons.chartLine,
                                 // size: 30,
                                 size: 15,
                               ),

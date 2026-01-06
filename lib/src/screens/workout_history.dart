@@ -1,6 +1,7 @@
 import 'package:fitcpxaluno/src/models/workout_history_model.dart';
 import 'package:fitcpxaluno/src/screens/view_workout_history.dart';
 import 'package:fitcpxaluno/src/services/workout_service.dart';
+import 'package:fitcpxaluno/src/widgets/backgroundAlert.dart';
 import 'package:fitcpxaluno/src/widgets/cupertino_card.dart';
 import 'package:fitcpxaluno/src/widgets/customScaffold.dart';
 import 'package:flutter/cupertino.dart';
@@ -73,6 +74,13 @@ class WorkoutHistory extends StatelessWidget {
                   }
 
                   final workouts = snapshot.data!;
+
+                  if (workouts.isEmpty) {
+                    return BackgroundAlert(
+                      text: "Nenhum treino encontrado",
+                      icon: FontAwesomeIcons.dumbbell,
+                    );
+                  }
 
                   return ListView.builder(
                     itemCount: workouts.length,
