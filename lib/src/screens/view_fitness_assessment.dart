@@ -25,6 +25,9 @@ class _ViewFitnessAssessmentState extends State<ViewFitnessAssessment>
   late final Animation<double> _fadeAnimation;
   late final _fitnessAssessmentService = FitnessAssessmentService();
 
+  // Armazena o Future para evitar múltiplas chamadas ao reconstruir a tela
+  late Future<FitnessAssessmentModel> _assessmentFuture;
+
   bool _isExisting = false;
 
   @override
@@ -43,13 +46,12 @@ class _ViewFitnessAssessmentState extends State<ViewFitnessAssessment>
       curve: Curves.easeOut,
     );
 
-    _controller.forward();
-  }
-
-  Future<FitnessAssessmentModel> _loadFitnessAssessment() async {
-    return await _fitnessAssessmentService.getFitnessAssessmentResult(
+    // Inicializa a busca dos dados
+    _assessmentFuture = _fitnessAssessmentService.getFitnessAssessmentResult(
       id_assessment: widget.idAssessment,
     );
+
+    _controller.forward();
   }
 
   Future<void> _exitScreen() async {
@@ -69,176 +71,195 @@ class _ViewFitnessAssessmentState extends State<ViewFitnessAssessment>
       onPopInvokedWithResult: (didPop, result) async {
         if (!didPop) _exitScreen();
       },
-      child: CustomScaffold(
-        navigationBar: const CupertinoNavigationBar(
-          border: null,
-          middle: Text('Detalhes da Avaliação'),
-        ),
-        child: SlideTransition(
-          position: _slideAnimation,
-          child: FadeTransition(
-            opacity: _fadeAnimation,
-            child: Container(
-              width: double.infinity,
-              height: mediaHeight,
-              decoration: BoxDecoration(
-                color: CupertinoColors.secondarySystemBackground.resolveFrom(
-                  context,
-                ),
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(16),
-                  topRight: Radius.circular(16),
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: Color.fromRGBO(0, 0, 0, 0.1),
-                    spreadRadius: 2,
-                    blurRadius: 8,
-                    offset: Offset(0, 3),
-                  ),
-                ],
-              ),
-              child: FutureBuilder<FitnessAssessmentModel>(
-                future: _loadFitnessAssessment(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(child: CupertinoActivityIndicator());
-                  }
+      // 1. O FutureBuilder agora envolve tudo, permitindo acesso aos dados na AppBar
+      child: FutureBuilder<FitnessAssessmentModel>(
+        future: _assessmentFuture,
+        builder: (context, snapshot) {
+          // Definimos o botão de ação (Share) apenas se os dados existirem
+          Widget? trailingButton;
 
-                  if (snapshot.hasError) {
-                    return Center(child: Text('Erro ao carregar os dados'));
-                  }
+          if (snapshot.hasData) {
+            final assessment = snapshot.data!;
+            trailingButton = CupertinoButton(
+              padding: EdgeInsets.zero,
+              // 2. Agora o 'assessment' está acessível aqui!
+              onPressed: () => exportFullContentAsPdf(assessment, context),
+              child: const Icon(CupertinoIcons.share),
+            );
+          }
 
-                  final assessment = snapshot.data!;
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      const SizedBox(height: 20),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              "Avaliação de ${assessment.date}",
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.w700,
-                                color: CupertinoColors.label.resolveFrom(
-                                  context,
-                                ),
-                              ),
-                            ),
-                            GestureDetector(
-                              onTap: () =>
-                                  exportFullContentAsPdf(assessment, context),
-                              child: Icon(FontAwesomeIcons.share),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(height: 12),
-                      Padding(
-                        padding: EdgeInsets.symmetric(vertical: 12),
-                        child: Container(
-                          height: 0.5,
-                          color: CupertinoColors.separator.resolveFrom(context),
-                        ),
-                      ),
-                      Expanded(
-                        child: SingleChildScrollView(
-                          physics: const BouncingScrollPhysics(),
-                          child: Column(
-                            children: [
-                              const SizedBox(height: 12),
-                              CupertinoButton.tinted(
-                                color: CupertinoColors.activeGreen,
-                                onPressed: () {
-                                  Navigator.of(
-                                    context,
-                                    rootNavigator: true,
-                                  ).push(
-                                    CupertinoPageRoute(
-                                      builder: (context) =>
-                                          ViewImagesFitnessAssessment(
-                                            key: UniqueKey(),
-                                            images: assessment.images,
-                                          ),
-                                    ),
-                                  );
-                                },
-                                child: Text(
-                                  'Imagens',
-                                  style: TextStyle(
-                                    color: CupertinoColors.activeGreen,
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 24,
-                                ),
-                                child: AspectRatio(
-                                  aspectRatio: 1.3,
-                                  child: MyPieChart(
-                                    assessment: assessment,
-                                    context: context,
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(height: 12),
-                              CardItem('Geral', [
-                                'Avaliador: ${assessment.trainer}',
-                                'Altura: ${assessment.height} cm',
-                                'Peso: ${assessment.weight} kg',
-                              ], context),
-                              CardItem('Dobras', [
-                                'Tríceps: ${assessment.tricepsFold ?? "-"}',
-                                'Peitoral: ${assessment.chestFold ?? "-"}',
-                                'Subescapular: ${assessment.subscapularisFold ?? "-"}',
-                                'Axilar Média: ${assessment.armpitFold ?? "-"}',
-                                'Abdominal: ${assessment.abdominal ?? "-"}',
-                                'Coxa: ${assessment.thighFold ?? "-"}',
-                                'Suprailiaca: ${assessment.suprailiacFold ?? "-"}',
-                                'Supraespinhal: ${assessment.supraspinatusFold ?? "-"}',
-                                'Bíceps: ${assessment.bicepsFold ?? "-"}',
-                                'Panturrilha: ${assessment.calfFold ?? "-"}',
-                              ], context),
-                              CardItem('Geral - Perimetria', [
-                                'Pescoço: ${assessment.neck ?? "-"}',
-                                'Ombro: ${assessment.shoulder ?? "-"}',
-                                'Tórax Inspirado: ${assessment.chestInhaled ?? "-"}',
-                                'Tórax Expirado: ${assessment.chestExhaled ?? "-"}',
-                                'Cintura: ${assessment.waist ?? "-"}',
-                                'Abdômen: ${assessment.abdomen ?? "-"}',
-                                'Quadril: ${assessment.hips ?? "-"}',
-                              ], context),
-                              CardItem('Geral - Lado Direito', [
-                                'Braço Relaxado Direito: ${assessment.rightArmRelaxed ?? "-"}',
-                                'Braço Contraído Direito: ${assessment.rightArmContracted ?? "-"}',
-                                'Antebraço Direito: ${assessment.rightForearm ?? "-"}',
-                                'Coxa Direita: ${assessment.rightThigh ?? "-"}',
-                                'Panturrilha Direita: ${assessment.rightCalf ?? "-"}',
-                              ], context),
-                              CardItem('Geral - Lado Esquerdo', [
-                                'Braço Relaxado Direito: ${assessment.leftArmRelaxed ?? "-"}',
-                                'Braço Contraído Direito: ${assessment.leftArmContracted ?? "-"}',
-                                'Antebraço Direito: ${assessment.leftForearm ?? "-"}',
-                                'Coxa Direita: ${assessment.leftThigh ?? "-"}',
-                                'Panturrilha Direita: ${assessment.leftCalf ?? "-"}',
-                              ], context),
-                            ],
-                          ),
-                        ),
+          return CustomScaffold(
+            navigationBar: CupertinoNavigationBar(
+              border: null,
+              middle: const Text('Detalhes da Avaliação'),
+              trailing: trailingButton, // Passamos o botão condicionalmente
+            ),
+            child: SlideTransition(
+              position: _slideAnimation,
+              child: FadeTransition(
+                opacity: _fadeAnimation,
+                child: Container(
+                  width: double.infinity,
+                  height: mediaHeight,
+                  decoration: BoxDecoration(
+                    color: CupertinoColors.secondarySystemBackground
+                        .resolveFrom(context),
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(16),
+                      topRight: Radius.circular(16),
+                    ),
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Color.fromRGBO(0, 0, 0, 0.1),
+                        spreadRadius: 2,
+                        blurRadius: 8,
+                        offset: Offset(0, 3),
                       ),
                     ],
-                  );
-                },
+                  ),
+                  // 3. Verificamos o estado do snapshot para renderizar o corpo
+                  child: Builder(
+                    builder: (context) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Center(
+                          child: CupertinoActivityIndicator(),
+                        );
+                      }
+
+                      if (snapshot.hasError) {
+                        return const Center(
+                          child: Text('Erro ao carregar os dados'),
+                        );
+                      }
+
+                      if (!snapshot.hasData) {
+                        return const Center(
+                          child: Text('Nenhum dado encontrado'),
+                        );
+                      }
+
+                      final assessment = snapshot.data!;
+
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          const SizedBox(height: 20),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  "Avaliação de ${assessment.date}",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w700,
+                                    color: CupertinoColors.label.resolveFrom(
+                                      context,
+                                    ),
+                                  ),
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    Navigator.of(
+                                      context,
+                                      rootNavigator: true,
+                                    ).push(
+                                      CupertinoPageRoute(
+                                        builder: (context) =>
+                                            ViewImagesFitnessAssessment(
+                                              key: UniqueKey(),
+                                              images: assessment.images,
+                                            ),
+                                      ),
+                                    );
+                                  },
+                                  child: const Icon(FontAwesomeIcons.camera),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                            child: Container(
+                              height: 0.5,
+                              color: CupertinoColors.separator.resolveFrom(
+                                context,
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: SingleChildScrollView(
+                              physics: const BouncingScrollPhysics(),
+                              child: Column(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 24,
+                                    ),
+                                    child: AspectRatio(
+                                      aspectRatio: 1,
+                                      child: MyPieChart(
+                                        assessment: assessment,
+                                        context: context,
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 12),
+                                  CardItem('Geral', [
+                                    'Avaliador: ${assessment.trainer}',
+                                    'Altura: ${assessment.height} cm',
+                                    'Peso: ${assessment.weight} kg',
+                                  ], context),
+                                  CardItem('Dobras', [
+                                    'Tríceps: ${assessment.tricepsFold ?? "-"}',
+                                    'Peitoral: ${assessment.chestFold ?? "-"}',
+                                    'Subescapular: ${assessment.subscapularisFold ?? "-"}',
+                                    'Axilar Média: ${assessment.armpitFold ?? "-"}',
+                                    'Abdominal: ${assessment.abdominal ?? "-"}',
+                                    'Coxa: ${assessment.thighFold ?? "-"}',
+                                    'Suprailiaca: ${assessment.suprailiacFold ?? "-"}',
+                                    'Supraespinhal: ${assessment.supraspinatusFold ?? "-"}',
+                                    'Bíceps: ${assessment.bicepsFold ?? "-"}',
+                                    'Panturrilha: ${assessment.calfFold ?? "-"}',
+                                  ], context),
+                                  CardItem('Geral - Perimetria', [
+                                    'Pescoço: ${assessment.neck ?? "-"}',
+                                    'Ombro: ${assessment.shoulder ?? "-"}',
+                                    'Tórax Inspirado: ${assessment.chestInhaled ?? "-"}',
+                                    'Tórax Expirado: ${assessment.chestExhaled ?? "-"}',
+                                    'Cintura: ${assessment.waist ?? "-"}',
+                                    'Abdômen: ${assessment.abdomen ?? "-"}',
+                                    'Quadril: ${assessment.hips ?? "-"}',
+                                  ], context),
+                                  CardItem('Geral - Lado Direito', [
+                                    'Braço Relaxado Direito: ${assessment.rightArmRelaxed ?? "-"}',
+                                    'Braço Contraído Direito: ${assessment.rightArmContracted ?? "-"}',
+                                    'Antebraço Direito: ${assessment.rightForearm ?? "-"}',
+                                    'Coxa Direita: ${assessment.rightThigh ?? "-"}',
+                                    'Panturrilha Direita: ${assessment.rightCalf ?? "-"}',
+                                  ], context),
+                                  CardItem('Geral - Lado Esquerdo', [
+                                    'Braço Relaxado Direito: ${assessment.leftArmRelaxed ?? "-"}',
+                                    'Braço Contraído Direito: ${assessment.leftArmContracted ?? "-"}',
+                                    'Antebraço Direito: ${assessment.leftForearm ?? "-"}',
+                                    'Coxa Direita: ${assessment.leftThigh ?? "-"}',
+                                    'Panturrilha Direita: ${assessment.leftCalf ?? "-"}',
+                                  ], context),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      );
+                    },
+                  ),
+                ),
               ),
             ),
-          ),
-        ),
+          );
+        },
       ),
     );
   }
@@ -255,7 +276,6 @@ Widget CardItem(String title, List<String?> items, BuildContext context) {
   return Padding(
     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
     child: Column(
-      // crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           title,
@@ -280,13 +300,12 @@ Widget CardItem(String title, List<String?> items, BuildContext context) {
                     ),
                   ],
                   delay: Duration(milliseconds: 100 * index),
-                  // child: Text(chip),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Expanded(
                         child: Text(
-                          chip.split(":").first + ":",
+                          "${chip.split(":").first}:",
                           style: TextStyle(
                             fontWeight: FontWeight.w500,
                             color: CupertinoColors.label.resolveFrom(context),

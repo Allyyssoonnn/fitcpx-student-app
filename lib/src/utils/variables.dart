@@ -4,6 +4,7 @@ enum Env { local, network, production, test }
 
 class Variables {
   static String url = 'https://api.fitcpx.com';
+  // static String url = 'http://192.168.1.16:8070';
   static Env currentEnv = Env.production;
 
   static Future<void> setEnv(Env env) async {

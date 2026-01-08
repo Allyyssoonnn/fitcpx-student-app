@@ -20,6 +20,7 @@ import 'package:fitcpxaluno/src/services/fitness_assessment_service.dart';
 import 'package:fitcpxaluno/src/services/user_service.dart';
 import 'package:fitcpxaluno/src/services/workout_service.dart';
 import 'package:fitcpxaluno/src/utils/variables.dart';
+import 'package:fitcpxaluno/src/widgets/notification_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -31,30 +32,13 @@ import 'package:go_router/go_router.dart';
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
 
-void _showNotification(RemoteMessage message) {
-  final notification = message.notification;
-  if (notification == null) return;
-
-  flutterLocalNotificationsPlugin.show(
-    notification.hashCode,
-    notification.title,
-    notification.body,
-    const NotificationDetails(
-      android: AndroidNotificationDetails(
-        'default_channel',
-        'Default',
-        importance: Importance.max,
-        priority: Priority.high,
-        icon: 'ic_launcher',
-      ),
-      iOS: DarwinNotificationDetails(),
-    ),
-  );
-}
-
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
   print("Mensagem recebida em background: ${message.messageId}");
+
+  // Se quiser mostrar notificação local no background (Android cria auto para notification messages, mas para data messages precisa disso):
+  await NotificationService().init();
+  await NotificationService().showInstantNotification(message);
 }
 
 void main() async {
@@ -93,6 +77,8 @@ class _MyAppState extends State<MyApp> {
   }
 
   void _initNotifications() async {
+    await NotificationService().init();
+
     // Solicitar permissão no iOS
     NotificationSettings settings = await FirebaseMessaging.instance
         .requestPermission(alert: true, badge: true, sound: true);
@@ -106,7 +92,11 @@ class _MyAppState extends State<MyApp> {
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       print("Mensagem recebida em foreground: ${message.notification?.title}");
       // aqui você pode usar flutter_local_notifications para exibir
-      _showNotification(message);
+      // _showNotification(message);
+
+      if (message.notification != null) {
+        NotificationService().showInstantNotification(message);
+      }
     });
 
     FirebaseMessaging.instance.onTokenRefresh.listen((newToken) async {

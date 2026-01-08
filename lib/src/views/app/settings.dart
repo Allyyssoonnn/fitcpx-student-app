@@ -140,6 +140,7 @@ class _SettingsScreen extends State<SettingsScreen> {
                     child: Container(
                       padding: EdgeInsets.all(20),
                       child: GestureDetector(
+                        behavior: HitTestBehavior.translucent,
                         onTap: () =>
                             Navigator.of(context, rootNavigator: true).push(
                               CupertinoPageRoute(
@@ -167,6 +168,7 @@ class _SettingsScreen extends State<SettingsScreen> {
                     child: Container(
                       padding: EdgeInsets.all(20),
                       child: GestureDetector(
+                        behavior: HitTestBehavior.translucent,
                         onTap: () =>
                             Navigator.of(context, rootNavigator: true).push(
                               CupertinoPageRoute(
@@ -194,6 +196,7 @@ class _SettingsScreen extends State<SettingsScreen> {
                     child: Container(
                       padding: EdgeInsets.all(20),
                       child: GestureDetector(
+                        behavior: HitTestBehavior.translucent,
                         onTap: () =>
                             Navigator.of(context, rootNavigator: true).push(
                               CupertinoPageRoute(

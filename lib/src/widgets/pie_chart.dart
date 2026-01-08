@@ -15,20 +15,24 @@ class MyPieChart extends StatelessWidget {
 
   Widget legendItem(Color color, String text) {
     return Row(
+      mainAxisSize: MainAxisSize.min,
       children: [
         Container(
-          width: 16,
-          height: 16,
-          decoration: BoxDecoration(shape: BoxShape.rectangle, color: color),
+          width: 12,
+          height: 12,
+          decoration: BoxDecoration(shape: BoxShape.circle, color: color),
         ),
         const SizedBox(width: 8),
         Expanded(
           child: Text(
             text,
             style: TextStyle(
-              fontSize: 14,
+              fontSize: 12, // Ajuste fino na fonte
+              fontWeight: FontWeight.w500,
               color: CupertinoColors.label.resolveFrom(context),
             ),
+            overflow: TextOverflow.ellipsis, // Evita quebra de linha feia
+            maxLines: 1,
           ),
         ),
       ],
@@ -37,16 +41,14 @@ class MyPieChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
+    return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        SizedBox(
-          width: 170,
-          height: 170,
+        Expanded(
           child: PieChart(
             PieChartData(
               sectionsSpace: 2,
-              centerSpaceRadius: 40,
+              centerSpaceRadius: 35,
               sections: [
                 if (assessment.type == "completo")
                   PieChartSectionData(
@@ -107,43 +109,39 @@ class MyPieChart extends StatelessWidget {
           ),
         ),
 
-        const SizedBox(width: 24),
+        const SizedBox(height: 12),
 
         // Legenda que ocupa o espaço restante
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              if (assessment.type == "completo")
-                legendItem(
-                  Colors.blue,
-                  'Residual (${assessment.residualPercMass!.toStringAsFixed(2)}%)',
-                ),
-              const SizedBox(height: 8),
+        Wrap(
+          spacing: 16.0, // Espaço horizontal entre itens
+          runSpacing: 8.0, // Espaço vertical entre linhas
+          children: [
+            if (assessment.type == "completo")
               legendItem(
-                Colors.red,
-                'Gordura (${assessment.bodyPercFat.toStringAsFixed(2)}%)',
+                Colors.blue,
+                'Residual (${assessment.residualPercMass!.toStringAsFixed(2)}%)',
               ),
-              const SizedBox(height: 8),
-              if (assessment.type == "completo")
-                legendItem(
-                  Colors.green,
-                  'Muscular (${assessment.musclePerMass!.toStringAsFixed(2)}%)',
-                ),
-              const SizedBox(height: 8),
-              if (assessment.type == "completo")
-                legendItem(
-                  Colors.grey,
-                  'Óssea (${assessment.bonePercMass!.toStringAsFixed(2)}%)',
-                ),
-              if (assessment.type != "completo")
-                legendItem(
-                  Colors.green,
-                  'Massa Magra (${assessment.leanPercMass!.toStringAsFixed(2)}%)',
-                ),
-            ],
-          ),
+            legendItem(
+              Colors.red,
+              'Gordura (${assessment.bodyPercFat.toStringAsFixed(2)}%)',
+            ),
+            if (assessment.type == "completo")
+              legendItem(
+                Colors.green,
+                'Muscular (${assessment.musclePerMass!.toStringAsFixed(2)}%)',
+              ),
+            if (assessment.type == "completo")
+              legendItem(
+                Colors.grey,
+                'Óssea (${assessment.bonePercMass!.toStringAsFixed(2)}%)',
+              ),
+            if (assessment.type != "completo")
+              legendItem(
+                Colors.green,
+                'Massa Magra (${assessment.leanPercMass!.toStringAsFixed(2)}%)',
+              ),
+            const SizedBox(height: 8),
+          ],
         ),
       ],
     );

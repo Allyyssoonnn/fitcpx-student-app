@@ -1,6 +1,7 @@
 import 'package:fitcpxaluno/src/models/workout_history_model.dart';
 import 'package:fitcpxaluno/src/widgets/cupertino_card.dart';
 import 'package:fitcpxaluno/src/widgets/customScaffold.dart';
+import 'package:fitcpxaluno/src/widgets/workout_share_sheet.dart';
 import 'package:flutter/cupertino.dart';
 
 class ViewWorkoutHistory extends StatefulWidget {
@@ -29,12 +30,25 @@ class _viewWorkoutHistory extends State<ViewWorkoutHistory> {
     }
   }
 
+  void _onShareTap() {
+    // Exemplo de tempo: você deve pegar o tempo real do seu model se tiver
+    // Se o WorkoutHistoryModel não tiver duração em segundos, você pode passar uma string pronta
+    final durationString = _formatDuration(3600);
+
+    WorkoutShareSheet.show(context, widget.workout, durationString);
+  }
+
   @override
   Widget build(BuildContext context) {
     return CustomScaffold(
-      navigationBar: const CupertinoNavigationBar(
+      navigationBar: CupertinoNavigationBar(
         border: null,
         middle: Text('Resumo de treino'),
+        trailing: CupertinoButton(
+          padding: EdgeInsets.zero,
+          onPressed: _onShareTap, // <--- CHAMADA AQUI
+          child: const Icon(CupertinoIcons.share),
+        ),
       ),
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 40),

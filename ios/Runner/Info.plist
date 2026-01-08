@@ -26,6 +26,16 @@
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Acesse suas fotos para compartilhar o treino.</string>
+
+	<key>NSCameraUsageDescription</key>
+	<string>Tire uma foto do seu treino para compartilhar.</string>
+
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Necessário para gravar vídeos.</string>
+
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>Este aplicativo precisa salvar imagens na sua galeria.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
