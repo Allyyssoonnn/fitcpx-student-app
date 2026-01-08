@@ -48,4 +48,29 @@ class FitnessAssessmentService {
       throw Exception(message);
     }
   }
+
+  Future<void> sendFitnessAssessment({
+    required double arm,
+    required double abdomen,
+    required double calf,
+    required double weight,
+    required double height,
+  }) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString('token');
+
+      _dio.options.headers['Authorization'] = token;
+      _dio.options.headers['Content-Type'] = 'application/json';
+
+      await _dio.get(
+        '/mobile/sendFitnessAssessment?arm=${arm}&abdomen=${abdomen}&calf=${calf}&weight=${weight}&height=${height}',
+      );
+
+      return;
+    } on DioException catch (e) {
+      final message = DioExceptions.fromDioError(e).toString();
+      throw Exception(message);
+    }
+  }
 }

@@ -48,7 +48,7 @@ class _viewWorkoutHistory extends State<ViewWorkoutHistory> {
         child: Column(
           children: [
             Padding(
-              padding: EdgeInsetsGeometry.symmetric(horizontal: 16),
+              padding: EdgeInsets.symmetric(horizontal: 16),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -66,7 +66,7 @@ class _viewWorkoutHistory extends State<ViewWorkoutHistory> {
             ),
             const SizedBox(height: 4),
             Padding(
-              padding: EdgeInsetsGeometry.symmetric(horizontal: 16),
+              padding: EdgeInsets.symmetric(horizontal: 16),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -92,7 +92,7 @@ class _viewWorkoutHistory extends State<ViewWorkoutHistory> {
               ),
             ),
             Padding(
-              padding: EdgeInsetsGeometry.symmetric(vertical: 12),
+              padding: EdgeInsets.symmetric(vertical: 12),
               child: Container(
                 height: 0.5,
                 color: CupertinoColors.separator.resolveFrom(context),
@@ -124,9 +124,7 @@ class _viewWorkoutHistory extends State<ViewWorkoutHistory> {
                                 ),
                               ),
                               Padding(
-                                padding: EdgeInsetsGeometry.symmetric(
-                                  vertical: 12,
-                                ),
+                                padding: EdgeInsets.symmetric(vertical: 12),
                                 child: Container(
                                   height: 0.5,
                                   color: exercise.sets!.every((s) => s.done)
@@ -192,7 +190,7 @@ class _viewWorkoutHistory extends State<ViewWorkoutHistory> {
                                     children: [
                                       const SizedBox(height: 20),
                                       Padding(
-                                        padding: EdgeInsetsGeometry.symmetric(
+                                        padding: EdgeInsets.symmetric(
                                           vertical: 12,
                                         ),
                                         child: Container(
@@ -212,7 +210,7 @@ class _viewWorkoutHistory extends State<ViewWorkoutHistory> {
                                         ),
                                       ),
                                       Padding(
-                                        padding: EdgeInsetsGeometry.symmetric(
+                                        padding: EdgeInsets.symmetric(
                                           vertical: 12,
                                         ),
                                         child: Container(

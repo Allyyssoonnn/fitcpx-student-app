@@ -22,11 +22,13 @@ class MyPieChart extends StatelessWidget {
           decoration: BoxDecoration(shape: BoxShape.rectangle, color: color),
         ),
         const SizedBox(width: 8),
-        Text(
-          text,
-          style: TextStyle(
-            fontSize: 14,
-            color: CupertinoColors.label.resolveFrom(context),
+        Expanded(
+          child: Text(
+            text,
+            style: TextStyle(
+              fontSize: 14,
+              color: CupertinoColors.label.resolveFrom(context),
+            ),
           ),
         ),
       ],
@@ -46,16 +48,17 @@ class MyPieChart extends StatelessWidget {
               sectionsSpace: 2,
               centerSpaceRadius: 40,
               sections: [
-                PieChartSectionData(
-                  value: assessment.residualPercMass,
-                  title: '${assessment.residualPercMass}%',
-                  color: Colors.blue,
-                  radius: 60,
-                  titleStyle: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 14,
+                if (assessment.type == "completo")
+                  PieChartSectionData(
+                    value: assessment.residualPercMass,
+                    title: '${assessment.residualPercMass}%',
+                    color: Colors.blue,
+                    radius: 60,
+                    titleStyle: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 14,
+                    ),
                   ),
-                ),
                 PieChartSectionData(
                   value: assessment.bodyPercFat,
                   title: '${assessment.bodyPercFat}%',
@@ -66,26 +69,39 @@ class MyPieChart extends StatelessWidget {
                     fontSize: 14,
                   ),
                 ),
-                PieChartSectionData(
-                  value: assessment.musclePerMass,
-                  title: '${assessment.musclePerMass}%',
-                  color: Colors.green,
-                  radius: 60,
-                  titleStyle: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 14,
+                if (assessment.type != "completo")
+                  PieChartSectionData(
+                    value: assessment.leanPercMass,
+                    title: '${assessment.leanPercMass}%',
+                    color: Colors.green,
+                    radius: 60,
+                    titleStyle: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 14,
+                    ),
                   ),
-                ),
-                PieChartSectionData(
-                  value: assessment.bonePercMass,
-                  title: '${assessment.bonePercMass}%',
-                  color: Colors.grey,
-                  radius: 60,
-                  titleStyle: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 14,
+                if (assessment.type == "completo")
+                  PieChartSectionData(
+                    value: assessment.musclePerMass,
+                    title: '${assessment.musclePerMass}%',
+                    color: Colors.green,
+                    radius: 60,
+                    titleStyle: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 14,
+                    ),
                   ),
-                ),
+                if (assessment.type == "completo")
+                  PieChartSectionData(
+                    value: assessment.bonePercMass,
+                    title: '${assessment.bonePercMass}%',
+                    color: Colors.grey,
+                    radius: 60,
+                    titleStyle: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 14,
+                    ),
+                  ),
               ],
             ),
           ),
@@ -99,25 +115,33 @@ class MyPieChart extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              legendItem(
-                Colors.blue,
-                'Residual (${assessment.residualPercMass!.toStringAsFixed(2)}%)',
-              ),
+              if (assessment.type == "completo")
+                legendItem(
+                  Colors.blue,
+                  'Residual (${assessment.residualPercMass!.toStringAsFixed(2)}%)',
+                ),
               const SizedBox(height: 8),
               legendItem(
                 Colors.red,
                 'Gordura (${assessment.bodyPercFat.toStringAsFixed(2)}%)',
               ),
               const SizedBox(height: 8),
-              legendItem(
-                Colors.green,
-                'Muscular (${assessment.musclePerMass!.toStringAsFixed(2)}%)',
-              ),
+              if (assessment.type == "completo")
+                legendItem(
+                  Colors.green,
+                  'Muscular (${assessment.musclePerMass!.toStringAsFixed(2)}%)',
+                ),
               const SizedBox(height: 8),
-              legendItem(
-                Colors.grey,
-                'Óssea (${assessment.bonePercMass!.toStringAsFixed(2)}%)',
-              ),
+              if (assessment.type == "completo")
+                legendItem(
+                  Colors.grey,
+                  'Óssea (${assessment.bonePercMass!.toStringAsFixed(2)}%)',
+                ),
+              if (assessment.type != "completo")
+                legendItem(
+                  Colors.green,
+                  'Massa Magra (${assessment.leanPercMass!.toStringAsFixed(2)}%)',
+                ),
             ],
           ),
         ),

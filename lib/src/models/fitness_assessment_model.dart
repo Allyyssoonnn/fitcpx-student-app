@@ -6,6 +6,7 @@ class FitnessAssessmentModel {
   final String date;
   final String weight;
   final String height;
+  final String type;
   final List<String> images;
 
   // Mass Percent
@@ -64,6 +65,7 @@ class FitnessAssessmentModel {
   final String? leftCalf;
 
   FitnessAssessmentModel({
+    required this.type,
     required this.id,
     required this.idClient,
     required this.date,
@@ -150,23 +152,33 @@ class FitnessAssessmentModel {
           .map((item) => item['url_imagem'] as String)
           .toList(),
 
-      bodyPercFat: _toDouble(json['result']?['compositionPercentage']?['gordura']),
+      bodyPercFat: _toDouble(
+        json['result']?['compositionPercentage']?['gordura'],
+      ),
       musclePerMass: _toDouble(
         json['result']?['compositionPercentage']?['massa_muscular'],
       ),
-      leanPercMass: _toDouble(json['result']?['compositionPercentage']?['massa_magra']),
-      bonePercMass: _toDouble(json['result']?['compositionPercentage']?['massa_ossea']),
+      leanPercMass: _toDouble(
+        json['result']?['compositionPercentage']?['massa_magra'],
+      ),
+      bonePercMass: _toDouble(
+        json['result']?['compositionPercentage']?['massa_ossea'],
+      ),
       residualPercMass: _toDouble(
         json['result']?['compositionPercentage']?['massa_residual'],
       ),
 
       bodyFat: _toDouble(json['result']?['compositionWeight']?['gordura']),
-      muscleMass: _toDouble(json['result']?['compositionWeight']?['massa_muscular']),
+      muscleMass: _toDouble(
+        json['result']?['compositionWeight']?['massa_muscular'],
+      ),
       leanMass: _toDouble(json['result']?['compositionWeight']?['massa_magra']),
       boneMass: _toDouble(json['result']?['compositionWeight']?['massa_ossea']),
-      residualMass: _toDouble(json['result']?['compositionWeight']?['massa_residual']),
+      residualMass: _toDouble(
+        json['result']?['compositionWeight']?['massa_residual'],
+      ),
 
-      trainer: json['usuario']?['nome_usuario']?.toString() ?? '',
+      trainer: json['usuario']?['nome_usuario']?.toString() ?? '-',
       client: json['aluno']?['nome_aluno']?.toString() ?? '',
       basalMetabolicRate: json['basal']?.toString(),
 
@@ -205,6 +217,8 @@ class FitnessAssessmentModel {
       leftForearm: json['antebraco_esquerdo']?.toString(),
       leftThigh: json['coxa_esquerda']?.toString(),
       leftCalf: json['panturrilha_esquerda']?.toString(),
+
+      type: json['tipo_avaliacao']?.toString() ?? '',
     );
   }
 }

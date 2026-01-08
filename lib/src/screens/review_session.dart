@@ -58,7 +58,7 @@ class ReviewSessionScreen extends StatelessWidget {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsetsGeometry.symmetric(vertical: 12),
+                    padding: EdgeInsets.symmetric(vertical: 12),
                     child: Container(
                       height: 0.5,
                       color: CupertinoColors.separator.resolveFrom(context),
@@ -87,7 +87,7 @@ class ReviewSessionScreen extends StatelessWidget {
                                       ),
                                     ),
                                     Padding(
-                                      padding: EdgeInsetsGeometry.symmetric(
+                                      padding: EdgeInsets.symmetric(
                                         vertical: 12,
                                       ),
                                       child: Container(
@@ -162,10 +162,9 @@ class ReviewSessionScreen extends StatelessWidget {
                                           children: [
                                             const SizedBox(height: 20),
                                             Padding(
-                                              padding:
-                                                  EdgeInsetsGeometry.symmetric(
-                                                    vertical: 12,
-                                                  ),
+                                              padding: EdgeInsets.symmetric(
+                                                vertical: 12,
+                                              ),
                                               child: Container(
                                                 height: 0.5,
                                                 color: CupertinoColors.separator
@@ -183,10 +182,9 @@ class ReviewSessionScreen extends StatelessWidget {
                                               ),
                                             ),
                                             Padding(
-                                              padding:
-                                                  EdgeInsetsGeometry.symmetric(
-                                                    vertical: 12,
-                                                  ),
+                                              padding: EdgeInsets.symmetric(
+                                                vertical: 12,
+                                              ),
                                               child: Container(
                                                 height: 0.5,
                                                 color:

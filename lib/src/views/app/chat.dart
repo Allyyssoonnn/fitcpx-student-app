@@ -53,7 +53,7 @@ class _ChatScreenState extends State<ChatScreen> {
       navigationBar: const CupertinoNavigationBar(middle: Text('Chat')),
       color: CupertinoColors.secondarySystemBackground.resolveFrom(context),
       child: Padding(
-        padding: EdgeInsetsGeometry.only(bottom: 40, left: 15, right: 15),
+        padding: EdgeInsets.only(bottom: 40, left: 15, right: 15),
         child: SfChat(
           messages: _messages,
           outgoingUser: _currentUserId,

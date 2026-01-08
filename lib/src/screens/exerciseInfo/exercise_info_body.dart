@@ -185,7 +185,7 @@ class _ExerciseInfoBodyState extends State<ExerciseInfoBody> {
                   ],
                 ),
                 Padding(
-                  padding: EdgeInsetsGeometry.symmetric(vertical: 5),
+                  padding: EdgeInsets.symmetric(vertical: 5),
                   child: Container(
                     height: 0.5,
                     color: CupertinoColors.separator.resolveFrom(context),

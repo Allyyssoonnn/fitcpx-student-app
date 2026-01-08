@@ -129,7 +129,7 @@ class _SettingsScreen extends State<SettingsScreen> {
                   ),
                   SizedBox(height: 16),
                   Padding(
-                    padding: EdgeInsetsGeometry.symmetric(vertical: 12),
+                    padding: EdgeInsets.symmetric(vertical: 12),
                     child: Container(
                       height: 0.5,
                       color: CupertinoColors.separator.resolveFrom(context),

@@ -140,7 +140,7 @@ class _ViewFitnessAssessmentState extends State<ViewFitnessAssessment>
                       ),
                       const SizedBox(height: 12),
                       Padding(
-                        padding: EdgeInsetsGeometry.symmetric(vertical: 12),
+                        padding: EdgeInsets.symmetric(vertical: 12),
                         child: Container(
                           height: 0.5,
                           color: CupertinoColors.separator.resolveFrom(context),
@@ -210,7 +210,7 @@ class _ViewFitnessAssessmentState extends State<ViewFitnessAssessment>
                                 'Ombro: ${assessment.shoulder ?? "-"}',
                                 'Tórax Inspirado: ${assessment.chestInhaled ?? "-"}',
                                 'Tórax Expirado: ${assessment.chestExhaled ?? "-"}',
-                                'Abdomên: ${assessment.waist ?? "-"}',
+                                'Cintura: ${assessment.waist ?? "-"}',
                                 'Abdômen: ${assessment.abdomen ?? "-"}',
                                 'Quadril: ${assessment.hips ?? "-"}',
                               ], context),

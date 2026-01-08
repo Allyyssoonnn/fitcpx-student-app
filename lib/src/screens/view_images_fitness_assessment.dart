@@ -117,7 +117,7 @@ class ViewImagesFitnessAssessment extends StatelessWidget {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             Padding(
-              padding: EdgeInsetsGeometry.symmetric(vertical: 12),
+              padding: EdgeInsets.symmetric(vertical: 12),
               child: Container(
                 height: 0.5,
                 color: CupertinoColors.separator.resolveFrom(context),
