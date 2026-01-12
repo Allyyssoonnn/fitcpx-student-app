@@ -15,31 +15,31 @@ class NewFitnessAssessment extends StatefulWidget {
 class _NewFitnessAssessmentState extends State<NewFitnessAssessment> {
   late final _weightController = TextEditingController();
   late final _heightController = TextEditingController();
-  late final _armController = TextEditingController();
-  late final _abdomenController = TextEditingController();
-  late final _calfController = TextEditingController();
+  late final _neckController = TextEditingController();
+  late final _waistController = TextEditingController();
+  late final _hipController = TextEditingController();
 
   void submit(BuildContext context) async {
     final weightText = _weightController.text.replaceAll(',', '.');
     final heightText = _heightController.text.replaceAll(',', '.');
-    final armText = _armController.text.replaceAll(',', '.');
-    final abdomenText = _abdomenController.text.replaceAll(',', '.');
-    final calfText = _calfController.text.replaceAll(',', '.');
+    final neckText = _neckController.text.replaceAll(',', '.');
+    final waistText = _waistController.text.replaceAll(',', '.');
+    final hipText = _hipController.text.replaceAll(',', '.');
 
-    if (armText.isEmpty || abdomenText.isEmpty || calfText.isEmpty) {
+    if (neckText.isEmpty || waistText.isEmpty || hipText.isEmpty) {
       _showErrorDialog(context, "Preencha todos os campos");
       return;
     }
 
-    final armValue = double.tryParse(armText);
-    final abdomenValue = double.tryParse(abdomenText);
-    final thighValue = double.tryParse(calfText);
+    final neckValue = double.tryParse(neckText);
+    final waistValue = double.tryParse(waistText);
+    final hipValue = double.tryParse(hipText);
     final weightValue = double.tryParse(weightText);
     final heightValue = double.tryParse(heightText);
 
-    if (armValue == null ||
-        abdomenValue == null ||
-        thighValue == null ||
+    if (neckValue == null ||
+        waistValue == null ||
+        hipValue == null ||
         weightValue == null ||
         heightValue == null) {
       _showErrorDialog(context, "Insira valores numéricos válidos");
@@ -49,9 +49,9 @@ class _NewFitnessAssessmentState extends State<NewFitnessAssessment> {
     try {
       // 4. Call Service with Named Parameters
       await FitnessAssessmentService().sendFitnessAssessment(
-        arm: armValue,
-        abdomen: abdomenValue,
-        calf: thighValue,
+        neck: neckValue,
+        waist: waistValue,
+        hip: hipValue,
         weight: weightValue,
         height: heightValue,
       );
@@ -154,19 +154,19 @@ class _NewFitnessAssessmentState extends State<NewFitnessAssessment> {
                   controller: _heightController,
                 ),
                 FieldText(
-                  label: "Perímetro do Braço",
-                  placeHolder: "Ex: 38",
-                  controller: _armController,
+                  label: "Perímetro do Pescoço",
+                  placeHolder: "Ex: 36,90",
+                  controller: _neckController,
                 ),
                 FieldText(
-                  label: "Perímetro do Abdômen",
-                  placeHolder: "Ex: 86",
-                  controller: _abdomenController,
+                  label: "Perímetro do Cintura",
+                  placeHolder: "Ex: 83,70",
+                  controller: _waistController,
                 ),
                 FieldText(
-                  label: "Perímetro do Panturrilha",
-                  placeHolder: "Ex: 35",
-                  controller: _calfController,
+                  label: "Perímetro do Quadril",
+                  placeHolder: "Ex: 101,70",
+                  controller: _hipController,
                 ),
 
                 const SizedBox(height: 24),

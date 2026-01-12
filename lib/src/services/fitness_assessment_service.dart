@@ -50,9 +50,9 @@ class FitnessAssessmentService {
   }
 
   Future<void> sendFitnessAssessment({
-    required double arm,
-    required double abdomen,
-    required double calf,
+    required double neck,
+    required double waist,
+    required double hip,
     required double weight,
     required double height,
   }) async {
@@ -64,7 +64,7 @@ class FitnessAssessmentService {
       _dio.options.headers['Content-Type'] = 'application/json';
 
       await _dio.get(
-        '/mobile/sendFitnessAssessment?arm=${arm}&abdomen=${abdomen}&calf=${calf}&weight=${weight}&height=${height}',
+        '/mobile/sendFitnessAssessment?neck=${neck}&waist=${waist}&hip=${hip}&weight=${weight}&height=${height}',
       );
 
       return;

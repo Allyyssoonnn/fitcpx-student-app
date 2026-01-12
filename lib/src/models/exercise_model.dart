@@ -40,7 +40,7 @@ class ExerciseModel {
       cod_exercicio: id ?? this.cod_exercicio,
       nome_exercicio: name ?? this.nome_exercicio,
       observacao_exercicio: observacao_exercicio,
-      observation: observation,
+      observation: this.observation ?? observation,
       url_exercicio: this.url_exercicio,
       nSets: this.nSets,
       superSet: superSet ?? this.superSet,
