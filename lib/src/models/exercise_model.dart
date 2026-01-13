@@ -40,7 +40,7 @@ class ExerciseModel {
       cod_exercicio: id ?? this.cod_exercicio,
       nome_exercicio: name ?? this.nome_exercicio,
       observacao_exercicio: observacao_exercicio,
-      observation: this.observation ?? observation,
+      observation: observation ?? this.observation,
       url_exercicio: this.url_exercicio,
       nSets: this.nSets,
       superSet: superSet ?? this.superSet,
@@ -117,7 +117,7 @@ class ExerciseModel {
       nome_equipamento_2: json['equipamento_2']?['nome_equipamento'] ?? '',
       cod_equipamento_3: json['cod_equipamento_3'] ?? 0,
       nome_equipamento_3: json['equipamento_3']?['nome_equipamento'] ?? '',
-      observation: json['observacao_sessao_exercicio_aluno'] ?? '',
+      observation: json['observacao_sessao_exercicio_aluno'],
     );
   }
 
