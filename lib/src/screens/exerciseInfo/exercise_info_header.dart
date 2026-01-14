@@ -154,16 +154,13 @@ class _ExerciseInfoHeaderState extends State<ExerciseInfoHeader> {
                   child: CupertinoButton.filled(
                     child: const Text("Salvar"),
                     onPressed: () {
-                      if (_observation.text.isNotEmpty) {
-                        context.read<SessionBloc>().add(
-                          UpdateObservationExerciseSession(
-                            observation: _observation.text,
-                            exerciseId: widget.exercise.cod_sessao_exercicio,
-                            setId:
-                                widget.exerciseSuperSet?.cod_sessao_exercicio,
-                          ),
-                        );
-                      }
+                      context.read<SessionBloc>().add(
+                        UpdateObservationExerciseSession(
+                          observation: _observation.text,
+                          exerciseId: widget.exercise.cod_sessao_exercicio,
+                          setId: widget.exerciseSuperSet?.cod_sessao_exercicio,
+                        ),
+                      );
                       Navigator.pop(context);
                     },
                   ),
