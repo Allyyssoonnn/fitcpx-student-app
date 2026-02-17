@@ -143,7 +143,7 @@ Widget _buildEventList(List<dynamic> events, context) {
     }
   }
 
-  void _optionsEventModal() {
+  void _optionsEventModal(eventUrl) {
     showModalBottomSheet(
       context: context,
       isScrollControlled:
@@ -185,7 +185,8 @@ Widget _buildEventList(List<dynamic> events, context) {
                   child: CupertinoButton.filled(
                     child: const Text("Solicitar ajuste"),
                     onPressed: () {
-                      _launchUrl("https://wa.me/554498084028");
+                      // _launchUrl("https://wa.me/554498084028");
+                      _launchUrl(eventUrl);
                       // Navigator.pop(context);
                     },
                   ),
@@ -287,7 +288,7 @@ Widget _buildEventList(List<dynamic> events, context) {
 
         return CupertinoCard(
           onTap: () => event.studentId != null
-              ? _optionsEventModal()
+              ? _optionsEventModal(event.url)
               : _optionsEventAvaliableModal(event.id),
           child: Row(
             children: [

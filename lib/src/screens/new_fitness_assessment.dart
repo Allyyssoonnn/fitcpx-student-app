@@ -123,7 +123,7 @@ class _NewFitnessAssessmentState extends State<NewFitnessAssessment> {
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
                   child: Text(
-                    'Essa é uma avaliação física rápida para consultoria, para gerar sua avaliação precisaremos de 3 medidas de perímetros básicas: Braço, Abdômen e Panturrilha',
+                    'Essa é uma avaliação física rápida para consultoria, para gerar sua avaliação precisaremos de 3 medidas de perímetros básicas: Pescoço, Cintura e Quadril',
                     style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.bold,

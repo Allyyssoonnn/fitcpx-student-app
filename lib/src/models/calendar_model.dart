@@ -9,6 +9,7 @@ class CalendarModel {
   final String type;
   final String description;
   final String modalidade;
+  final String? url;
 
   CalendarModel({
     required this.id,
@@ -19,6 +20,7 @@ class CalendarModel {
     required this.type,
     required this.description,
     required this.modalidade,
+    this.url,
   });
 
   factory CalendarModel.fromJson(Map<String, dynamic> json) {
@@ -45,6 +47,7 @@ class CalendarModel {
       type: json['tipo_agendamento'] ?? '',
       description: json['descricao_evento'] ?? '',
       modalidade: json['modalidade']?['nome_modalidade'] ?? '',
+      url: json['url'] ?? null,
     );
   }
 }
