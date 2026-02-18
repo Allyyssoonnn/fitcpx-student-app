@@ -211,7 +211,13 @@ class FieldText extends StatelessWidget {
         crossAxisAlignment:
             CrossAxisAlignment.start, // Aligns label to the left
         children: [
-          Text(label, style: const TextStyle(fontWeight: FontWeight.bold)),
+          Text(
+            label,
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: CupertinoColors.label.resolveFrom(context),
+            ),
+          ),
           const SizedBox(height: 8),
           CupertinoTextField(
             controller: controller,
@@ -220,7 +226,6 @@ class FieldText extends StatelessWidget {
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: CupertinoColors.systemBackground,
               border: Border.all(color: CupertinoColors.systemGrey4),
               borderRadius: BorderRadius.circular(8),
             ),
