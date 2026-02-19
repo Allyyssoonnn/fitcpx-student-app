@@ -33,7 +33,7 @@ class _viewWorkoutHistory extends State<ViewWorkoutHistory> {
   void _onShareTap() {
     // Exemplo de tempo: você deve pegar o tempo real do seu model se tiver
     // Se o WorkoutHistoryModel não tiver duração em segundos, você pode passar uma string pronta
-    final durationString = _formatDuration(3600);
+    final durationString = _formatDuration(widget.workout.duration);
 
     WorkoutShareSheet.show(context, widget.workout, durationString);
   }

@@ -223,13 +223,39 @@ class _SettingsScreen extends State<SettingsScreen> {
               ),
               Column(
                 children: [
-                  CupertinoButton.tinted(
-                    color: CupertinoColors.destructiveRed,
-                    onPressed: () =>
-                        context.read<AuthBloc>().add(AuthLoggedOut()),
-                    child: const Text(
-                      'Sair da conta',
-                      style: TextStyle(color: CupertinoColors.destructiveRed),
+                  GestureDetector(
+                    onTap: () {},
+                    child: Container(
+                      padding: EdgeInsets.all(20),
+                      child: GestureDetector(
+                        behavior: HitTestBehavior.translucent,
+                        onTap: () =>
+                            context.read<AuthBloc>().add(AuthLoggedOut()),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              spacing: 16,
+                              children: [
+                                Icon(
+                                  FontAwesomeIcons.rightFromBracket,
+                                  color: CupertinoColors.destructiveRed,
+                                ),
+                                Text(
+                                  'Sair da conta',
+                                  style: TextStyle(
+                                    color: CupertinoColors.destructiveRed,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Icon(
+                              CupertinoIcons.chevron_right,
+                              color: CupertinoColors.destructiveRed,
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
                   ),
                   Text("Version: $_version", style: TextStyle(fontSize: 9)),

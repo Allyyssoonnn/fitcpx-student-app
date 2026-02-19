@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:fitcpxaluno/src/core/dio_client.dart';
 import 'package:fitcpxaluno/src/core/dio_exceptions.dart';
 import 'package:fitcpxaluno/src/models/fitness_assessment_model.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class FitnessAssessmentService {
@@ -55,6 +56,7 @@ class FitnessAssessmentService {
     required double hip,
     required double weight,
     required double height,
+    required List<XFile> images,
   }) async {
     try {
       final prefs = await SharedPreferences.getInstance();
@@ -63,9 +65,30 @@ class FitnessAssessmentService {
       _dio.options.headers['Authorization'] = token;
       _dio.options.headers['Content-Type'] = 'application/json';
 
-      await _dio.get(
-        '/mobile/sendFitnessAssessment?neck=${neck}&waist=${waist}&hip=${hip}&weight=${weight}&height=${height}',
-      );
+      FormData formData = FormData.fromMap({
+        'neck': neck,
+        'waist': waist,
+        'hip': hip,
+        'weight': weight,
+        'height': height,
+      });
+
+      for (var file in images) {
+        formData.files.add(
+          MapEntry(
+            // ATENÇÃO: 'images' deve ser EXATAMENTE o mesmo nome que o seu Multer
+            // espera no backend (ex: upload.array('images')).
+            // Em alguns backends, pode ser necessário usar 'images[]'.
+            'images',
+            await MultipartFile.fromFile(
+              file.path,
+              filename: file.name.isNotEmpty ? file.name : 'avaliacao.png',
+            ),
+          ),
+        );
+      }
+
+      await _dio.post('/mobile/sendFitnessAssessment', data: formData);
 
       return;
     } on DioException catch (e) {

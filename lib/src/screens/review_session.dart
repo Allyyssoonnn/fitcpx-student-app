@@ -15,9 +15,22 @@ class ReviewSessionScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomScaffold(
-      navigationBar: const CupertinoNavigationBar(
+      navigationBar: CupertinoNavigationBar(
         border: null,
         middle: Text('Revisar treino'),
+        trailing: CupertinoButton(
+          padding: EdgeInsets.zero,
+          onPressed: () {
+            context.read<SessionBloc>().add(FinishWorkout());
+            context.read<TimerBloc>().add(StopTimer());
+            context.read<WorkoutBloc>().add(LoadWorkouts());
+            Navigator.pop(context);
+            Navigator.pop(context);
+          },
+          child: const Text(
+            "Confirmar",
+          ), // Texto as vezes é melhor que ícone para ação principal
+        ),
       ),
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 20),
@@ -272,20 +285,20 @@ class ReviewSessionScreen extends StatelessWidget {
                     ),
                   ),
 
-                  CupertinoButton.tinted(
-                    color: CupertinoColors.activeGreen,
-                    onPressed: () {
-                      context.read<SessionBloc>().add(FinishWorkout());
-                      context.read<TimerBloc>().add(StopTimer());
-                      context.read<WorkoutBloc>().add(LoadWorkouts());
-                      Navigator.pop(context);
-                      Navigator.pop(context);
-                    },
-                    child: const Text(
-                      'Confirmar',
-                      style: TextStyle(color: CupertinoColors.activeGreen),
-                    ),
-                  ),
+                  // CupertinoButton.tinted(
+                  //   color: CupertinoColors.activeGreen,
+                  //   onPressed: () {
+                  //     context.read<SessionBloc>().add(FinishWorkout());
+                  //     context.read<TimerBloc>().add(StopTimer());
+                  //     context.read<WorkoutBloc>().add(LoadWorkouts());
+                  //     Navigator.pop(context);
+                  //     Navigator.pop(context);
+                  //   },
+                  //   child: const Text(
+                  //     'Confirmar',
+                  //     style: TextStyle(color: CupertinoColors.activeGreen),
+                  //   ),
+                  // ),
                 ],
               );
             }
