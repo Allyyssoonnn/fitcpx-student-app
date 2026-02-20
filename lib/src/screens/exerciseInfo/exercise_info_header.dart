@@ -7,6 +7,7 @@ import 'package:fitcpxaluno/src/widgets/video_player.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class ExerciseInfoHeader extends StatefulWidget {
   const ExerciseInfoHeader({
@@ -235,9 +236,24 @@ class _ExerciseInfoHeaderState extends State<ExerciseInfoHeader> {
                 sizeStyle: CupertinoButtonSize.medium,
                 color: CupertinoColors.activeGreen,
                 onPressed: showObservation,
-                child: const Icon(
-                  Icons.message,
-                  color: CupertinoColors.activeGreen,
+                child: Row(
+                  spacing: 6,
+                  children: [
+                    const Icon(
+                      Icons.message,
+                      color: CupertinoColors.activeGreen,
+                    ),
+
+                    if ((exercise.observacao_exercicio != null &&
+                            exercise.observacao_exercicio!.isNotEmpty) ||
+                        exercise.observation != null &&
+                            exercise.observation!.isNotEmpty)
+                      Icon(
+                        FontAwesomeIcons.circleDot,
+                        size: 10,
+                        color: CupertinoColors.activeGreen,
+                      ),
+                  ],
                 ),
               ),
               CupertinoButton.tinted(

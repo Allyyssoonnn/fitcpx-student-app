@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-//Event
+// Eventos
 abstract class TimerEvent {}
 
 class StartTimer extends TimerEvent {}
@@ -14,7 +14,7 @@ class LoadTimer extends TimerEvent {}
 
 class TickTimer extends TimerEvent {}
 
-//State
+// Estados
 abstract class TimerState {}
 
 class RunningTimerState extends TimerState {
@@ -25,9 +25,10 @@ class RunningTimerState extends TimerState {
 
 class StoppedTimerState extends TimerState {}
 
+// Bloc
 class TimerBloc extends Bloc<TimerEvent, TimerState> {
   Timer? _timer;
-  int _secondsElapsed = 0;
+  DateTime? _startTime; // Guardamos a referência do início na memória
 
   TimerBloc() : super(StoppedTimerState()) {
     on<StartTimer>(_startTimer);
@@ -36,54 +37,73 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
     on<TickTimer>(_onTickTimer);
   }
 
-  void _onTickTimer(TickTimer event, Emitter<TimerState> emit) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setInt('session_timer', _secondsElapsed);
-    emit(RunningTimerState(_secondsElapsed));
+  // O Tick agora não precisa ser async, ele apenas calcula a diferença na memória!
+  void _onTickTimer(TickTimer event, Emitter<TimerState> emit) {
+    if (_startTime != null) {
+      final now = DateTime.now();
+      final secondsElapsed = now.difference(_startTime!).inSeconds;
+      emit(RunningTimerState(secondsElapsed));
+    }
   }
 
   void _onLoadSessionTimer(LoadTimer event, Emitter<TimerState> emit) async {
     final prefs = await SharedPreferences.getInstance();
-    final savedTime = prefs.getInt('session_timer') ?? 0;
-    _secondsElapsed = savedTime;
-
     final sessionJson = prefs.getString('session');
     final hasActiveWorkout = sessionJson != null;
+    final startTimeMillis = prefs.getInt('session_start_time');
 
-    if (!hasActiveWorkout) {
+    // Correção: Se não houver treino ou tempo salvo, paramos e encerramos a função.
+    if (!hasActiveWorkout || startTimeMillis == null) {
       add(StopTimer());
+      return;
     }
 
+    _startTime = DateTime.fromMillisecondsSinceEpoch(startTimeMillis);
+
+    // Calcula os segundos exatos que passaram desde que o timer foi criado
+    final secondsElapsed = DateTime.now().difference(_startTime!).inSeconds;
+
     _timer?.cancel();
-    _timer = Timer.periodic(Duration(seconds: 1), (_) {
-      _secondsElapsed++;
+    _timer = Timer.periodic(const Duration(seconds: 1), (_) {
       add(TickTimer());
     });
 
-    emit(RunningTimerState(_secondsElapsed));
+    emit(RunningTimerState(secondsElapsed));
   }
 
   void _startTimer(StartTimer event, Emitter<TimerState> emit) async {
-    _secondsElapsed = 0;
+    final prefs = await SharedPreferences.getInstance();
 
-    // Inicia o timer
-    _timer?.cancel(); // limpa se já tiver rodando
-    _timer = Timer.periodic(Duration(seconds: 1), (_) {
-      _secondsElapsed++;
+    // Registra o momento exato do início
+    _startTime = DateTime.now();
+    await prefs.setInt(
+      'session_start_time',
+      _startTime!.millisecondsSinceEpoch,
+    );
+
+    // Inicia o timer em loop
+    _timer?.cancel(); // Limpa se já estiver rodando
+    _timer = Timer.periodic(const Duration(seconds: 1), (_) {
       add(TickTimer());
     });
 
-    //Não salva em Prefs pois o Tick faz isso a cada segundo
-    emit(RunningTimerState(_secondsElapsed));
+    emit(RunningTimerState(0));
   }
 
   void _stopTimer(StopTimer event, Emitter<TimerState> emit) async {
     final prefs = await SharedPreferences.getInstance();
-    prefs.remove('session_timer');
+    await prefs.remove('session_start_time');
 
+    _startTime = null;
     _timer?.cancel();
     _timer = null;
 
     emit(StoppedTimerState());
+  }
+
+  @override
+  Future<void> close() {
+    _timer?.cancel();
+    return super.close();
   }
 }

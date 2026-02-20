@@ -63,11 +63,17 @@ class SessionBloc extends Bloc<SessionEvent, SessionState> {
   ) async {
     try {
       final prefs = await SharedPreferences.getInstance();
-      final savedTime = prefs.getInt('session_timer') ?? 0;
+      // final savedTime = prefs.getInt('session_timer') ?? 0;
+      final startTimeMillis = prefs.getInt('session_start_time');
+      final _startTime = DateTime.fromMillisecondsSinceEpoch(
+        startTimeMillis ?? 0,
+      );
+      final secondsElapsed = DateTime.now().difference(_startTime!).inSeconds;
+
       final workoutService = WorkoutService();
       await workoutService.finishWorkout(
         session: _session,
-        durationSeconds: savedTime,
+        durationSeconds: secondsElapsed,
       );
 
       await SharedPreferences.getInstance().then(
