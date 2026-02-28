@@ -12,6 +12,7 @@ class WelcomeButton extends StatelessWidget {
     this.labelColor,
     this.showBadge,
     this.messageBadge,
+    this.disable,
   });
 
   final String buttonText;
@@ -22,6 +23,7 @@ class WelcomeButton extends StatelessWidget {
   final Color? labelColor;
   final bool? showBadge;
   final String? messageBadge;
+  final bool? disable;
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +32,7 @@ class WelcomeButton extends StatelessWidget {
       borderRadius: BorderRadius.circular(10),
       child: InkWell(
         borderRadius: BorderRadius.circular(10),
-        onTap: onTap,
+        onTap: (disable != true) ? onTap : null,
         child: Stack(
           children: [
             Container(
@@ -45,7 +47,9 @@ class WelcomeButton extends StatelessWidget {
                     ),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.2),
+                    color: (disable == true)
+                        ? Colors.black.withOpacity(0.0)
+                        : Colors.black.withOpacity(0.2),
                     spreadRadius: 1,
                     blurRadius: 5,
                     offset: const Offset(0, 3),
@@ -56,13 +60,20 @@ class WelcomeButton extends StatelessWidget {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(icon, color: labelColor),
+                  Icon(
+                    icon,
+                    color: (disable == true)
+                        ? CupertinoColors.tertiaryLabel.resolveFrom(context)
+                        : labelColor,
+                  ),
                   Text(
                     buttonText,
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 20,
-                      color: CupertinoColors.label.resolveFrom(context),
+                      color: (disable == true)
+                          ? CupertinoColors.tertiaryLabel.resolveFrom(context)
+                          : CupertinoColors.label.resolveFrom(context),
                     ),
                     textAlign: TextAlign.center,
                   ),
@@ -72,7 +83,9 @@ class WelcomeButton extends StatelessWidget {
                     style: TextStyle(
                       fontWeight: FontWeight.normal,
                       fontSize: 15,
-                      color: CupertinoColors.label.resolveFrom(context),
+                      color: (disable == true)
+                          ? CupertinoColors.tertiaryLabel.resolveFrom(context)
+                          : CupertinoColors.label.resolveFrom(context),
                     ),
                     textAlign: TextAlign.center,
                   ),

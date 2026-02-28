@@ -1,4 +1,6 @@
+import 'package:fitcpxaluno/src/models/contract_model.dart';
 import 'package:fitcpxaluno/src/models/contract_payment_model.dart';
+import 'package:fitcpxaluno/src/services/contract_service.dart';
 import 'package:fitcpxaluno/src/widgets/backgroundAlert.dart';
 import 'package:fitcpxaluno/src/widgets/cupertino_card.dart';
 import 'package:fitcpxaluno/src/widgets/customScaffold.dart';
@@ -14,8 +16,13 @@ void showCupertinoSnackBar(BuildContext context, String message) =>
 
 class ViewPaymentContract extends StatefulWidget {
   final List<ContractPaymentModel> payments;
+  final ContractModel contract;
 
-  const ViewPaymentContract({super.key, required this.payments});
+  const ViewPaymentContract({
+    super.key,
+    required this.payments,
+    required this.contract,
+  });
 
   @override
   State<ViewPaymentContract> createState() => _viewPaymentContractState();
@@ -23,6 +30,19 @@ class ViewPaymentContract extends StatefulWidget {
 
 class _viewPaymentContractState extends State<ViewPaymentContract> {
   Future<void> _launchUrl(String url) async {
+    if (url != null && await canLaunchUrl(Uri.parse(url))) {
+      await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+    } else {
+      showCupertinoSnackBar(context, 'Não foi possível abrir o link');
+    }
+  }
+
+  Future<void> _downloadContract(String? contractId) async {
+    if (contractId == null) {
+      return showCupertinoSnackBar(context, 'Não foi possível abrir o link');
+    }
+    final url = await ContractService().downloadContract(contractId);
+
     if (url != null && await canLaunchUrl(Uri.parse(url))) {
       await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
     } else {
@@ -38,7 +58,7 @@ class _viewPaymentContractState extends State<ViewPaymentContract> {
         middle: Text('Pagamentos do contrato'),
       ),
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 40),
+        padding: const EdgeInsets.symmetric(vertical: 20),
         decoration: BoxDecoration(
           color: CupertinoColors.secondarySystemBackground.resolveFrom(context),
           borderRadius: BorderRadius.only(
@@ -48,10 +68,86 @@ class _viewPaymentContractState extends State<ViewPaymentContract> {
         ),
         child: Column(
           children: [
-            Text(
-              'Pagamentos',
-              style: TextStyle(
-                color: CupertinoColors.label.resolveFrom(context),
+            CupertinoCard(
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          widget.contract.description,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            // fontSize: 18,
+                            fontSize: 14,
+                            color: CupertinoColors.label.resolveFrom(context),
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          'Status: ${widget.contract.status}',
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: CupertinoColors.label.resolveFrom(context),
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          '${widget.contract.date} até ${widget.contract.dueDate}',
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: CupertinoColors.label.resolveFrom(context),
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          'ID: ${widget.contract.id}',
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: CupertinoColors.label.resolveFrom(context),
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        if (widget.contract.statusContract != null)
+                          Text(
+                            widget.contract.statusContract!,
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: CupertinoColors.label.resolveFrom(context),
+                            ),
+                          ),
+                        const SizedBox(height: 4),
+                        Text(
+                          '${widget.contract.idContract ?? "Não consta contrato"}',
+                          style: TextStyle(
+                            fontSize: 8,
+                            color: CupertinoColors.label.resolveFrom(context),
+                          ),
+                        ),
+                        if (widget.contract.idContract != null) ...[
+                          const SizedBox(height: 8),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Expanded(
+                                child: CupertinoButton.tinted(
+                                  sizeStyle: CupertinoButtonSize.medium,
+                                  child: const Text("Ver contrato"),
+                                  onPressed: () {
+                                    _downloadContract(
+                                      widget.contract.idContract,
+                                    );
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ],
+                    ),
+                  ),
+                ],
               ),
             ),
             Padding(
@@ -84,7 +180,8 @@ class _viewPaymentContractState extends State<ViewPaymentContract> {
                               color:
                                   payment.status == 'confirmed' ||
                                       payment.status == 'paid' ||
-                                      payment.status == 'succeeded'
+                                      payment.status == 'succeeded' ||
+                                      payment.status == 'receivedCash'
                                   ? CupertinoColors.activeGreen
                                   : CupertinoColors.activeOrange,
                               width: 1.5,
@@ -94,7 +191,8 @@ class _viewPaymentContractState extends State<ViewPaymentContract> {
                           child: Icon(
                             payment.status == 'confirmed' ||
                                     payment.status == 'paid' ||
-                                    payment.status == 'succeeded'
+                                    payment.status == 'succeeded' ||
+                                    payment.status == 'receivedCash'
                                 ? CupertinoIcons.check_mark
                                 : CupertinoIcons.arrow_2_circlepath,
                             // size: 30,
@@ -130,7 +228,8 @@ class _viewPaymentContractState extends State<ViewPaymentContract> {
                               const SizedBox(height: 4),
                               if (payment.status == 'confirmed' ||
                                   payment.status == 'paid' ||
-                                  payment.status == 'succeeded')
+                                  payment.status == 'succeeded' ||
+                                  payment.status == 'receivedCash')
                                 Text(
                                   "Pago",
                                   style: TextStyle(
@@ -141,10 +240,12 @@ class _viewPaymentContractState extends State<ViewPaymentContract> {
                                 ),
                               if (payment.status != 'confirmed' &&
                                   payment.status != 'paid' &&
-                                  payment.status != 'succeeded')
+                                  payment.status != 'succeeded' &&
+                                  payment.status != 'receivedCash')
                                 Container(
                                   width: double.infinity,
                                   child: CupertinoButton.tinted(
+                                    sizeStyle: CupertinoButtonSize.medium,
                                     color: CupertinoColors.activeGreen,
                                     onPressed: () =>
                                         _launchUrl(payment.invoiceUrl),

@@ -1,6 +1,12 @@
+import 'package:fitcpxaluno/src/models/user_model.dart';
+
 abstract class AuthState {}
 
-class AuthAuthenticated extends AuthState {}
+class AuthAuthenticated extends AuthState {
+  final UserModel user;
+
+  AuthAuthenticated(this.user);
+}
 
 class AuthUnAuthenticated extends AuthState {}
 

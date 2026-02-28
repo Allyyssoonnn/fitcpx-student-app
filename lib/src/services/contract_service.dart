@@ -17,4 +17,20 @@ class ContractService {
       throw Exception(message);
     }
   }
+
+  Future<String> downloadContract(String contractId) async {
+    try {
+      final response = await _dio.post(
+        '/mobile/downloadContract',
+        data: {'documentId': contractId, 'signed': false},
+      );
+
+      final data = response.data;
+
+      return data;
+    } on DioException catch (e) {
+      final message = DioExceptions.fromDioError(e).toString();
+      throw Exception(message);
+    }
+  }
 }

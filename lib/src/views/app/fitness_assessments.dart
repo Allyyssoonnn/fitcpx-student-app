@@ -14,7 +14,7 @@ class FitnessAssessmentsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 40),
+      padding: const EdgeInsets.symmetric(vertical: 20),
       decoration: BoxDecoration(
         color: CupertinoColors.secondarySystemBackground.resolveFrom(context),
         borderRadius: BorderRadius.only(
@@ -146,7 +146,7 @@ class FitnessAssessmentsScreen extends StatelessWidget {
           ),
 
           Positioned(
-            bottom: 20,
+            bottom: 30,
             right: 20,
             child: CupertinoButton.filled(
               sizeStyle: CupertinoButtonSize.small,

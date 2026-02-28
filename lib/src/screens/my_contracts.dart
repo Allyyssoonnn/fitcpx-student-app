@@ -18,7 +18,7 @@ class MyContracts extends StatelessWidget {
         middle: Text('Meus contratos'),
       ),
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 40),
+        padding: const EdgeInsets.symmetric(vertical: 20),
         decoration: BoxDecoration(
           color: CupertinoColors.secondarySystemBackground.resolveFrom(context),
           borderRadius: BorderRadius.only(
@@ -26,113 +26,111 @@ class MyContracts extends StatelessWidget {
             topLeft: Radius.circular(20),
           ),
         ),
-        child: Column(
-          children: [
-            Text(
-              'Contratos',
-              style: TextStyle(
-                color: CupertinoColors.label.resolveFrom(context),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 12),
-              child: Container(
-                height: 0.5,
-                color: CupertinoColors.separator.resolveFrom(context),
-              ),
-            ),
-            BlocBuilder<ContractBloc, ContractState>(
-              builder: (context, state) {
-                if (state is ContractLoading) {
-                  return const Center(child: CupertinoActivityIndicator());
-                } else if (state is ContractError) {
-                  return Center(child: Text(state.message));
-                } else if (state is ContractLoaded) {
-                  if (state.contracts.isEmpty) {
-                    return BackgroundAlert(
-                      text: "Nenhum contrato encontrado",
-                      icon: FontAwesomeIcons.link,
-                    );
-                  }
+        child: BlocBuilder<ContractBloc, ContractState>(
+          builder: (context, state) {
+            if (state is ContractLoading) {
+              return const Center(child: CupertinoActivityIndicator());
+            } else if (state is ContractError) {
+              return Center(child: Text(state.message));
+            } else if (state is ContractLoaded) {
+              if (state.contracts.isEmpty) {
+                return BackgroundAlert(
+                  text: "Nenhum contrato encontrado",
+                  icon: FontAwesomeIcons.link,
+                );
+              }
 
-                  return Expanded(
-                    child: ListView.builder(
-                      itemCount: state.contracts.length,
-                      physics: BouncingScrollPhysics(),
-                      itemBuilder: (context, index) {
-                        final contract = state.contracts[index];
-                        return CupertinoCard(
-                          onTap: () => Navigator.of(context).push(
-                            CupertinoPageRoute(
-                              builder: (context) => ViewPaymentContract(
-                                key: UniqueKey(),
-                                payments: contract.payments ?? [],
+              return Expanded(
+                child: ListView.builder(
+                  itemCount: state.contracts.length,
+                  physics: BouncingScrollPhysics(),
+                  itemBuilder: (context, index) {
+                    final contract = state.contracts[index];
+                    return CupertinoCard(
+                      onTap: () => Navigator.of(context).push(
+                        CupertinoPageRoute(
+                          builder: (context) => ViewPaymentContract(
+                            key: UniqueKey(),
+                            payments: contract.payments ?? [],
+                            contract: contract,
+                          ),
+                        ),
+                      ),
+                      child: Row(
+                        children: [
+                          Container(
+                            decoration: BoxDecoration(
+                              color: CupertinoColors.systemGrey4.withOpacity(
+                                0.3,
                               ),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            padding: const EdgeInsets.all(12),
+                            child: Icon(
+                              FontAwesomeIcons.paperclip,
+                              // size: 30,
+                              size: 15,
                             ),
                           ),
-                          child: Row(
-                            children: [
-                              Container(
-                                decoration: BoxDecoration(
-                                  color: CupertinoColors.systemGrey4
-                                      .withOpacity(0.3),
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                padding: const EdgeInsets.all(12),
-                                child: Icon(
-                                  FontAwesomeIcons.link,
-                                  // size: 30,
-                                  size: 15,
-                                ),
-                              ),
-                              const SizedBox(width: 16),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      contract.description,
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w600,
-                                        // fontSize: 18,
-                                        fontSize: 14,
-                                        color: CupertinoColors.label
-                                            .resolveFrom(context),
-                                      ),
+                          const SizedBox(width: 16),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  contract.description,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    // fontSize: 18,
+                                    fontSize: 14,
+                                    color: CupertinoColors.label.resolveFrom(
+                                      context,
                                     ),
-                                    const SizedBox(height: 4),
-                                    Text(
-                                      'Status: ${contract.status}',
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        color: CupertinoColors.label
-                                            .resolveFrom(context),
-                                      ),
-                                    ),
-                                    const SizedBox(height: 4),
-                                    Text(
-                                      '${contract.date} até ${contract.dueDate}',
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        color: CupertinoColors.label
-                                            .resolveFrom(context),
-                                      ),
-                                    ),
-                                  ],
+                                  ),
                                 ),
-                              ),
-                              Icon(CupertinoIcons.chevron_right),
-                            ],
+                                const SizedBox(height: 4),
+                                Text(
+                                  'Status: ${contract.status}',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: CupertinoColors.label.resolveFrom(
+                                      context,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  '${contract.date} até ${contract.dueDate}',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: CupertinoColors.label.resolveFrom(
+                                      context,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  'ID: ${contract.id}',
+                                  style: TextStyle(
+                                    fontSize: 10,
+                                    color: CupertinoColors.label.resolveFrom(
+                                      context,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-                        );
-                      },
-                    ),
-                  );
-                }
-                return Center(child: CupertinoActivityIndicator());
-              },
-            ),
-          ],
+                          Icon(CupertinoIcons.chevron_right),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+              );
+            }
+            return Center(child: CupertinoActivityIndicator());
+          },
         ),
       ),
     );

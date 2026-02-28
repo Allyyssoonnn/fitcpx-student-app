@@ -1,6 +1,9 @@
 import 'dart:async';
 
+import 'package:fitcpxaluno/src/blocs/auth/auth_bloc.dart';
+import 'package:fitcpxaluno/src/blocs/auth/auth_state.dart';
 import 'package:fitcpxaluno/src/blocs/session_timer/sessionTimer.dart';
+import 'package:fitcpxaluno/src/models/user_model.dart';
 import 'package:fitcpxaluno/src/screens/session_exercises.dart';
 import 'package:fitcpxaluno/src/services/chat_service.dart';
 import 'package:fitcpxaluno/src/views/app/chat.dart';
@@ -69,6 +72,7 @@ class _CustomCupertinoScaffoldState extends State<CustomCupertinoScaffold> {
   Widget build(BuildContext context) {
     // final index = routes.indexWhere((t) => currentLocation.startsWith(t));
     final index = widget.navigationShell.currentIndex;
+    final shellIndex = widget.navigationShell.currentIndex;
 
     return CupertinoPageScaffold(
       backgroundColor: const Color.fromRGBO(40, 167, 69, 1),
@@ -96,111 +100,162 @@ class _CustomCupertinoScaffoldState extends State<CustomCupertinoScaffold> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 // ⬇️ BlocBuilder apenas na TabBar
-                BlocBuilder<TimerBloc, TimerState>(
+                BlocBuilder<AuthBloc, AuthState>(
                   builder: (context, state) {
-                    bool isRunning = state is RunningTimerState;
-                    String timeText = '';
-                    if (isRunning) {
-                      timeText = _formatDuration(state.secondsElapsed ?? 0);
-                    }
+                    UserModel? user;
+                    if (state is AuthAuthenticated) user = state.user;
 
-                    return CupertinoTabBar(
-                      backgroundColor: CupertinoColors.systemBackground
-                          .resolveFrom(context),
-                      currentIndex: index >= 0 ? index : 0,
-                      onTap: (i) {
-                        if (i == 2 && isRunning) {
-                          // 👇 se treino está rolando, abre direto a tela do treino
-                          Navigator.of(context, rootNavigator: true).push(
-                            CupertinoPageRoute(
-                              builder: (context) => SessionExerciseScreen(),
+                    final bool isBlocked = user?.status == "B";
+
+                    return BlocBuilder<TimerBloc, TimerState>(
+                      builder: (context, timerState) {
+                        bool isRunning = timerState is RunningTimerState;
+                        String timeText = isRunning
+                            ? _formatDuration(timerState.secondsElapsed ?? 0)
+                            : '';
+
+                        // 🔥 Criação dinâmica das abas com base no status do usuário
+                        List<Map<String, dynamic>> availableTabs = [
+                          {
+                            'route': '/home',
+                            'shellIndex': 0,
+                            'item': const BottomNavigationBarItem(
+                              icon: Icon(FontAwesomeIcons.house, size: 20),
+                              label: 'Início',
                             ),
-                          );
-                          return;
+                          },
+                        ];
+
+                        if (!isBlocked) {
+                          availableTabs.add({
+                            'route': '/fitness_assessments',
+                            'shellIndex': 1,
+                            'item': const BottomNavigationBarItem(
+                              icon: Icon(FontAwesomeIcons.chartLine, size: 20),
+                              label: 'Avaliações',
+                            ),
+                          });
+
+                          availableTabs.add({
+                            'route': '/workouts',
+                            'shellIndex': 2,
+                            'isWorkout': true,
+                            'item': BottomNavigationBarItem(
+                              icon: isRunning
+                                  ? Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: 2,
+                                      ),
+                                      child: Text(
+                                        timeText,
+                                        style: const TextStyle(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.bold,
+                                          color: CupertinoColors.activeGreen,
+                                        ),
+                                      ),
+                                    )
+                                  : const Icon(
+                                      FontAwesomeIcons.dumbbell,
+                                      size: 20,
+                                    ),
+                              label: isRunning ? 'Ativo' : 'Treinos',
+                            ),
+                          });
                         }
 
-                        if (i == 3) {
-                          setState(() => unreadCount = "0");
-                          Navigator.of(context, rootNavigator: true).push(
-                            CupertinoPageRoute(
-                              builder: (context) => ChatScreen(),
-                            ),
-                          );
-                          return;
-                        }
-
-                        if (index != i) context.go(routes[i]);
-                      },
-                      items: [
-                        const BottomNavigationBarItem(
-                          icon: Icon(FontAwesomeIcons.house, size: 20),
-                          label: 'Início',
-                        ),
-                        const BottomNavigationBarItem(
-                          icon: Icon(FontAwesomeIcons.chartLine, size: 20),
-                          label: 'Avaliações',
-                        ),
-
-                        // 🔥 Aqui o item muda dinamicamente
-                        BottomNavigationBarItem(
-                          icon: isRunning
-                              ? Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                    vertical: 2,
-                                  ),
-                                  child: Text(
-                                    timeText,
-                                    style: const TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.bold,
-                                      color: CupertinoColors.activeGreen,
-                                    ),
-                                  ),
-                                )
-                              : const Icon(FontAwesomeIcons.dumbbell, size: 20),
-                          label: isRunning ? 'Ativo' : 'Treinos',
-                        ),
-
-                        BottomNavigationBarItem(
-                          icon: Stack(
-                            clipBehavior: Clip.none,
-                            children: [
-                              const Icon(FontAwesomeIcons.message, size: 20),
-                              if (unreadCount != "0")
-                                Positioned(
-                                  right: -6,
-                                  top: -2,
-                                  child: Container(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 5,
-                                      vertical: 1,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: CupertinoColors.activeGreen,
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    constraints: const BoxConstraints(
-                                      minWidth: 14,
-                                      minHeight: 14,
-                                    ),
-                                    child: Text(
-                                      unreadCount,
-                                      style: const TextStyle(
-                                        color: CupertinoColors.white,
-                                        fontSize: 10,
+                        availableTabs.add({
+                          'route': '/chat',
+                          'shellIndex': 3,
+                          'isChat': true,
+                          'item': BottomNavigationBarItem(
+                            icon: Stack(
+                              clipBehavior: Clip.none,
+                              children: [
+                                const Icon(FontAwesomeIcons.message, size: 20),
+                                if (unreadCount != "0")
+                                  Positioned(
+                                    right: -6,
+                                    top: -2,
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 5,
+                                        vertical: 1,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: CupertinoColors.activeGreen,
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      constraints: const BoxConstraints(
+                                        minWidth: 14,
+                                        minHeight: 14,
+                                      ),
+                                      child: Text(
+                                        unreadCount,
+                                        style: const TextStyle(
+                                          color: CupertinoColors.white,
+                                          fontSize: 10,
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
-                            ],
+                              ],
+                            ),
+                            label: 'Chat',
                           ),
-                          label: 'Chat',
-                        ),
-                        const BottomNavigationBarItem(
-                          icon: Icon(FontAwesomeIcons.user, size: 20),
-                          label: 'Minha conta',
-                        ),
-                      ],
+                        });
+
+                        availableTabs.add({
+                          'route': '/settings',
+                          'shellIndex': 4,
+                          'item': const BottomNavigationBarItem(
+                            icon: Icon(FontAwesomeIcons.user, size: 20),
+                            label: 'Minha conta',
+                          ),
+                        });
+
+                        // 🔹 Mapeia o índice do GoRouter para o índice da visualização atual
+                        int currentUIIndex = availableTabs.indexWhere(
+                          (tab) => tab['shellIndex'] == shellIndex,
+                        );
+                        if (currentUIIndex == -1)
+                          currentUIIndex = 0; // Fallback de segurança
+
+                        return CupertinoTabBar(
+                          backgroundColor: CupertinoColors.systemBackground
+                              .resolveFrom(context),
+                          currentIndex: currentUIIndex,
+                          onTap: (i) {
+                            final tab = availableTabs[i];
+
+                            if (tab['isWorkout'] == true && isRunning) {
+                              Navigator.of(context, rootNavigator: true).push(
+                                CupertinoPageRoute(
+                                  builder: (context) => SessionExerciseScreen(),
+                                ),
+                              );
+                              return;
+                            }
+
+                            if (tab['isChat'] == true) {
+                              setState(() => unreadCount = "0");
+                              Navigator.of(context, rootNavigator: true).push(
+                                CupertinoPageRoute(
+                                  builder: (context) => ChatScreen(),
+                                ),
+                              );
+                              return;
+                            }
+
+                            if (shellIndex != tab['shellIndex']) {
+                              context.go(tab['route']);
+                            }
+                          },
+                          items: availableTabs
+                              .map((t) => t['item'] as BottomNavigationBarItem)
+                              .toList(),
+                        );
+                      },
                     );
                   },
                 ),

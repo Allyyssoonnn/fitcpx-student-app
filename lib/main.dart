@@ -69,7 +69,6 @@ class _MyAppState extends State<MyApp> {
     super.initState();
     authBloc = AuthBloc(UserService());
     DioClient.getInstance(authBloc);
-    authBloc.checkLoginStatus();
     _initNotifications();
 
     // O Roteador é criado aqui, usando o AuthBloc
@@ -136,7 +135,8 @@ class _MyAppState extends State<MyApp> {
         ),
         BlocProvider(create: (_) => SessionBloc()..add(LoadSession())),
         BlocProvider(create: (_) => TimerBloc()..add(LoadTimer())),
-        BlocProvider(create: (_) => authBloc),
+        // Use BlocProvider.value para blocs que já foram instanciados fora do build (no initState)
+        BlocProvider.value(value: authBloc),
       ],
       child: CupertinoApp.router(
         localizationsDelegates: const [

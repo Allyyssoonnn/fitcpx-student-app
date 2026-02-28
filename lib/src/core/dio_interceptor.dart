@@ -46,7 +46,15 @@ class DioInterceptor extends Interceptor {
         );
 
         final newToken = refreshResponse.data['token'];
+        final newRefreshToken = refreshResponse.data['refreshToken'];
+        final status = refreshResponse.data['license']?['status'];
+        final status_description =
+            refreshResponse.data['license']?['status_description'];
+
         await prefs.setString('token', newToken);
+        await prefs.setString('refreshToken', newRefreshToken);
+        await prefs.setString('status', status);
+        await prefs.setString('status_description', status_description);
 
         // Reenvia a request original com o novo token
         final newRequest = err.requestOptions;

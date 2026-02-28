@@ -1,5 +1,7 @@
 import 'package:fitcpxaluno/src/blocs/auth/auth_bloc.dart';
 import 'package:fitcpxaluno/src/blocs/auth/auth_event.dart';
+import 'package:fitcpxaluno/src/blocs/auth/auth_state.dart';
+import 'package:fitcpxaluno/src/models/user_model.dart';
 import 'package:fitcpxaluno/src/screens/events.dart';
 import 'package:fitcpxaluno/src/screens/my_contracts.dart';
 import 'package:fitcpxaluno/src/screens/workout_history.dart';
@@ -47,7 +49,7 @@ class _SettingsScreen extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     return Container(
-          padding: const EdgeInsets.symmetric(vertical: 50, horizontal: 10),
+          padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
           decoration: BoxDecoration(
             color: CupertinoColors.secondarySystemBackground.resolveFrom(
               context,
@@ -60,31 +62,56 @@ class _SettingsScreen extends State<SettingsScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Column(
-                children: [
-                  GestureDetector(
-                    onTap: () {},
-                    child: Row(
-                      spacing: 10,
-                      children: [
-                        if (userImg != '')
-                          ClipOval(
-                            child: Image.network(
-                              userImg ?? 'https://placehold.co/400',
-                              height: 50,
-                              fit: BoxFit.cover,
-                              loadingBuilder:
-                                  (context, child, loadingProgress) {
-                                    if (loadingProgress == null) return child;
+              BlocBuilder<AuthBloc, AuthState>(
+                builder: (context, state) {
+                  UserModel? user;
+                  if (state is AuthAuthenticated) user = state.user;
+
+                  final bool isBlocked = user?.status == "B";
+
+                  return Column(
+                    children: [
+                      GestureDetector(
+                        onTap: () {},
+                        child: Row(
+                          spacing: 10,
+                          children: [
+                            if (userImg != '')
+                              ClipOval(
+                                child: Image.network(
+                                  userImg ?? 'https://placehold.co/400',
+                                  height: 50,
+                                  fit: BoxFit.cover,
+                                  loadingBuilder:
+                                      (context, child, loadingProgress) {
+                                        if (loadingProgress == null)
+                                          return child;
+                                        return Container(
+                                          height: 50,
+                                          width: 50,
+                                          alignment: Alignment.center,
+                                          child:
+                                              const CupertinoActivityIndicator(),
+                                        );
+                                      },
+                                  errorBuilder: (context, error, stackTrace) {
                                     return Container(
                                       height: 50,
                                       width: 50,
+                                      // color: Colors.grey[300],
                                       alignment: Alignment.center,
-                                      child: const CupertinoActivityIndicator(),
+                                      child: const Icon(
+                                        CupertinoIcons.person,
+                                        size: 24,
+                                        // color: Colors.grey,
+                                      ),
                                     );
                                   },
-                              errorBuilder: (context, error, stackTrace) {
-                                return Container(
+                                ),
+                              )
+                            else
+                              ClipOval(
+                                child: Container(
                                   height: 50,
                                   width: 50,
                                   // color: Colors.grey[300],
@@ -92,141 +119,139 @@ class _SettingsScreen extends State<SettingsScreen> {
                                   child: const Icon(
                                     CupertinoIcons.person,
                                     size: 24,
-                                    // color: Colors.grey,
                                   ),
-                                );
-                              },
+                                ),
+                              ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(userName ?? 'userName'),
+                                // Text(
+                                //   'Ver perfil',
+                                //   style: TextStyle(
+                                //     fontSize: 12,
+                                //     color: Colors.grey,
+                                //   ),
+                                // ),
+                              ],
                             ),
-                          )
-                        else
-                          ClipOval(
-                            child: Container(
-                              height: 50,
-                              width: 50,
-                              // color: Colors.grey[300],
-                              alignment: Alignment.center,
-                              child: const Icon(
-                                CupertinoIcons.person,
-                                size: 24,
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(vertical: 12),
+                        child: Container(
+                          height: 0.5,
+                          color: CupertinoColors.separator.resolveFrom(context),
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () {},
+                        child: Container(
+                          padding: EdgeInsets.all(20),
+                          child: GestureDetector(
+                            behavior: HitTestBehavior.translucent,
+                            onTap: () =>
+                                Navigator.of(context, rootNavigator: true).push(
+                                  CupertinoPageRoute(
+                                    builder: (context) => MyContracts(),
+                                  ),
+                                ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Row(
+                                  spacing: 16,
+                                  children: [
+                                    Icon(FontAwesomeIcons.moneyBillWave),
+                                    Text('Pagamentos'),
+                                  ],
+                                ),
+                                Icon(CupertinoIcons.chevron_right),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      if (!isBlocked) ...[
+                        GestureDetector(
+                          onTap: () {},
+                          child: Container(
+                            padding: EdgeInsets.all(20),
+                            child: GestureDetector(
+                              behavior: HitTestBehavior.translucent,
+                              onTap: () =>
+                                  Navigator.of(
+                                    context,
+                                    rootNavigator: true,
+                                  ).push(
+                                    CupertinoPageRoute(
+                                      builder: (context) => WorkoutHistory(),
+                                    ),
+                                  ),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Row(
+                                    spacing: 16,
+                                    children: [
+                                      Icon(FontAwesomeIcons.dumbbell),
+                                      Text('Histórico de treinos'),
+                                    ],
+                                  ),
+                                  Icon(CupertinoIcons.chevron_right),
+                                ],
                               ),
                             ),
                           ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(userName ?? 'userName'),
-                            // Text(
-                            //   'Ver perfil',
-                            //   style: TextStyle(
-                            //     fontSize: 12,
-                            //     color: Colors.grey,
-                            //   ),
-                            // ),
-                          ],
+                        ),
+                        GestureDetector(
+                          onTap: () {},
+                          child: Container(
+                            padding: EdgeInsets.all(20),
+                            child: GestureDetector(
+                              behavior: HitTestBehavior.translucent,
+                              onTap: () =>
+                                  Navigator.of(
+                                    context,
+                                    rootNavigator: true,
+                                  ).push(
+                                    CupertinoPageRoute(
+                                      builder: (context) => Events(),
+                                    ),
+                                  ),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Row(
+                                    spacing: 16,
+                                    children: [
+                                      Icon(FontAwesomeIcons.calendar),
+                                      Text('Agenda'),
+                                    ],
+                                  ),
+                                  Icon(CupertinoIcons.chevron_right),
+                                ],
+                              ),
+                            ),
+                          ),
                         ),
                       ],
-                    ),
-                  ),
-                  SizedBox(height: 16),
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: 12),
-                    child: Container(
-                      height: 0.5,
-                      color: CupertinoColors.separator.resolveFrom(context),
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () {},
-                    child: Container(
-                      padding: EdgeInsets.all(20),
-                      child: GestureDetector(
-                        behavior: HitTestBehavior.translucent,
-                        onTap: () =>
-                            Navigator.of(context, rootNavigator: true).push(
-                              CupertinoPageRoute(
-                                builder: (context) => MyContracts(),
-                              ),
-                            ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              spacing: 16,
-                              children: [
-                                Icon(FontAwesomeIcons.moneyBillWave),
-                                Text('Pagamentos'),
-                              ],
-                            ),
-                            Icon(CupertinoIcons.chevron_right),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () {},
-                    child: Container(
-                      padding: EdgeInsets.all(20),
-                      child: GestureDetector(
-                        behavior: HitTestBehavior.translucent,
-                        onTap: () =>
-                            Navigator.of(context, rootNavigator: true).push(
-                              CupertinoPageRoute(
-                                builder: (context) => WorkoutHistory(),
-                              ),
-                            ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              spacing: 16,
-                              children: [
-                                Icon(FontAwesomeIcons.dumbbell),
-                                Text('Histórico de treinos'),
-                              ],
-                            ),
-                            Icon(CupertinoIcons.chevron_right),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () {},
-                    child: Container(
-                      padding: EdgeInsets.all(20),
-                      child: GestureDetector(
-                        behavior: HitTestBehavior.translucent,
-                        onTap: () =>
-                            Navigator.of(context, rootNavigator: true).push(
-                              CupertinoPageRoute(
-                                builder: (context) => Events(),
-                              ),
-                            ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              spacing: 16,
-                              children: [
-                                Icon(FontAwesomeIcons.calendar),
-                                Text('Agenda'),
-                              ],
-                            ),
-                            Icon(CupertinoIcons.chevron_right),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
+                    ],
+                  );
+                },
               ),
               Column(
                 children: [
                   GestureDetector(
                     onTap: () {},
                     child: Container(
-                      padding: EdgeInsets.all(20),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 20,
+                        vertical: 40,
+                      ),
                       child: GestureDetector(
                         behavior: HitTestBehavior.translucent,
                         onTap: () =>

@@ -1,7 +1,10 @@
+import 'package:fitcpxaluno/src/blocs/auth/auth_bloc.dart';
+import 'package:fitcpxaluno/src/blocs/auth/auth_state.dart';
 import 'package:fitcpxaluno/src/blocs/events/calendar_bloc.dart';
 import 'package:fitcpxaluno/src/blocs/events/calendar_state.dart';
 import 'package:fitcpxaluno/src/screens/events.dart';
 import 'package:fitcpxaluno/src/screens/my_contracts.dart';
+import 'package:fitcpxaluno/src/widgets/userBlocked.dart';
 import 'package:fitcpxaluno/src/widgets/welcome_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +19,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-          padding: const EdgeInsets.symmetric(vertical: 40),
+          padding: const EdgeInsets.symmetric(vertical: 20),
           decoration: BoxDecoration(
             color: CupertinoColors.secondarySystemBackground.resolveFrom(
               context,
@@ -40,60 +43,86 @@ class HomeScreen extends StatelessWidget {
                         color: CupertinoColors.separator.resolveFrom(context),
                       ),
                     ),
-                    Column(
-                      children: [
-                        WelcomeButton(
-                          color: Colors.green,
-                          labelColor: Colors.black,
-                          icon: FontAwesomeIcons.dumbbell,
-                          buttonText: 'Treinar agora',
-                          buttonDescription: 'Realizar treino de hoje',
-                          onTap: () => context.go('/workouts'),
-                        ),
-                        WelcomeButton(
-                          icon: FontAwesomeIcons.chartLine,
-                          buttonText: 'Minhas avaliações',
-                          buttonDescription: 'Conferir sua evolução',
-                          onTap: () => context.go('/fitness_assessments'),
-                        ),
-                        WelcomeButton(
-                          icon: FontAwesomeIcons.moneyBillWave,
-                          buttonText: 'Pagamentos',
-                          buttonDescription: 'Conferir seus pagamentos',
-                          onTap: () => {
-                            Navigator.of(context, rootNavigator: true).push(
-                              CupertinoPageRoute(
-                                builder: (context) => MyContracts(),
-                              ),
-                            ),
-                          },
-                        ),
-                        BlocBuilder<CalendarBloc, CalendarState>(
-                          builder: (context, state) {
-                            final avaliableEventsToShow =
-                                (state is CalendarLoaded &&
-                                    state.avaliableEvents.isNotEmpty)
-                                ? true
-                                : false;
+                    BlocBuilder<AuthBloc, AuthState>(
+                      builder: (context, state) {
+                        if (state is AuthAuthenticated) {
+                          final user = state.user;
+                          final bool isBlocked = user.status == "B";
 
-                            return WelcomeButton(
-                              messageBadge: avaliableEventsToShow
-                                  ? "Eventos disponíveis"
-                                  : null,
-                              icon: FontAwesomeIcons.calendar,
-                              buttonText: 'Agenda',
-                              buttonDescription: 'Conferir eventos',
-                              onTap: () => {
-                                Navigator.of(context, rootNavigator: true).push(
-                                  CupertinoPageRoute(
-                                    builder: (context) => Events(),
-                                  ),
+                          return Column(
+                            children: [
+                              if (isBlocked)
+                                UserBlockedWarning(
+                                  message: user.status_description,
                                 ),
-                              },
-                            );
-                          },
-                        ),
-                      ],
+                              if (!isBlocked) ...[
+                                WelcomeButton(
+                                  color: Colors.green,
+                                  labelColor: Colors.black,
+                                  icon: FontAwesomeIcons.dumbbell,
+                                  buttonText: 'Treinar agora',
+                                  buttonDescription: 'Realizar treino de hoje',
+                                  onTap: () => context.go('/workouts'),
+                                ),
+                                WelcomeButton(
+                                  icon: FontAwesomeIcons.chartLine,
+                                  buttonText: 'Minhas avaliações',
+                                  buttonDescription: 'Conferir sua evolução',
+                                  onTap: () =>
+                                      context.go('/fitness_assessments'),
+                                ),
+                              ],
+                              WelcomeButton(
+                                icon: FontAwesomeIcons.moneyBillWave,
+                                buttonText: 'Pagamentos',
+                                buttonDescription: 'Conferir seus pagamentos',
+                                onTap: () => {
+                                  Navigator.of(
+                                    context,
+                                    rootNavigator: true,
+                                  ).push(
+                                    CupertinoPageRoute(
+                                      builder: (context) => MyContracts(),
+                                    ),
+                                  ),
+                                },
+                              ),
+                              if (!isBlocked) ...[
+                                BlocBuilder<CalendarBloc, CalendarState>(
+                                  builder: (context, state) {
+                                    final avaliableEventsToShow =
+                                        (state is CalendarLoaded &&
+                                            state.avaliableEvents.isNotEmpty)
+                                        ? true
+                                        : false;
+
+                                    return WelcomeButton(
+                                      disable: user.status == "B",
+                                      messageBadge: avaliableEventsToShow
+                                          ? "Eventos disponíveis"
+                                          : null,
+                                      icon: FontAwesomeIcons.calendar,
+                                      buttonText: 'Agenda',
+                                      buttonDescription: 'Conferir eventos',
+                                      onTap: () => {
+                                        Navigator.of(
+                                          context,
+                                          rootNavigator: true,
+                                        ).push(
+                                          CupertinoPageRoute(
+                                            builder: (context) => Events(),
+                                          ),
+                                        ),
+                                      },
+                                    );
+                                  },
+                                ),
+                              ],
+                            ],
+                          );
+                        }
+                        return SizedBox.shrink();
+                      },
                     ),
                   ],
                 ),

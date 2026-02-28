@@ -8,6 +8,8 @@ class ContractModel {
   final String? date;
   final String? dueDate;
   final List<ContractPaymentModel>? payments;
+  final String? statusContract;
+  final String? idContract;
 
   ContractModel({
     required this.id,
@@ -16,6 +18,8 @@ class ContractModel {
     this.status,
     this.date,
     this.dueDate,
+    this.statusContract,
+    this.idContract,
   });
 
   factory ContractModel.fromJson(Map<String, dynamic> json) {
@@ -35,6 +39,8 @@ class ContractModel {
       id: json['cod_aluno_contrato'] ?? 0,
       description: json['descricao_aluno_contrato'] ?? 'contractName',
       status: json['status_aluno_contrato'] ?? '',
+      idContract: json['autentique_aluno_contrato'],
+      statusContract: json['statusautentique_aluno_contrato'],
       date: formattedDate,
       dueDate: formattedDueDate,
       payments: (json['pagamentos'] as List<dynamic>?)

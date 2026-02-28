@@ -107,12 +107,15 @@ class UserService {
       return UserModel(
         id: data['student']?['cod_aluno'],
         name: data['student']?['nome_aluno'],
+        email: data['student']?['email_aluno'],
         clientImg: data['student']?['imagem_aluno'],
         companyId: data['company']?['cod_empresa'],
         company: data['company']?['nome_empresa'],
         companyImg: data['company']?['imagem_empresa'],
         token: data['token'],
         refreshToken: data['refreshToken'],
+        status: data['license']?['status'],
+        status_description: data['license']?['status_description'],
       );
     } on DioException catch (e) {
       final errorMessage = DioExceptions.fromDioError(e).toString();
