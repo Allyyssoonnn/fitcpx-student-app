@@ -1,12 +1,27 @@
-<div align="center">
-  <img src="assets/images/logo.png" alt="FitCPX logo" width="220" />
+<p align="right">
+  <a href="README.md"><strong>🇺🇸 English</strong></a> · <a href="README.pt-BR.md">🇧🇷 Português</a>
+</p>
 
-  # FitCPX — Student App
+<p align="center">
+  <img src="assets/images/logo.png" alt="FitCPX logo" width="96" />
+</p>
 
-  **Flutter mobile companion app for students using the FitCPX fitness management platform.**
+<h1 align="center">FitCPX · Student App</h1>
 
-  [Português](README.pt-BR.md) · [FitCPX Web](https://github.com/Allyyssoonnn/fitcpx-web) · [FitCPX Backend](https://github.com/Allyyssoonnn/fitcpx-backend) · [FitCPX Website](https://fitcpx.com)
-</div>
+<p align="center">
+  <strong>The Flutter companion app for students using a real fitness-management SaaS.</strong>
+</p>
+
+<p align="center">
+  <a href="https://fitcpx.com">Official product</a> ·
+  <a href="https://github.com/Allyyssoonnn/fitcpx-web">Web application</a> ·
+  <a href="https://github.com/Allyyssoonnn/fitcpx-backend">Backend API</a>
+</p>
+
+<p align="center">
+  <code>Flutter</code> &nbsp; <code>Dart</code> &nbsp; <code>BLoC</code> &nbsp;
+  <code>Dio</code> &nbsp; <code>Firebase</code> &nbsp; <code>Android & iOS</code>
+</p>
 
 ---
 
